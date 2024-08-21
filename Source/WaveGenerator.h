@@ -2,10 +2,11 @@
 #include <JuceHeader.h>
 
 enum WAVE_TYPE {
-	SINE = 1,
+	NONE,
+	SINE,
 	SQUARE,
 	TRIANGLE,
-	SAW_DIGITAL,
+	//SAW_DIGITAL,
 	SAW_ANALOG,
 	NOISE,
 };

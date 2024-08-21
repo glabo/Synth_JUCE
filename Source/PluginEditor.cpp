@@ -18,15 +18,13 @@ Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioP
 {
     // add wave type selector
     addAndMakeVisible(waveTypeSelection);
-    waveTypeSelection.addItem("Sine", 1);
-    waveTypeSelection.addItem("Square", 2);
-    waveTypeSelection.addItem("Triangle", 3);
-    //waveTypeSelection.addItem("Saw", 4);
-    waveTypeSelection.addItem("Saw Analog", 5);
-    waveTypeSelection.addItem("Noise", 6);
+
+    auto* parameter = p.apvts.getParameter("wavetype");
+    auto waveType = static_cast<WAVE_TYPE>(parameter->convertFrom0to1(parameter->getValue()) + 1);
+    waveTypeSelection.addItemList(parameter->getAllValueStrings(), 1);
 
     waveTypeSelection.onChange = [this] { waveTypeSelectionChanged(); };
-    waveTypeSelection.setSelectedId(WAVE_TYPE::SINE);
+    waveTypeSelection.setSelectedId(waveType);
 
     waveTypeLabel.attachToComponent(&waveTypeSelection, false);
     waveTypeLabel.setFont(juce::FontOptions(11.0f));
@@ -117,6 +115,9 @@ int Synth_JUCEAudioProcessorEditor::getControlParameterIndex(Component& control)
 
     if (&control == &delaySlider)
         return 1;
+
+    if (&control == &waveTypeSelection)
+        return 2;
 
     return -1;
 }

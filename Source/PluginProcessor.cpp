@@ -173,6 +173,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
 Synth_JUCEAudioProcessor::createParameterLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
+    layout.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "wavetype",  1 }, "Waveform", juce::StringArray{ "Sine", "Square", "Triangle", "Saw Analog", "Noise"}, 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gain",  1 }, "Gain", juce::NormalisableRange<float>(0.0f, 1.0f), 0.9f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "delay", 1 }, "Delay Feedback", juce::NormalisableRange<float>(0.0f, 1.0f), 0.5f));
 

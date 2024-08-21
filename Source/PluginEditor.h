@@ -48,8 +48,10 @@ private:
 
     juce::ComboBox waveTypeSelection;
     juce::AudioProcessorValueTreeState::ComboBoxAttachment waveTypeAttachment;
+
     juce::Slider gainSlider, delaySlider;
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment, delayAttachment;
+
     juce::Colour backgroundColour;
 
     // these are used to persist the UI's size - the values are stored along with the
