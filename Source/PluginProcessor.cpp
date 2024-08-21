@@ -12,16 +12,14 @@
 //==============================================================================
 Synth_JUCEAudioProcessor::Synth_JUCEAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+     : AudioProcessor (getBusesProperties()),
+       apvts(*this, nullptr, "apvts", createParameterLayout())
 #endif
 {
+    // Add a sub-tree to store the state of our UI
+    apvts.state.addChild({ "uiState", { { "width",  400 }, { "height", 200 } }, {} }, -1, nullptr);
+
+    initialiseSynth();
 }
 
 Synth_JUCEAudioProcessor::~Synth_JUCEAudioProcessor()
@@ -29,142 +27,98 @@ Synth_JUCEAudioProcessor::~Synth_JUCEAudioProcessor()
 }
 
 //==============================================================================
-const juce::String Synth_JUCEAudioProcessor::getName() const
-{
-    return JucePlugin_Name;
-}
-
-bool Synth_JUCEAudioProcessor::acceptsMidi() const
-{
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-bool Synth_JUCEAudioProcessor::producesMidi() const
-{
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-bool Synth_JUCEAudioProcessor::isMidiEffect() const
-{
-   #if JucePlugin_IsMidiEffect
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-double Synth_JUCEAudioProcessor::getTailLengthSeconds() const
-{
-    return 0.0;
-}
-
-int Synth_JUCEAudioProcessor::getNumPrograms()
-{
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
-                // so this should be at least 1, even if you're not really implementing programs.
-}
-
-int Synth_JUCEAudioProcessor::getCurrentProgram()
-{
-    return 0;
-}
-
-void Synth_JUCEAudioProcessor::setCurrentProgram (int index)
-{
-}
-
-const juce::String Synth_JUCEAudioProcessor::getProgramName (int index)
-{
-    return {};
-}
-
-void Synth_JUCEAudioProcessor::changeProgramName (int index, const juce::String& newName)
-{
-}
-
-//==============================================================================
-void Synth_JUCEAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void Synth_JUCEAudioProcessor::prepareToPlay (double newSampleRate, int /*samplesPerBlock*/)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    synth.setCurrentPlaybackSampleRate(newSampleRate);
+    keyboardState.reset();
 
-    juce::dsp::ProcessSpec spec;
+    if (isUsingDoublePrecision())
+    {
+        delayBufferDouble.setSize(2, 12000);
+        delayBufferFloat.setSize(1, 1);
+    }
+    else
+    {
+        delayBufferFloat.setSize(2, 12000);
+        delayBufferDouble.setSize(1, 1);
+    }
 
-    spec.maximumBlockSize = samplesPerBlock;
-    spec.numChannels = 1;
-    spec.sampleRate = sampleRate;
-
-    leftChain.prepare(spec);
-    rightChain.prepare(spec);
+    reset();
 }
 
 void Synth_JUCEAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
+    keyboardState.reset();
+}
+
+void Synth_JUCEAudioProcessor::reset()
+{
+    // Use this method as the place to clear any delay lines, buffers, etc, as it
+    // means there's been a break in the audio's continuity.
+    delayBufferFloat.clear();
+    delayBufferDouble.clear();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool Synth_JUCEAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused (layouts);
-    return true;
-  #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    // Some plugin hosts, such as certain GarageBand versions, will only
-    // load plugins that support stereo bus layouts.
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    // Only mono/stereo and input/output must have same layout
+    const auto& mainOutput = layouts.getMainOutputChannelSet();
+    const auto& mainInput = layouts.getMainInputChannelSet();
+
+    // input and output layout must either be the same or the input must be disabled altogether
+    if (!mainInput.isDisabled() && mainInput != mainOutput)
         return false;
 
-    // This checks if the input layout matches the output layout
-   #if ! JucePlugin_IsSynth
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
+    // only allow stereo and mono
+    if (mainOutput.size() > 2)
         return false;
-   #endif
 
     return true;
-  #endif
 }
 #endif
 
 void Synth_JUCEAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    jassert(!isUsingDoublePrecision());
+    process(buffer, midiMessages, delayBufferFloat);
+}
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-    
-    juce::dsp::AudioBlock<float> block(buffer);
+void Synth_JUCEAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
+{
+    jassert(isUsingDoublePrecision());
+    process(buffer, midiMessages, delayBufferDouble);
+}
 
-    auto leftBlock = block.getSingleChannelBlock(0);
-    auto rightBlock = block.getSingleChannelBlock(1);
+void Synth_JUCEAudioProcessor::initialiseSynth()
+{
+    auto numVoices = 8;
 
-    juce::dsp::ProcessContextReplacing<float> leftContext(leftBlock);
-    juce::dsp::ProcessContextReplacing<float> rightContext(rightBlock);
+    // Add some voices...
+    for (auto i = 0; i < numVoices; ++i)
+        synth.addVoice(new SineWaveVoice());
 
-    leftChain.process(leftContext);
-    rightChain.process(rightContext);
+    // ..and give the synth a sound to play
+    synth.addSound(new SineWaveSound());
+}
 
+void Synth_JUCEAudioProcessor::updateCurrentTimeInfoFromHost()
+{
+    const auto newInfo = [&]
+    {
+        if (auto* ph = getPlayHead())
+            if (auto result = ph->getPosition())
+                return *result;
 
+        // If the host fails to provide the current time, we'll just use default values
+        return juce::AudioPlayHead::PositionInfo{};
+    }();
+
+    lastPosInfo.set(newInfo);
 }
 
 //==============================================================================
@@ -175,30 +129,48 @@ bool Synth_JUCEAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* Synth_JUCEAudioProcessor::createEditor()
 {
-    //return new Synth_JUCEAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor(*this);
+    return new Synth_JUCEAudioProcessorEditor (*this);
 }
 
 //==============================================================================
 void Synth_JUCEAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    // Store an xml representation of our state.
+    if (auto xmlState = apvts.copyState().createXml())
+        copyXmlToBinary(*xmlState, destData);
 }
 
 void Synth_JUCEAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    // Restore our plug-in's state from the xml representation stored in the above
+    // method.
+    if (auto xmlState = getXmlFromBinary(data, sizeInBytes))
+        apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+}
+
+void Synth_JUCEAudioProcessor::updateTrackProperties(const TrackProperties& properties)
+{
+    {
+        const juce::ScopedLock sl(trackPropertiesLock);
+        trackProperties = properties;
+    }
+
+    juce::MessageManager::callAsync([this]
+        {
+            if (auto* editor = dynamic_cast<Synth_JUCEAudioProcessorEditor*> (getActiveEditor()))
+            editor->updateTrackProperties();
+        });
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout
 Synth_JUCEAudioProcessor::createParameterLayout()
 {
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gain",  1 }, "Gain", juce::NormalisableRange<float>(0.0f, 1.0f), 0.9f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "delay", 1 }, "Delay Feedback", juce::NormalisableRange<float>(0.0f, 1.0f), 0.5f));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>( "LowCut Freq",
+    // FILTER STUFF that we'll use later
+ /*   layout.add(std::make_unique<juce::AudioParameterFloat>( "LowCut Freq",
                                                             "LowCut Freq",
                                                             juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f),
                                                             20.f));
@@ -238,7 +210,7 @@ Synth_JUCEAudioProcessor::createParameterLayout()
     layout.add(std::make_unique<juce::AudioParameterChoice>("HighCut Slope",
                                                             "HighCut Slope",
                                                             stringArray,
-                                                            0));
+                                                            0));*/
     return layout;
 }
 
