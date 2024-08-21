@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "SpinLockedPosInfo.h"
 #include "SineWave.h"
+#include "GenericVoice.h"
 
 //==============================================================================
 /**

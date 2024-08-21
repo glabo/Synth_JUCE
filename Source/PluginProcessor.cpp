@@ -100,10 +100,10 @@ void Synth_JUCEAudioProcessor::initialiseSynth()
 
     // Add some voices...
     for (auto i = 0; i < numVoices; ++i)
-        synth.addVoice(new SineWaveVoice());
+        synth.addVoice(new GenericVoice());
 
     // ..and give the synth a sound to play
-    synth.addSound(new SineWaveSound());
+    synth.addSound(new GenericSound());
 }
 
 void Synth_JUCEAudioProcessor::updateCurrentTimeInfoFromHost()
