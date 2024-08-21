@@ -6,16 +6,30 @@
   ==============================================================================
 */
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 //==============================================================================
 Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p),
     midiKeyboard(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
+    waveTypeAttachment(p.apvts, "wavetype", waveTypeSelection),
     gainAttachment(p.apvts, "gain", gainSlider),
     delayAttachment(p.apvts, "delay", delaySlider)
 {
+    // add wave type selector
+    addAndMakeVisible(waveTypeSelection);
+    waveTypeSelection.addItem("Sine", 1);
+    waveTypeSelection.addItem("Square", 2);
+    waveTypeSelection.addItem("Triangle", 3);
+    //waveTypeSelection.addItem("Saw", 4);
+    waveTypeSelection.addItem("Saw Analog", 5);
+    waveTypeSelection.addItem("Noise", 6);
+
+    waveTypeSelection.onChange = [this] { waveTypeSelectionChanged(); };
+    waveTypeSelection.setSelectedId(WAVE_TYPE::SINE);
+
+    waveTypeLabel.attachToComponent(&waveTypeSelection, false);
+    waveTypeLabel.setFont(juce::FontOptions(11.0f));
 
     // add some sliders..
     addAndMakeVisible(gainSlider);
@@ -77,6 +91,8 @@ void Synth_JUCEAudioProcessorEditor::resized()
 
     r.removeFromTop(20);
     auto sliderArea = r.removeFromTop(60);
+
+    waveTypeSelection.setBounds(sliderArea.removeFromLeft(juce::jmin(180, sliderArea.getWidth() / 4)));
     gainSlider.setBounds(sliderArea.removeFromLeft(juce::jmin(180, sliderArea.getWidth() / 2)));
     delaySlider.setBounds(sliderArea.removeFromLeft(juce::jmin(180, sliderArea.getWidth())));
 
@@ -138,5 +154,10 @@ void Synth_JUCEAudioProcessorEditor::updateTimecodeDisplay(const juce::AudioPlay
         displayText << "  (playing)";
 
     timecodeDisplayLabel.setText(displayText.toString(), juce::dontSendNotification);
+}
+
+void Synth_JUCEAudioProcessorEditor::waveTypeSelectionChanged() {
+    WAVE_TYPE waveType = static_cast<WAVE_TYPE>(this->waveTypeSelection.getSelectedId());
+    audioProcessor.setWaveType(waveType);
 }
 

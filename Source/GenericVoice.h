@@ -110,6 +110,10 @@ public:
         }
     }
 
+    void setWaveType(WAVE_TYPE newWaveType) {
+        waveType = newWaveType;
+    }
+
     using SynthesiserVoice::renderNextBlock;
 
 private:

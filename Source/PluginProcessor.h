@@ -75,6 +75,7 @@ public:
     }
 
     void initialiseSynth();
+    void Synth_JUCEAudioProcessor::setWaveType(WAVE_TYPE waveType);
     void updateCurrentTimeInfoFromHost();
 
     //==============================================================================

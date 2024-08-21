@@ -106,6 +106,13 @@ void Synth_JUCEAudioProcessor::initialiseSynth()
     synth.addSound(new GenericSound());
 }
 
+void Synth_JUCEAudioProcessor::setWaveType(WAVE_TYPE waveType) {
+    for (auto i = 0; i < synth.getNumVoices(); i++) {
+        auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
+        voice->setWaveType(waveType);
+    }
+}
+
 void Synth_JUCEAudioProcessor::updateCurrentTimeInfoFromHost()
 {
     const auto newInfo = [&]

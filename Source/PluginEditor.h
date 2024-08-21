@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "WaveGenerator.h"
 
 //==============================================================================
 /**
@@ -42,8 +43,11 @@ private:
 
     juce::Label timecodeDisplayLabel,
         gainLabel{ {}, "Throughput level:" },
-        delayLabel{ {}, "Delay:" };
+        delayLabel{ {}, "Delay:" },
+        waveTypeLabel{ {}, "Waveform:"};
 
+    juce::ComboBox waveTypeSelection;
+    juce::AudioProcessorValueTreeState::ComboBoxAttachment waveTypeAttachment;
     juce::Slider gainSlider, delaySlider;
     juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment, delayAttachment;
     juce::Colour backgroundColour;
@@ -83,6 +87,8 @@ private:
         return juce::String::formatted("%d|%d|%03d", bar, beat, ticks);
     }
     void updateTimecodeDisplay(const juce::AudioPlayHead::PositionInfo& pos);
+
+    void waveTypeSelectionChanged();
 
     // called when the stored window size changes
     void valueChanged(juce::Value&) override
