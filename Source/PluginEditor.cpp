@@ -12,36 +12,8 @@
 Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p),
     midiKeyboard(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
-    waveTypeAttachment(p.apvts, "wavetype", waveTypeSelection),
-    gainAttachment(p.apvts, "gain", gainSlider),
-    delayAttachment(p.apvts, "delay", delaySlider)
+    oscillatorComponent(p)
 {
-    // add wave type selector
-    addAndMakeVisible(waveTypeSelection);
-
-    auto* parameter = p.apvts.getParameter("wavetype");
-    auto waveType = static_cast<WAVE_TYPE>(parameter->convertFrom0to1(parameter->getValue()) + 1);
-    waveTypeSelection.addItemList(parameter->getAllValueStrings(), 1);
-
-    waveTypeSelection.onChange = [this] { waveTypeSelectionChanged(); };
-    waveTypeSelection.setSelectedId(waveType);
-
-    waveTypeLabel.attachToComponent(&waveTypeSelection, false);
-    waveTypeLabel.setFont(juce::FontOptions(11.0f));
-
-    // add some sliders..
-    addAndMakeVisible(gainSlider);
-    gainSlider.setSliderStyle(juce::Slider::Rotary);
-
-    addAndMakeVisible(delaySlider);
-    delaySlider.setSliderStyle(juce::Slider::Rotary);
-
-    // add some labels for the sliders..
-    gainLabel.attachToComponent(&gainSlider, false);
-    gainLabel.setFont(juce::FontOptions(11.0f));
-
-    delayLabel.attachToComponent(&delaySlider, false);
-    delayLabel.setFont(juce::FontOptions(11.0f));
 
     // add the midi keyboard component..
     addAndMakeVisible(midiKeyboard);
@@ -59,6 +31,7 @@ Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioP
     lastUIHeight.referTo(p.apvts.state.getChildWithName("uiState").getPropertyAsValue("height", nullptr));
 
     // set our component's initial size to be the last one that was stored in the filter's settings
+    addAndMakeVisible(oscillatorComponent);
     setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
 
     lastUIWidth.addListener(this);
@@ -82,17 +55,13 @@ void Synth_JUCEAudioProcessorEditor::resized()
 {
     // This lays out our child components...
 
-    auto r = getLocalBounds().reduced(8);
+    timecodeDisplayLabel.setBounds(getLocalBounds().reduced(2).removeFromTop(26));
+    midiKeyboard.setBounds(getLocalBounds().reduced(2).removeFromBottom(70));
 
-    timecodeDisplayLabel.setBounds(r.removeFromTop(26));
-    midiKeyboard.setBounds(r.removeFromBottom(70));
+    auto sliderArea = getLocalBounds().reduced(2);
+    sliderArea.removeFromTop(40);
 
-    r.removeFromTop(20);
-    auto sliderArea = r.removeFromTop(60);
-
-    waveTypeSelection.setBounds(sliderArea.removeFromLeft(juce::jmin(180, sliderArea.getWidth() / 4)));
-    gainSlider.setBounds(sliderArea.removeFromLeft(juce::jmin(180, sliderArea.getWidth() / 2)));
-    delaySlider.setBounds(sliderArea.removeFromLeft(juce::jmin(180, sliderArea.getWidth())));
+    oscillatorComponent.setBounds(sliderArea.removeFromTop(80));
 
     lastUIWidth = getWidth();
     lastUIHeight = getHeight();
@@ -110,16 +79,7 @@ void Synth_JUCEAudioProcessorEditor::hostMIDIControllerIsAvailable(bool controll
 
 int Synth_JUCEAudioProcessorEditor::getControlParameterIndex(Component& control)
 {
-    if (&control == &gainSlider)
-        return 0;
-
-    if (&control == &delaySlider)
-        return 1;
-
-    if (&control == &waveTypeSelection)
-        return 2;
-
-    return -1;
+    return oscillatorComponent.getControlParameterIndex(control);
 }
 
 void Synth_JUCEAudioProcessorEditor::updateTrackProperties()
@@ -155,10 +115,5 @@ void Synth_JUCEAudioProcessorEditor::updateTimecodeDisplay(const juce::AudioPlay
         displayText << "  (playing)";
 
     timecodeDisplayLabel.setText(displayText.toString(), juce::dontSendNotification);
-}
-
-void Synth_JUCEAudioProcessorEditor::waveTypeSelectionChanged() {
-    WAVE_TYPE waveType = static_cast<WAVE_TYPE>(this->waveTypeSelection.getSelectedId());
-    audioProcessor.setWaveType(waveType);
 }
 
