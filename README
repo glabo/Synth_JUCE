@@ -1,0 +1,5 @@
+This project is a learning exercise for the JUCE VST plugin platform.
+
+The goal is to create a basic additive synth instrument with multiple oscillators with
+individual volume envelopes and a GUI. Once that's in place we'll start playing with filters,
+pitch envelopes, etc.
