@@ -43,6 +43,7 @@ public:
         //auto delayParamValue = apvts.getParameter(DELAY_ID)->getValue();
         for (auto i = 0; i < synth.getNumVoices(); i++) {
             auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
+            voice->setEnvelopeSampleRate(getSampleRate());
             voice->setEnvelopeParams(
                 apvts.getRawParameterValue(ATTACK_ID),
                 apvts.getRawParameterValue(DECAY_ID),

@@ -20,7 +20,7 @@ private:
                             attackAttachment, decayAttachment, sustainAttachment, releaseAttachment;
 
     juce::Label gainLabel{ {}, "Level:" },
-                delayLabel{ {}, "Delay:" },
+                //delayLabel{ {}, "Delay:" },
                 waveTypeLabel{ {}, "Waveform:" },
                 attackLabel{ {}, "Attack:" },
                 decayLabel{ {}, "Decay:" },

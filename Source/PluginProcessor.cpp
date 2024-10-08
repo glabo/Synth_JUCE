@@ -195,12 +195,12 @@ Synth_JUCEAudioProcessor::createParameterLayout()
                                                             1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ DECAY_ID,  1 },
                                                             "Decay (ms)",
-                                                            juce::NormalisableRange<float>(0.0f, 1.0f),
+                                                            juce::NormalisableRange<float>(0.0f, 10.0f),
                                                             1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ SUSTAIN_ID,  1 },
                                                             "Sustain Level",
-                                                            juce::NormalisableRange<float>(0.0f, 10.0f),
-                                                            0.5f));
+                                                            juce::NormalisableRange<float>(0.0f, 1.0f),
+                                                            1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ RELEASE_ID,  1 },
                                                             "Release (ms)",
                                                             juce::NormalisableRange<float>(0.0f, 10.0f),

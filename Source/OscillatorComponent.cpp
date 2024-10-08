@@ -26,7 +26,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p) :
 
     // Gain slider
     addAndMakeVisible(gainSlider);
-    gainSlider.setSliderStyle(juce::Slider::Rotary);
+    gainSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     gainSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
 
     gainLabel.attachToComponent(&gainSlider, false);
@@ -34,44 +34,44 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p) :
     gainLabel.setJustificationType(juce::Justification::centred);
 
     // Delay slider
-    addAndMakeVisible(delaySlider);
-    delaySlider.setSliderStyle(juce::Slider::Rotary);
-    delaySlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+    //addAndMakeVisible(delaySlider);
+    //delaySlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    //delaySlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
 
-    delayLabel.attachToComponent(&delaySlider, false);
-    delayLabel.setFont(juce::FontOptions(11.0f));
-    delayLabel.setJustificationType(juce::Justification::centred);
+    //delayLabel.attachToComponent(&delaySlider, false);
+    //delayLabel.setFont(juce::FontOptions(11.0f));
+    //delayLabel.setJustificationType(juce::Justification::centred);
 
     // Attack slider
     addAndMakeVisible(attackSlider);
-    attackSlider.setSliderStyle(juce::Slider::Rotary);
+    attackSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     attackSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
 
     attackLabel.attachToComponent(&attackSlider, false);
     attackLabel.setFont(juce::FontOptions(11.0f));
     attackLabel.setJustificationType(juce::Justification::centred);
 
-    // sustain slider
-    addAndMakeVisible(sustainSlider);
-    sustainSlider.setSliderStyle(juce::Slider::Rotary);
-    sustainSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
-
-    sustainLabel.attachToComponent(&sustainSlider, false);
-    sustainLabel.setFont(juce::FontOptions(11.0f));
-    sustainLabel.setJustificationType(juce::Justification::centred);
-
-    // decay slider
+    // Decay slider
     addAndMakeVisible(decaySlider);
-    decaySlider.setSliderStyle(juce::Slider::Rotary);
+    decaySlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     decaySlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
 
     decayLabel.attachToComponent(&decaySlider, false);
     decayLabel.setFont(juce::FontOptions(11.0f));
     decayLabel.setJustificationType(juce::Justification::centred);
 
-    // release slider
+    // Sustain slider
+    addAndMakeVisible(sustainSlider);
+    sustainSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    sustainSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+
+    sustainLabel.attachToComponent(&sustainSlider, false);
+    sustainLabel.setFont(juce::FontOptions(11.0f));
+    sustainLabel.setJustificationType(juce::Justification::centred);
+
+    // Release slider
     addAndMakeVisible(releaseSlider);
-    releaseSlider.setSliderStyle(juce::Slider::Rotary);
+    releaseSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     releaseSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
 
     releaseLabel.attachToComponent(&releaseSlider, false);
@@ -108,8 +108,8 @@ void OscillatorComponent::resized() {
     auto releaseSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
     releaseSlider.setBounds(releaseSliderBounds);
 
-    auto delaySliderBounds = controlArea.removeFromLeft(boxSubDivision);
-    delaySlider.setBounds(delaySliderBounds);
+    //auto delaySliderBounds = controlArea.removeFromLeft(boxSubDivision);
+    //delaySlider.setBounds(delaySliderBounds);
 }
 
 void OscillatorComponent::waveTypeSelectionChanged() {
