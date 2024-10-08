@@ -5,7 +5,11 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p) :
     audioProcessor(p),
     waveTypeAttachment(p.apvts, WAVETYPE_ID, waveTypeSelection),
     gainAttachment(p.apvts, GAIN_ID, gainSlider),
-    delayAttachment(p.apvts, DELAY_ID, delaySlider)
+    delayAttachment(p.apvts, DELAY_ID, delaySlider),
+    attackAttachment(p.apvts, ATTACK_ID, attackSlider),
+    decayAttachment(p.apvts, DECAY_ID, decaySlider),
+    sustainAttachment(p.apvts, SUSTAIN_ID, sustainSlider),
+    releaseAttachment(p.apvts, RELEASE_ID, releaseSlider)
 {
     // Wave type selector
     addAndMakeVisible(waveTypeSelection);
@@ -37,6 +41,42 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p) :
     delayLabel.attachToComponent(&delaySlider, false);
     delayLabel.setFont(juce::FontOptions(11.0f));
     delayLabel.setJustificationType(juce::Justification::centred);
+
+    // Attack slider
+    addAndMakeVisible(attackSlider);
+    attackSlider.setSliderStyle(juce::Slider::Rotary);
+    attackSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+
+    attackLabel.attachToComponent(&attackSlider, false);
+    attackLabel.setFont(juce::FontOptions(11.0f));
+    attackLabel.setJustificationType(juce::Justification::centred);
+
+    // sustain slider
+    addAndMakeVisible(sustainSlider);
+    sustainSlider.setSliderStyle(juce::Slider::Rotary);
+    sustainSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+
+    sustainLabel.attachToComponent(&sustainSlider, false);
+    sustainLabel.setFont(juce::FontOptions(11.0f));
+    sustainLabel.setJustificationType(juce::Justification::centred);
+
+    // decay slider
+    addAndMakeVisible(decaySlider);
+    decaySlider.setSliderStyle(juce::Slider::Rotary);
+    decaySlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+
+    decayLabel.attachToComponent(&decaySlider, false);
+    decayLabel.setFont(juce::FontOptions(11.0f));
+    decayLabel.setJustificationType(juce::Justification::centred);
+
+    // release slider
+    addAndMakeVisible(releaseSlider);
+    releaseSlider.setSliderStyle(juce::Slider::Rotary);
+    releaseSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+
+    releaseLabel.attachToComponent(&releaseSlider, false);
+    releaseLabel.setFont(juce::FontOptions(11.0f));
+    releaseLabel.setJustificationType(juce::Justification::centred);
 }
 
 void OscillatorComponent::resized() {
@@ -46,15 +86,30 @@ void OscillatorComponent::resized() {
     // Wave selector is left quarter of initial size
     // Gain slider is left half of REMAINING size
     // Delay slider is left half of REMAINING size
-    auto waveTypeSelectionBounds = controlArea.removeFromLeft(juce::jmin(180, controlArea.getWidth() / 4));
+    auto boxSubDivision = juce::jmin(180, controlArea.getWidth() / 7);
+    auto waveTypeSelectionBounds = controlArea.removeFromLeft(boxSubDivision);
     waveTypeSelectionBounds.removeFromTop(30);
     waveTypeSelectionBounds.removeFromBottom(30);
-    waveTypeSelectionBounds.removeFromRight(20);
-    waveTypeSelectionBounds.removeFromLeft(20);
+    waveTypeSelectionBounds.removeFromRight(10);
+    waveTypeSelectionBounds.removeFromLeft(10);
     waveTypeSelection.setBounds(waveTypeSelectionBounds);
     controlArea.removeFromTop(20);
-    gainSlider.setBounds(controlArea.removeFromLeft(juce::jmin(180, controlArea.getWidth() / 2)));
-    delaySlider.setBounds(controlArea.removeFromLeft(juce::jmin(180, controlArea.getWidth())));
+    auto gainSliderBounds = controlArea.removeFromLeft(boxSubDivision);
+    gainSlider.setBounds(gainSliderBounds);
+
+    auto adsrBounds = controlArea.removeFromLeft(boxSubDivision * 2);
+    auto adsrBoxSubDivision = adsrBounds.getWidth() / 4;
+    auto attackSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
+    attackSlider.setBounds(attackSliderBounds);
+    auto decaySliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
+    decaySlider.setBounds(decaySliderBounds);
+    auto sustainSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
+    sustainSlider.setBounds(sustainSliderBounds);
+    auto releaseSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
+    releaseSlider.setBounds(releaseSliderBounds);
+
+    auto delaySliderBounds = controlArea.removeFromLeft(boxSubDivision);
+    delaySlider.setBounds(delaySliderBounds);
 }
 
 void OscillatorComponent::waveTypeSelectionChanged() {

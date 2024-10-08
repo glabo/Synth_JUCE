@@ -14,12 +14,18 @@ private:
     juce::ComboBox waveTypeSelection;
     juce::AudioProcessorValueTreeState::ComboBoxAttachment waveTypeAttachment;
 
-    juce::Slider gainSlider, delaySlider;
-    juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment, delayAttachment;
+    juce::Slider gainSlider, delaySlider,
+        attackSlider, decaySlider, sustainSlider, releaseSlider;
+    juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment, delayAttachment,
+                            attackAttachment, decayAttachment, sustainAttachment, releaseAttachment;
 
     juce::Label gainLabel{ {}, "Level:" },
                 delayLabel{ {}, "Delay:" },
-                waveTypeLabel{ {}, "Waveform:" };
+                waveTypeLabel{ {}, "Waveform:" },
+                attackLabel{ {}, "Attack:" },
+                decayLabel{ {}, "Decay:" },
+                sustainLabel{ {}, "Sustain:" },
+                releaseLabel{ {}, "Release:" };
 
     void waveTypeSelectionChanged();
 
