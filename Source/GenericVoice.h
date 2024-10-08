@@ -1,6 +1,8 @@
 #pragma once
+
 #include <JuceHeader.h>
 #include "WaveGenerator.h"
+
 class GenericSound final : public juce::SynthesiserSound
 {
 public:
@@ -27,8 +29,8 @@ public:
         int /*currentPitchWheelPosition*/) override
     {
         currentAngle = 0.0;
-        level = velocity * 0.15;
-        tailOff = 0.0;
+        velocityLevel = velocity * 0.15;
+        envelope.noteOn();
 
         cyclesPerSecond = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         auto cyclesPerSample = cyclesPerSecond / getSampleRate();
@@ -43,9 +45,7 @@ public:
             // start a tail-off by setting this flag. The render callback will pick up on
             // this and do a fade out, calling clearCurrentNote() when it's finished.
 
-            if (juce::approximatelyEqual(tailOff, 0.0)) // we only need to begin a tail-off if it's not already doing so - the
-                // stopNote method could be called more than once.
-                tailOff = 1.0;
+            envelope.noteOff();
         }
         else
         {
@@ -68,43 +68,25 @@ public:
 
     void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override
     {
+        envelope.setParameters(envelopeParams);
         if (!juce::approximatelyEqual(angleDelta, 0.0))
         {
-            if (tailOff > 0.0)
+            while (--numSamples >= 0)
             {
-                while (--numSamples >= 0)
-                {
-                    auto currentSample = (float)(getWaveformSample(waveType, currentAngle, cyclesPerSecond) * level * tailOff);
+                if (envelope.isActive()) {
+                    float envelopeLevel = envelope.getNextSample();
+                    auto currentSample = (float)(getWaveformSample(waveType, currentAngle, cyclesPerSecond) * velocityLevel * envelopeLevel);
 
                     for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
                         outputBuffer.addSample(i, startSample, currentSample);
 
                     currentAngle += angleDelta;
                     ++startSample;
-
-                    tailOff *= 0.99;
-
-                    if (tailOff <= 0.005)
-                    {
-                        // tells the synth that this voice has stopped
-                        clearCurrentNote();
-
-                        angleDelta = 0.0;
-                        break;
-                    }
                 }
-            }
-            else
-            {
-                while (--numSamples >= 0)
-                {
-                    auto currentSample = (float)(getWaveformSample(waveType, currentAngle, cyclesPerSecond) * level);
-
-                    for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
-                        outputBuffer.addSample(i, startSample, currentSample);
-
-                    currentAngle += angleDelta;
-                    ++startSample;
+                else {
+                    clearCurrentNote();
+                    angleDelta = 0.0;
+                    break;
                 }
             }
         }
@@ -114,13 +96,27 @@ public:
         waveType = newWaveType;
     }
 
+    void setEnvelopeSampleRate(double sampleRate) {
+        envelope.setSampleRate(sampleRate);
+    }
+
+    void setEnvelopeParams(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+    {
+        envelopeParams.attack = *attack;
+        envelopeParams.decay = *decay;
+        envelopeParams.sustain = *sustain;
+        envelopeParams.release = *release;
+    }
+
     using SynthesiserVoice::renderNextBlock;
 
 private:
     double cyclesPerSecond = 0.0;
     double currentAngle = 0.0;
     double angleDelta = 0.0;
-    double level = 0.0;
-    double tailOff = 0.0;
+    double velocityLevel = 0.0;
     WAVE_TYPE waveType = SINE;
+
+    juce::ADSR envelope;
+    juce::ADSR::Parameters envelopeParams;
 };

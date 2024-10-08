@@ -1,15 +1,16 @@
 #include "OscillatorComponent.h"
+#include "TreeLabels.h"
 
 OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p) :
     audioProcessor(p),
-    waveTypeAttachment(p.apvts, "wavetype", waveTypeSelection),
-    gainAttachment(p.apvts, "gain", gainSlider),
-    delayAttachment(p.apvts, "delay", delaySlider)
+    waveTypeAttachment(p.apvts, WAVETYPE_ID, waveTypeSelection),
+    gainAttachment(p.apvts, GAIN_ID, gainSlider),
+    delayAttachment(p.apvts, DELAY_ID, delaySlider)
 {
     // Wave type selector
     addAndMakeVisible(waveTypeSelection);
 
-    auto* parameter = p.apvts.getParameter("wavetype");
+    auto* parameter = p.apvts.getParameter(WAVETYPE_ID);
     auto waveType = static_cast<WAVE_TYPE>(parameter->convertFrom0to1(parameter->getValue()) + 1);
     waveTypeSelection.addItemList(parameter->getAllValueStrings(), 1);
 

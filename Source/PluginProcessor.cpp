@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "TreeLabels.h"
 
 //==============================================================================
 Synth_JUCEAudioProcessor::Synth_JUCEAudioProcessor()
@@ -172,11 +173,38 @@ void Synth_JUCEAudioProcessor::updateTrackProperties(const TrackProperties& prop
 juce::AudioProcessorValueTreeState::ParameterLayout
 Synth_JUCEAudioProcessor::createParameterLayout()
 {
+    // Master oscillator controls
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
-    layout.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ "wavetype",  1 }, "Waveform", juce::StringArray{ "Sine", "Square", "Triangle", "Saw Analog", "Noise"}, 0));
-    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "gain",  1 }, "Gain", juce::NormalisableRange<float>(0.0f, 1.0f), 0.9f));
-    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ "delay", 1 }, "Delay Feedback", juce::NormalisableRange<float>(0.0f, 1.0f), 0.5f));
+    layout.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ WAVETYPE_ID,  1 },
+                                                            "Waveform",
+                                                            juce::StringArray{ "Sine", "Square", "Triangle", "Saw Analog", "Noise"},
+                                                            0));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ GAIN_ID,  1 },
+                                                            "Gain",
+                                                            juce::NormalisableRange<float>(0.0f, 1.0f),
+                                                            0.9f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ DELAY_ID, 1 },
+                                                            "Delay Feedback",
+                                                            juce::NormalisableRange<float>(0.0f, 1.0f),
+                                                            0.5f));
 
+    // Oscillator envelope controls
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ ATTACK_ID,  1 },
+                                                            "Attack (ms)",
+                                                            juce::NormalisableRange<float>(0.0f, 10.0f),
+                                                            1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ DECAY_ID,  1 },
+                                                            "Decay (ms)",
+                                                            juce::NormalisableRange<float>(0.0f, 1.0f),
+                                                            1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ SUSTAIN_ID,  1 },
+                                                            "Sustain Level",
+                                                            juce::NormalisableRange<float>(0.0f, 10.0f),
+                                                            0.5f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ RELEASE_ID,  1 },
+                                                            "Release (ms)",
+                                                            juce::NormalisableRange<float>(0.0f, 10.0f),
+                                                            1.0f));
     // FILTER STUFF that we'll use later
  /*   layout.add(std::make_unique<juce::AudioParameterFloat>( "LowCut Freq",
                                                             "LowCut Freq",

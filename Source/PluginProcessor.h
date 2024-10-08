@@ -12,6 +12,7 @@
 #include "SpinLockedPosInfo.h"
 #include "SineWave.h"
 #include "GenericVoice.h"
+#include "TreeLabels.h"
 
 //==============================================================================
 /**
@@ -38,8 +39,17 @@ public:
     template <typename FloatType>
     void process(juce::AudioBuffer<FloatType>& buffer, juce::MidiBuffer& midiMessages, juce::AudioBuffer<FloatType>& delayBuffer)
     {
-        auto gainParamValue = apvts.getParameter("gain")->getValue();
-        auto delayParamValue = apvts.getParameter("delay")->getValue();
+        auto gainParamValue = apvts.getParameter(GAIN_ID)->getValue();
+        //auto delayParamValue = apvts.getParameter(DELAY_ID)->getValue();
+        for (auto i = 0; i < synth.getNumVoices(); i++) {
+            auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
+            voice->setEnvelopeParams(
+                apvts.getRawParameterValue(ATTACK_ID),
+                apvts.getRawParameterValue(DECAY_ID),
+                apvts.getRawParameterValue(SUSTAIN_ID),
+                apvts.getRawParameterValue(RELEASE_ID)
+            );
+        }
         auto numSamples = buffer.getNumSamples();
 
         // In case we have more outputs than inputs, we'll clear any output
