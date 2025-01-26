@@ -27,7 +27,7 @@ private:
                 sustainLabel{ {}, "Sustain:" },
                 releaseLabel{ {}, "Release:" };
 
-    void waveTypeSelectionChanged();
+    void waveTypeSelectionChanged(int oscId = 0);
 
     void resized() override;
     //==============================================================================

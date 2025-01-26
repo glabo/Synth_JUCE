@@ -112,9 +112,9 @@ void OscillatorComponent::resized() {
     //delaySlider.setBounds(delaySliderBounds);
 }
 
-void OscillatorComponent::waveTypeSelectionChanged() {
+void OscillatorComponent::waveTypeSelectionChanged(int oscId) {
     WAVE_TYPE waveType = static_cast<WAVE_TYPE>(this->waveTypeSelection.getSelectedId());
-    audioProcessor.setWaveType(waveType);
+    audioProcessor.setWaveType(oscId, waveType);
 }
 
 int OscillatorComponent::getControlParameterIndex(Component& control)

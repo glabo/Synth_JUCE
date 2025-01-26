@@ -1,7 +1,11 @@
 #pragma once
 
+#include <memory>
 #include <JuceHeader.h>
 #include "WaveGenerator.h"
+#include "Oscillator.h"
+
+const int NUM_OSC = 1;
 
 class GenericSound final : public juce::SynthesiserSound
 {
@@ -17,7 +21,17 @@ public:
 class GenericVoice final : public juce::SynthesiserVoice
 {
 public:
-    GenericVoice() {}
+    GenericVoice() {
+        for (auto i = 0; i < NUM_OSC; i++) {
+            osc.push_back(std::make_unique<Oscillator>());
+        }
+    }
+    GenericVoice(WAVE_TYPE waveType) {
+        waveType = waveType;
+        for (auto i = 0; i < NUM_OSC; i++) {
+            osc.push_back(std::make_unique<Oscillator>());
+        }
+    }
 
     bool canPlaySound(juce::SynthesiserSound* sound) override
     {
@@ -30,7 +44,9 @@ public:
     {
         currentAngle = 0.0;
         velocityLevel = velocity * 0.15;
-        envelope.noteOn();
+        for (auto& o : osc) {
+            o->startNote(velocityLevel, cyclesPerSecond);
+        }
 
         cyclesPerSecond = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
         auto cyclesPerSample = cyclesPerSecond / getSampleRate();
@@ -44,8 +60,9 @@ public:
         {
             // start a tail-off by setting this flag. The render callback will pick up on
             // this and do a fade out, calling clearCurrentNote() when it's finished.
-
-            envelope.noteOff();
+            for (auto& o : osc) {
+                o->noteOff();
+            }
         }
         else
         {
@@ -66,19 +83,29 @@ public:
         // not implemented for the purposes of this demo!
     }
 
+    bool anyEnvelopeActive() {
+        for (auto& o : osc) {
+            if (o->isActive())
+                return true;
+        }
+        return false;
+    }
+
     void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override
     {
-        envelope.setParameters(envelopeParams);
+        // Trigger envelope param set for oscillators
+        setEnvelopeParams();
         if (!juce::approximatelyEqual(angleDelta, 0.0))
         {
             while (--numSamples >= 0)
             {
-                if (envelope.isActive()) {
-                    float envelopeLevel = envelope.getNextSample();
-                    auto currentSample = (float)(getWaveformSample(waveType, currentAngle, cyclesPerSecond) * velocityLevel * envelopeLevel);
-
+                if (anyEnvelopeActive()) {
+                    float summedSample = 0.0f;
+                    for (auto& o : osc) {
+                        summedSample += (float)o->generateSample(currentAngle, cyclesPerSecond);
+                    }
                     for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
-                        outputBuffer.addSample(i, startSample, currentSample);
+                        outputBuffer.addSample(i, startSample, summedSample);
 
                     currentAngle += angleDelta;
                     ++startSample;
@@ -87,25 +114,36 @@ public:
                     clearCurrentNote();
                     angleDelta = 0.0;
                     break;
+
                 }
             }
         }
     }
 
-    void setWaveType(WAVE_TYPE newWaveType) {
+    void setWaveType(int oscId, WAVE_TYPE newWaveType) {
+        osc[oscId]->setWaveType(newWaveType);
         waveType = newWaveType;
     }
 
     void setEnvelopeSampleRate(double sampleRate) {
-        envelope.setSampleRate(sampleRate);
+        for (auto& o : osc) {
+            o->setEnvelopeSampleRate(sampleRate);
+        }
     }
 
-    void setEnvelopeParams(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+    void setEnvelopeParams() {
+        for (auto& o : osc) {
+            o->setEnvelopeParams();
+        }
+    }
+
+    void linkEnvelopeParams(int oscId, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
     {
-        envelopeParams.attack = *attack;
-        envelopeParams.decay = *decay;
-        envelopeParams.sustain = *sustain;
-        envelopeParams.release = *release;
+        // oscId is currently unused
+        // Eventually remove loop and pass oscId through to the envelopeParameters
+        for (auto& o : osc) {
+            o->linkEnvelopeParams(attack, decay, sustain, release);
+        }
     }
 
     using SynthesiserVoice::renderNextBlock;
@@ -115,8 +153,10 @@ private:
     double currentAngle = 0.0;
     double angleDelta = 0.0;
     double velocityLevel = 0.0;
+
+    std::vector<std::unique_ptr<Oscillator>> osc;
+
     WAVE_TYPE waveType = SINE;
 
     juce::ADSR envelope;
-    juce::ADSR::Parameters envelopeParams;
 };

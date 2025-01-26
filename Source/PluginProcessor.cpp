@@ -107,10 +107,10 @@ void Synth_JUCEAudioProcessor::initialiseSynth()
     synth.addSound(new GenericSound());
 }
 
-void Synth_JUCEAudioProcessor::setWaveType(WAVE_TYPE waveType) {
+void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType) {
     for (auto i = 0; i < synth.getNumVoices(); i++) {
         auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
-        voice->setWaveType(waveType);
+        voice->setWaveType(oscId, waveType);
     }
 }
 
@@ -179,10 +179,6 @@ Synth_JUCEAudioProcessor::createParameterLayout()
                                                             "Waveform",
                                                             juce::StringArray{ "Sine", "Square", "Triangle", "Saw Analog", "Noise"},
                                                             0));
-    //layout.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ WAVETYPE_2_ID,  1 },
-    //                                                        "Waveform",
-    //                                                        juce::StringArray{ "Sine", "Square", "Triangle", "Saw Analog", "Noise" },
-    //                                                        0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ GAIN_ID,  1 },
                                                             "Gain",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),
