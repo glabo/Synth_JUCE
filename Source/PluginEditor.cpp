@@ -13,9 +13,9 @@ Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioP
     : AudioProcessorEditor (&p), audioProcessor (p),
     midiKeyboard(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
     oscillatorComponent0(p, OSC_0, WAVETYPE_ID_0, GAIN_ID_0, DELAY_ID_0, ATTACK_ID_0, DECAY_ID_0, SUSTAIN_ID_0, RELEASE_ID_0),
-    oscillatorComponent1(p, OSC_1, WAVETYPE_ID_1, GAIN_ID_1, DELAY_ID_1, ATTACK_ID_1, DECAY_ID_1, SUSTAIN_ID_1, RELEASE_ID_1)
-    //oscillatorComponent2(p),
-    //oscillatorComponent3(p)
+    oscillatorComponent1(p, OSC_1, WAVETYPE_ID_1, GAIN_ID_1, DELAY_ID_1, ATTACK_ID_1, DECAY_ID_1, SUSTAIN_ID_1, RELEASE_ID_1),
+    oscillatorComponent2(p, OSC_2, WAVETYPE_ID_2, GAIN_ID_2, DELAY_ID_2, ATTACK_ID_2, DECAY_ID_2, SUSTAIN_ID_2, RELEASE_ID_2),
+    oscillatorComponent3(p, OSC_3, WAVETYPE_ID_3, GAIN_ID_3, DELAY_ID_3, ATTACK_ID_3, DECAY_ID_3, SUSTAIN_ID_3, RELEASE_ID_3)
 {
 
     // add the midi keyboard component..
@@ -36,6 +36,8 @@ Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioP
     // set our component's initial size to be the last one that was stored in the filter's settings
     addAndMakeVisible(oscillatorComponent0);
     addAndMakeVisible(oscillatorComponent1);
+    addAndMakeVisible(oscillatorComponent2);
+    addAndMakeVisible(oscillatorComponent3);
 
     setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
 
@@ -68,6 +70,8 @@ void Synth_JUCEAudioProcessorEditor::resized()
 
     oscillatorComponent0.setBounds(sliderArea.removeFromTop(80));
     oscillatorComponent1.setBounds(sliderArea.removeFromTop(80));
+    oscillatorComponent2.setBounds(sliderArea.removeFromTop(80));
+    oscillatorComponent3.setBounds(sliderArea.removeFromTop(80));
 
     lastUIWidth = getWidth();
     lastUIHeight = getHeight();

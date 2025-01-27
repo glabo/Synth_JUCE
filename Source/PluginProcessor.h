@@ -60,6 +60,20 @@ public:
                 apvts.getRawParameterValue(SUSTAIN_ID_1),
                 apvts.getRawParameterValue(RELEASE_ID_1)
             );
+            voice->linkEnvelopeParams(OSC_2,
+                apvts.getParameter(GAIN_ID_2)->getValue(),
+                apvts.getRawParameterValue(ATTACK_ID_2),
+                apvts.getRawParameterValue(DECAY_ID_2),
+                apvts.getRawParameterValue(SUSTAIN_ID_2),
+                apvts.getRawParameterValue(RELEASE_ID_2)
+            );
+            voice->linkEnvelopeParams(OSC_3,
+                apvts.getParameter(GAIN_ID_3)->getValue(),
+                apvts.getRawParameterValue(ATTACK_ID_3),
+                apvts.getRawParameterValue(DECAY_ID_3),
+                apvts.getRawParameterValue(SUSTAIN_ID_3),
+                apvts.getRawParameterValue(RELEASE_ID_3)
+            );
         }
         auto numSamples = buffer.getNumSamples();
 
@@ -80,7 +94,7 @@ public:
         //applyDelay(buffer, delayBuffer, delayParamValue);
 
         // Apply our gain change to the outgoing data..
-        applyGain(buffer, delayBuffer, gainParamValue);
+        applyGain(buffer, delayBuffer, masterGain);
 
         // Now ask the host for the current time so we can store it to be displayed later...
         updateCurrentTimeInfoFromHost();

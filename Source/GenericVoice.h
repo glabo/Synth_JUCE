@@ -5,7 +5,7 @@
 #include "WaveGenerator.h"
 #include "Oscillator.h"
 
-const int NUM_OSC = 2;
+const int NUM_OSC = 4;
 
 class GenericSound final : public juce::SynthesiserSound
 {

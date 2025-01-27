@@ -48,8 +48,8 @@ private:
 
     OscillatorComponent oscillatorComponent0;
     OscillatorComponent oscillatorComponent1;
-    //OscillatorComponent oscillatorComponent2;
-    //OscillatorComponent oscillatorComponent3;
+    OscillatorComponent oscillatorComponent2;
+    OscillatorComponent oscillatorComponent3;
 
     juce::Colour backgroundColour;
 
