@@ -23,13 +23,13 @@ class GenericVoice final : public juce::SynthesiserVoice
 public:
     GenericVoice() {
         for (auto i = 0; i < NUM_OSC; i++) {
-            osc.push_back(std::make_unique<Oscillator>());
+            osc.push_back(std::make_unique<Oscillator>(i));
         }
     }
     GenericVoice(WAVE_TYPE waveType) {
         waveType = waveType;
         for (auto i = 0; i < NUM_OSC; i++) {
-            osc.push_back(std::make_unique<Oscillator>());
+            osc.push_back(std::make_unique<Oscillator>(i));
         }
     }
 
@@ -42,16 +42,19 @@ public:
         juce::SynthesiserSound* /*sound*/,
         int /*currentPitchWheelPosition*/) override
     {
-        currentAngle = 0.0;
         velocityLevel = velocity * 0.15;
         for (auto& o : osc) {
-            o->startNote(velocityLevel, cyclesPerSecond);
+            // Trigger note start
+            o->startNote(velocityLevel, perOscillatorCyclesPerSecond[o->getId()]);
+
+            // Calculate pitch offset and per-oscillator pitch
+            auto newNote = midiNoteNumber + o->getPitchShift();
+            perOscillatorCyclesPerSecond[o->getId()] =
+                juce::MidiMessage::getMidiNoteInHertz(newNote);
+            currentAngle[o->getId()] = 0.0;
+            auto cyclesPerSample = perOscillatorCyclesPerSecond[o->getId()] / getSampleRate();
+            angleDelta[o->getId()] = cyclesPerSample * juce::MathConstants<double>::twoPi;
         }
-
-        cyclesPerSecond = juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber);
-        auto cyclesPerSample = cyclesPerSecond / getSampleRate();
-
-        angleDelta = cyclesPerSample * juce::MathConstants<double>::twoPi;
     }
 
     void stopNote(float /*velocity*/, bool allowTailOff) override
@@ -67,9 +70,9 @@ public:
         else
         {
             // we're being told to stop playing immediately, so reset everything..
-
             clearCurrentNote();
-            angleDelta = 0.0;
+            for (auto i = 0; i<NUM_OSC; i++)
+                angleDelta[i] = 0.0;
         }
     }
 
@@ -91,28 +94,39 @@ public:
         return false;
     }
 
+    bool allAngleDeltaEqualZero() {
+        for (auto i : angleDelta) {
+            if (!juce::approximatelyEqual(i, 0.0))
+                return false;
+        }
+        return true;
+    }
+
     void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override
     {
         // Trigger envelope param set for oscillators
         setEnvelopeParams();
-        if (!juce::approximatelyEqual(angleDelta, 0.0))
+        if (!allAngleDeltaEqualZero())
         {
             while (--numSamples >= 0)
             {
                 if (anyEnvelopeActive()) {
                     float summedSample = 0.0f;
                     for (auto& o : osc) {
-                        summedSample += (float)o->generateSample(currentAngle, cyclesPerSecond);
+                        summedSample += (float)o->generateSample(currentAngle[o->getId()],
+                                                                 perOscillatorCyclesPerSecond[o->getId()]);
+
+                        currentAngle[o->getId()] += angleDelta[o->getId()];
                     }
                     for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
                         outputBuffer.addSample(i, startSample, summedSample);
-
-                    currentAngle += angleDelta;
                     ++startSample;
                 }
                 else {
                     clearCurrentNote();
-                    angleDelta = 0.0;
+                    for (auto& o : osc) {
+                        angleDelta[o->getId()] = 0.0;
+                    }
                     break;
 
                 }
@@ -137,17 +151,17 @@ public:
         }
     }
 
-    void linkEnvelopeParams(int oscId, float level, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+    void linkEnvelopeParams(int oscId, float level, int pitchShift, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
     {
-        osc[oscId]->linkEnvelopeParams(level, attack, decay, sustain, release);
+        osc[oscId]->linkEnvelopeParams(level, pitchShift, attack, decay, sustain, release);
     }
 
     using SynthesiserVoice::renderNextBlock;
 
 private:
-    double cyclesPerSecond = 0.0;
-    double currentAngle = 0.0;
-    double angleDelta = 0.0;
+    double perOscillatorCyclesPerSecond[NUM_OSC];
+    double currentAngle[NUM_OSC];
+    double angleDelta[NUM_OSC];
     double velocityLevel = 0.0;
 
     std::vector<std::unique_ptr<Oscillator>> osc;

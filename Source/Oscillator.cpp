@@ -29,9 +29,15 @@ void Oscillator::setEnvelopeSampleRate(double sampleRate) {
 	envelope.setSampleRate(sampleRate);
 }
 
-void Oscillator::linkEnvelopeParams(float level, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+void Oscillator::linkEnvelopeParams(float level,
+									int pitch,
+									std::atomic<float>* attack,
+									std::atomic<float>* decay,
+									std::atomic<float>* sustain,
+									std::atomic<float>* release)
 {
 	knobLevel = level;
+	pitchShift = pitch;
 	envelopeParams.attack = *attack;
 	envelopeParams.decay = *decay;
 	envelopeParams.sustain = *sustain;
@@ -44,6 +50,16 @@ void Oscillator::setEnvelopeParams() {
 
 bool Oscillator::isActive() {
 	return envelope.isActive();
+}
+
+int Oscillator::getId()
+{
+	return id;
+}
+
+int Oscillator::getPitchShift()
+{
+	return pitchShift;
 }
 
 double Oscillator::generateSample(double currentAngle, double cps)

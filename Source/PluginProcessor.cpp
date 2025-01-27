@@ -185,6 +185,9 @@ Synth_JUCEAudioProcessor::createParameterLayout()
                                                             "Gain",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),
                                                             0.9f));
+    layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ PITCH_ID_0,  1 },
+                                                            "Pitch",
+                                                            -12, 12, 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ DELAY_ID_0, 1 },
                                                             "Delay Feedback",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),
@@ -218,6 +221,9 @@ Synth_JUCEAudioProcessor::createParameterLayout()
                                                             "Gain",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),
                                                             0.9f));
+    layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ PITCH_ID_1,  1 },
+                                                            "Pitch",
+                                                            -12, 12, 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ DELAY_ID_1, 1 },
                                                             "Delay Feedback",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),
@@ -250,6 +256,9 @@ Synth_JUCEAudioProcessor::createParameterLayout()
                                                             "Gain",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),
                                                             0.9f));
+    layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ PITCH_ID_2,  1 },
+                                                            "Pitch",
+                                                            -12, 12, 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ DELAY_ID_2, 1 },
                                                             "Delay Feedback",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),
@@ -282,6 +291,9 @@ Synth_JUCEAudioProcessor::createParameterLayout()
                                                             "Gain",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),
                                                             0.9f));
+    layout.add(std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ PITCH_ID_3,  1 },
+                                                            "Pitch",
+                                                            -12, 12, 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ DELAY_ID_3, 1 },
                                                             "Delay Feedback",
                                                             juce::NormalisableRange<float>(0.0f, 1.0f),

@@ -5,6 +5,11 @@ static const juce::String WAVETYPE_ID_1 = "wavetype_1";
 static const juce::String WAVETYPE_ID_2 = "wavetype_2";
 static const juce::String WAVETYPE_ID_3 = "wavetype_3";
 
+static const juce::String PITCH_ID_0 = "pitch_0";
+static const juce::String PITCH_ID_1 = "pitch_1";
+static const juce::String PITCH_ID_2 = "pitch_2";
+static const juce::String PITCH_ID_3 = "pitch_3";
+
 static const juce::String GAIN_ID_0 = "gain_0";
 static const juce::String GAIN_ID_1 = "gain_1";
 static const juce::String GAIN_ID_2 = "gain_2";

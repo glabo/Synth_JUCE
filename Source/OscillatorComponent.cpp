@@ -4,6 +4,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
                                             int id,
                                             juce::String wavetypeId,
                                             juce::String gainId,
+                                            juce::String pitchId,
                                             juce::String delayId,
                                             juce::String attackId,
                                             juce::String decayId,
@@ -12,6 +13,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     audioProcessor(p),
     waveTypeAttachment(p.apvts, wavetypeId, waveTypeSelection),
     gainAttachment(p.apvts, gainId, gainSlider),
+    pitchAttachment(p.apvts, pitchId, pitchSlider),
     delayAttachment(p.apvts, delayId, delaySlider),
     attackAttachment(p.apvts, attackId, attackSlider),
     decayAttachment(p.apvts, decayId, decaySlider),
@@ -40,6 +42,17 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     gainLabel.attachToComponent(&gainSlider, false);
     gainLabel.setFont(juce::FontOptions(11.0f));
     gainLabel.setJustificationType(juce::Justification::centred);
+
+    // Pitch
+    addAndMakeVisible(pitchSlider);
+    pitchSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    pitchSlider.setRange(-12, 12, 1.0);
+    pitchSlider.setDoubleClickReturnValue(true, 0.0);
+    pitchSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+
+    pitchLabel.attachToComponent(&pitchSlider, false);
+    pitchLabel.setFont(juce::FontOptions(11.0f));
+    pitchLabel.setJustificationType(juce::Justification::centred);
 
     // Delay slider
     //addAndMakeVisible(delaySlider);
@@ -93,7 +106,6 @@ void OscillatorComponent::resized() {
     // Layout:
     // Wave selector is left quarter of initial size
     // Gain slider is left half of REMAINING size
-    // Delay slider is left half of REMAINING size
     auto boxSubDivision = juce::jmin(180, controlArea.getWidth() / 7);
     auto waveTypeSelectionBounds = controlArea.removeFromLeft(boxSubDivision);
     waveTypeSelectionBounds.removeFromTop(30);
@@ -101,9 +113,13 @@ void OscillatorComponent::resized() {
     waveTypeSelectionBounds.removeFromRight(10);
     waveTypeSelectionBounds.removeFromLeft(10);
     waveTypeSelection.setBounds(waveTypeSelectionBounds);
+
     controlArea.removeFromTop(20);
-    auto gainSliderBounds = controlArea.removeFromLeft(boxSubDivision);
+    auto controlBounds = controlArea.removeFromLeft(boxSubDivision);
+    auto gainSliderBounds = controlBounds.removeFromLeft(controlBounds.getWidth() / 2);
+    auto pitchSliderBounds = controlBounds;
     gainSlider.setBounds(gainSliderBounds);
+    pitchSlider.setBounds(pitchSliderBounds);
 
     auto adsrBounds = controlArea.removeFromLeft(boxSubDivision * 2);
     auto adsrBoxSubDivision = adsrBounds.getWidth() / 4;

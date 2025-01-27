@@ -48,6 +48,7 @@ public:
             // Can't do this at a lower level because we have to access the raw param value
             voice->linkEnvelopeParams(OSC_0,
                 apvts.getParameter(GAIN_ID_0)->getValue(),
+                ((juce::AudioParameterInt*)(apvts.getParameter(PITCH_ID_0)))->get(),
                 apvts.getRawParameterValue(ATTACK_ID_0),
                 apvts.getRawParameterValue(DECAY_ID_0),
                 apvts.getRawParameterValue(SUSTAIN_ID_0),
@@ -55,6 +56,7 @@ public:
             );
             voice->linkEnvelopeParams(OSC_1,
                 apvts.getParameter(GAIN_ID_1)->getValue(),
+                ((juce::AudioParameterInt*)(apvts.getParameter(PITCH_ID_1)))->get(),
                 apvts.getRawParameterValue(ATTACK_ID_1),
                 apvts.getRawParameterValue(DECAY_ID_1),
                 apvts.getRawParameterValue(SUSTAIN_ID_1),
@@ -62,6 +64,7 @@ public:
             );
             voice->linkEnvelopeParams(OSC_2,
                 apvts.getParameter(GAIN_ID_2)->getValue(),
+                ((juce::AudioParameterInt*)(apvts.getParameter(PITCH_ID_2)))->get(),
                 apvts.getRawParameterValue(ATTACK_ID_2),
                 apvts.getRawParameterValue(DECAY_ID_2),
                 apvts.getRawParameterValue(SUSTAIN_ID_2),
@@ -69,6 +72,7 @@ public:
             );
             voice->linkEnvelopeParams(OSC_3,
                 apvts.getParameter(GAIN_ID_3)->getValue(),
+                ((juce::AudioParameterInt*)(apvts.getParameter(PITCH_ID_3)))->get(),
                 apvts.getRawParameterValue(ATTACK_ID_3),
                 apvts.getRawParameterValue(DECAY_ID_3),
                 apvts.getRawParameterValue(SUSTAIN_ID_3),

@@ -2,6 +2,7 @@
 
 double getWaveformSample(WAVE_TYPE waveType, double dPhase, double freq)
 {
+	// freq parameter is currently unused, we probably should just get rid of it...
 	double baseValue = 0.0;
 	switch (waveType) {
 	case SINE:

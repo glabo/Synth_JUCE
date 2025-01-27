@@ -9,6 +9,7 @@ public:
                         int id,
                         juce::String wavetypeId,
                         juce::String gainId,
+                        juce::String pitchId,
                         juce::String delayId,
                         juce::String attackId,
                         juce::String decayId,
@@ -23,6 +24,7 @@ private:
     int oscId;
     juce::String wavetypeId;
     juce::String gainId;
+    juce::String pitchId;
     juce::String delayId;
     juce::String attackId;
     juce::String decayId;
@@ -32,12 +34,13 @@ private:
     juce::ComboBox waveTypeSelection;
     juce::AudioProcessorValueTreeState::ComboBoxAttachment waveTypeAttachment;
 
-    juce::Slider gainSlider, delaySlider,
+    juce::Slider gainSlider, pitchSlider, delaySlider,
         attackSlider, decaySlider, sustainSlider, releaseSlider;
-    juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment, delayAttachment,
+    juce::AudioProcessorValueTreeState::SliderAttachment gainAttachment, pitchAttachment, delayAttachment,
                             attackAttachment, decayAttachment, sustainAttachment, releaseAttachment;
 
     juce::Label gainLabel{ {}, "Level:" },
+                pitchLabel{ {}, "Pitch:" },
                 //delayLabel{ {}, "Delay:" },
                 waveTypeLabel{ {}, "Waveform:" },
                 attackLabel{ {}, "Attack:" },
