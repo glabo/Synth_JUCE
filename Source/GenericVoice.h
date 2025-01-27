@@ -38,22 +38,25 @@ public:
         return dynamic_cast<GenericSound*> (sound) != nullptr;
     }
 
+    void calculateOscillatorNoteValues(int midiNoteNumber, int oscId, int pitchShift) {
+        // Calculate pitch offset and per-oscillator pitch
+        auto newNote = midiNoteNumber + pitchShift;
+        perOscillatorCyclesPerSecond[oscId] =
+            juce::MidiMessage::getMidiNoteInHertz(newNote);
+        auto cyclesPerSample = perOscillatorCyclesPerSecond[oscId] / getSampleRate();
+        angleDelta[oscId] = cyclesPerSample * juce::MathConstants<double>::twoPi;
+    }
+
     void startNote(int midiNoteNumber, float velocity,
         juce::SynthesiserSound* /*sound*/,
         int /*currentPitchWheelPosition*/) override
     {
         velocityLevel = velocity * 0.15;
-        for (auto& o : osc) {
+        for (const auto& o : osc) {
             // Trigger note start
             o->startNote(velocityLevel, perOscillatorCyclesPerSecond[o->getId()]);
-
-            // Calculate pitch offset and per-oscillator pitch
-            auto newNote = midiNoteNumber + o->getPitchShift();
-            perOscillatorCyclesPerSecond[o->getId()] =
-                juce::MidiMessage::getMidiNoteInHertz(newNote);
+            calculateOscillatorNoteValues(midiNoteNumber, o->getId(), o->getPitchShift());
             currentAngle[o->getId()] = 0.0;
-            auto cyclesPerSample = perOscillatorCyclesPerSecond[o->getId()] / getSampleRate();
-            angleDelta[o->getId()] = cyclesPerSample * juce::MathConstants<double>::twoPi;
         }
     }
 
@@ -113,6 +116,7 @@ public:
                 if (anyEnvelopeActive()) {
                     float summedSample = 0.0f;
                     for (auto& o : osc) {
+                        calculateOscillatorNoteValues(getCurrentlyPlayingNote(), o->getId(), o->getPitchShift());
                         summedSample += (float)o->generateSample(currentAngle[o->getId()],
                                                                  perOscillatorCyclesPerSecond[o->getId()]);
 
