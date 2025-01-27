@@ -21,10 +21,6 @@ Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioP
     // add the midi keyboard component..
     addAndMakeVisible(midiKeyboard);
 
-    // add a label that will display the current timecode and status..
-    addAndMakeVisible(timecodeDisplayLabel);
-    timecodeDisplayLabel.setFont(juce::FontOptions(juce::Font::getDefaultMonospacedFontName(), 15.0f, juce::Font::plain));
-
     // set resize limits for this plug-in
     setResizeLimits(400, 200, 1024, 700);
     setResizable(true, p.wrapperType !=
@@ -62,7 +58,7 @@ void Synth_JUCEAudioProcessorEditor::resized()
 {
     // This lays out our child components...
 
-    timecodeDisplayLabel.setBounds(getLocalBounds().reduced(2).removeFromTop(26));
+    //timecodeDisplayLabel.setBounds(getLocalBounds().reduced(2).removeFromTop(26));
     midiKeyboard.setBounds(getLocalBounds().reduced(2).removeFromBottom(70));
 
     auto sliderArea = getLocalBounds().reduced(2);
@@ -79,7 +75,7 @@ void Synth_JUCEAudioProcessorEditor::resized()
 
 void Synth_JUCEAudioProcessorEditor::timerCallback()
 {
-    updateTimecodeDisplay(getProcessor().lastPosInfo.get());
+    //updateTimecodeDisplay(getProcessor().lastPosInfo.get());
 }
 
 void Synth_JUCEAudioProcessorEditor::hostMIDIControllerIsAvailable(bool controllerIsAvailable)
