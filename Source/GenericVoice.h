@@ -5,7 +5,7 @@
 #include "WaveGenerator.h"
 #include "Oscillator.h"
 
-const int NUM_OSC = 1;
+const int NUM_OSC = 2;
 
 class GenericSound final : public juce::SynthesiserSound
 {
@@ -137,13 +137,9 @@ public:
         }
     }
 
-    void linkEnvelopeParams(int oscId, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+    void linkEnvelopeParams(int oscId, float level, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
     {
-        // oscId is currently unused
-        // Eventually remove loop and pass oscId through to the envelopeParameters
-        for (auto& o : osc) {
-            o->linkEnvelopeParams(attack, decay, sustain, release);
-        }
+        osc[oscId]->linkEnvelopeParams(level, attack, decay, sustain, release);
     }
 
     using SynthesiserVoice::renderNextBlock;

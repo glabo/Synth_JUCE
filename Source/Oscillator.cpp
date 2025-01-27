@@ -2,6 +2,7 @@
 
 Oscillator::Oscillator(int initId) {
 	id = initId;
+	knobLevel = 0.0;
 	velocityLevel = 0.0;
 	cyclesPerSecond = 0.0;
 }
@@ -28,8 +29,9 @@ void Oscillator::setEnvelopeSampleRate(double sampleRate) {
 	envelope.setSampleRate(sampleRate);
 }
 
-void Oscillator::linkEnvelopeParams(std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+void Oscillator::linkEnvelopeParams(float level, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
 {
+	knobLevel = level;
 	envelopeParams.attack = *attack;
 	envelopeParams.decay = *decay;
 	envelopeParams.sustain = *sustain;
@@ -48,7 +50,7 @@ double Oscillator::generateSample(double currentAngle, double cps)
 {
 	if (isActive()) {
 		float envelopeLevel = envelope.getNextSample();
-		return getWaveformSample(waveType, currentAngle, cps) * velocityLevel * envelopeLevel;
+		return getWaveformSample(waveType, currentAngle, cps) * velocityLevel * envelopeLevel * knobLevel;
 	}
 	else {
 		return 0.0;

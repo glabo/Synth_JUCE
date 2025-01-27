@@ -5,11 +5,29 @@
 
 class OscillatorComponent : public juce::Component {
 public:
-    OscillatorComponent(Synth_JUCEAudioProcessor& p);
+    OscillatorComponent(Synth_JUCEAudioProcessor& p,
+                        int id,
+                        juce::String wavetypeId,
+                        juce::String gainId,
+                        juce::String delayId,
+                        juce::String attackId,
+                        juce::String decayId,
+                        juce::String sustainId,
+                        juce::String releaseId);
 
     int getControlParameterIndex(Component& control);
 private:
     Synth_JUCEAudioProcessor& audioProcessor;
+
+    // parameter IDs
+    int oscId;
+    juce::String wavetypeId;
+    juce::String gainId;
+    juce::String delayId;
+    juce::String attackId;
+    juce::String decayId;
+    juce::String sustainId;
+    juce::String releaseId;
 
     juce::ComboBox waveTypeSelection;
     juce::AudioProcessorValueTreeState::ComboBoxAttachment waveTypeAttachment;

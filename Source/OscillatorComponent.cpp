@@ -1,24 +1,32 @@
 #include "OscillatorComponent.h"
-#include "TreeLabels.h"
 
-OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p) :
+OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
+                                            int id,
+                                            juce::String wavetypeId,
+                                            juce::String gainId,
+                                            juce::String delayId,
+                                            juce::String attackId,
+                                            juce::String decayId,
+                                            juce::String sustainId,
+                                            juce::String releaseId) :
     audioProcessor(p),
-    waveTypeAttachment(p.apvts, WAVETYPE_ID, waveTypeSelection),
-    gainAttachment(p.apvts, GAIN_ID, gainSlider),
-    delayAttachment(p.apvts, DELAY_ID, delaySlider),
-    attackAttachment(p.apvts, ATTACK_ID, attackSlider),
-    decayAttachment(p.apvts, DECAY_ID, decaySlider),
-    sustainAttachment(p.apvts, SUSTAIN_ID, sustainSlider),
-    releaseAttachment(p.apvts, RELEASE_ID, releaseSlider)
+    waveTypeAttachment(p.apvts, wavetypeId, waveTypeSelection),
+    gainAttachment(p.apvts, gainId, gainSlider),
+    delayAttachment(p.apvts, delayId, delaySlider),
+    attackAttachment(p.apvts, attackId, attackSlider),
+    decayAttachment(p.apvts, decayId, decaySlider),
+    sustainAttachment(p.apvts, sustainId, sustainSlider),
+    releaseAttachment(p.apvts, releaseId, releaseSlider)
 {
+    oscId = id;
     // Wave type selector
     addAndMakeVisible(waveTypeSelection);
 
-    auto* parameter = p.apvts.getParameter(WAVETYPE_ID);
+    auto* parameter = p.apvts.getParameter(wavetypeId);
     auto waveType = static_cast<WAVE_TYPE>(parameter->convertFrom0to1(parameter->getValue()) + 1);
     waveTypeSelection.addItemList(parameter->getAllValueStrings(), 1);
 
-    waveTypeSelection.onChange = [this] { waveTypeSelectionChanged(); };
+    waveTypeSelection.onChange = [this] { waveTypeSelectionChanged(oscId); };
     waveTypeSelection.setSelectedId(waveType);
 
     waveTypeLabel.attachToComponent(&waveTypeSelection, false);

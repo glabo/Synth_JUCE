@@ -12,7 +12,10 @@
 Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p),
     midiKeyboard(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
-    oscillatorComponent(p)
+    oscillatorComponent0(p, OSC_0, WAVETYPE_ID_0, GAIN_ID_0, DELAY_ID_0, ATTACK_ID_0, DECAY_ID_0, SUSTAIN_ID_0, RELEASE_ID_0),
+    oscillatorComponent1(p, OSC_1, WAVETYPE_ID_1, GAIN_ID_1, DELAY_ID_1, ATTACK_ID_1, DECAY_ID_1, SUSTAIN_ID_1, RELEASE_ID_1)
+    //oscillatorComponent2(p),
+    //oscillatorComponent3(p)
 {
 
     // add the midi keyboard component..
@@ -31,7 +34,9 @@ Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioP
     lastUIHeight.referTo(p.apvts.state.getChildWithName("uiState").getPropertyAsValue("height", nullptr));
 
     // set our component's initial size to be the last one that was stored in the filter's settings
-    addAndMakeVisible(oscillatorComponent);
+    addAndMakeVisible(oscillatorComponent0);
+    addAndMakeVisible(oscillatorComponent1);
+
     setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
 
     lastUIWidth.addListener(this);
@@ -61,7 +66,8 @@ void Synth_JUCEAudioProcessorEditor::resized()
     auto sliderArea = getLocalBounds().reduced(2);
     sliderArea.removeFromTop(40);
 
-    oscillatorComponent.setBounds(sliderArea.removeFromTop(80));
+    oscillatorComponent0.setBounds(sliderArea.removeFromTop(80));
+    oscillatorComponent1.setBounds(sliderArea.removeFromTop(80));
 
     lastUIWidth = getWidth();
     lastUIHeight = getHeight();
@@ -79,7 +85,8 @@ void Synth_JUCEAudioProcessorEditor::hostMIDIControllerIsAvailable(bool controll
 
 int Synth_JUCEAudioProcessorEditor::getControlParameterIndex(Component& control)
 {
-    return oscillatorComponent.getControlParameterIndex(control);
+    // Maybe we won't have to update this?
+    return oscillatorComponent0.getControlParameterIndex(control);
 }
 
 void Synth_JUCEAudioProcessorEditor::updateTrackProperties()

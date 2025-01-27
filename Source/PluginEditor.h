@@ -44,9 +44,12 @@ private:
 
     juce::Label timecodeDisplayLabel;
 
-    const int NUM_OSC = 4; // Hints for future
+    static const int NUM_OSC = 4; // Hints for future
 
-    OscillatorComponent oscillatorComponent;
+    OscillatorComponent oscillatorComponent0;
+    OscillatorComponent oscillatorComponent1;
+    //OscillatorComponent oscillatorComponent2;
+    //OscillatorComponent oscillatorComponent3;
 
     juce::Colour backgroundColour;
 

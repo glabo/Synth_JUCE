@@ -39,7 +39,7 @@ public:
     template <typename FloatType>
     void process(juce::AudioBuffer<FloatType>& buffer, juce::MidiBuffer& midiMessages, juce::AudioBuffer<FloatType>& delayBuffer)
     {
-        auto gainParamValue = apvts.getParameter(GAIN_ID)->getValue();
+        auto masterGain = 1.0;
         //auto delayParamValue = apvts.getParameter(DELAY_ID)->getValue();
         for (auto i = 0; i < synth.getNumVoices(); i++) {
             auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
@@ -47,10 +47,18 @@ public:
             // This is where we'll associate an OSC_ID with its envelope parameters.
             // Can't do this at a lower level because we have to access the raw param value
             voice->linkEnvelopeParams(OSC_0,
-                apvts.getRawParameterValue(ATTACK_ID),
-                apvts.getRawParameterValue(DECAY_ID),
-                apvts.getRawParameterValue(SUSTAIN_ID),
-                apvts.getRawParameterValue(RELEASE_ID)
+                apvts.getParameter(GAIN_ID_0)->getValue(),
+                apvts.getRawParameterValue(ATTACK_ID_0),
+                apvts.getRawParameterValue(DECAY_ID_0),
+                apvts.getRawParameterValue(SUSTAIN_ID_0),
+                apvts.getRawParameterValue(RELEASE_ID_0)
+            );
+            voice->linkEnvelopeParams(OSC_1,
+                apvts.getParameter(GAIN_ID_1)->getValue(),
+                apvts.getRawParameterValue(ATTACK_ID_1),
+                apvts.getRawParameterValue(DECAY_ID_1),
+                apvts.getRawParameterValue(SUSTAIN_ID_1),
+                apvts.getRawParameterValue(RELEASE_ID_1)
             );
         }
         auto numSamples = buffer.getNumSamples();
