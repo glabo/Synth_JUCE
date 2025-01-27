@@ -56,9 +56,7 @@ void Synth_JUCEAudioProcessorEditor::paint (juce::Graphics& g)
 
 void Synth_JUCEAudioProcessorEditor::resized()
 {
-    // This lays out our child components...
-
-    //timecodeDisplayLabel.setBounds(getLocalBounds().reduced(2).removeFromTop(26));
+    // Lay out components
     midiKeyboard.setBounds(getLocalBounds().reduced(2).removeFromBottom(70));
 
     auto sliderArea = getLocalBounds().reduced(2);
@@ -106,6 +104,7 @@ Synth_JUCEAudioProcessor& Synth_JUCEAudioProcessorEditor::getProcessor() const
 
 void Synth_JUCEAudioProcessorEditor::updateTimecodeDisplay(const juce::AudioPlayHead::PositionInfo& pos)
 {
+    // UNUSED
     juce::MemoryOutputStream displayText;
 
     const auto sig = pos.getTimeSignature().orFallback(juce::AudioPlayHead::TimeSignature{});
