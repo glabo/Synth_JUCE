@@ -141,9 +141,9 @@ public:
         }
     }
 
-    void linkEnvelopeParams(int oscId, float level, int pitchShift, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
+    void pushEnvelopeParams(int oscId, float level, int pitchShift, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
     {
-        osc[oscId]->linkEnvelopeParams(level, pitchShift, attack, decay, sustain, release);
+        osc[oscId]->pushEnvelopeParams(level, pitchShift, attack, decay, sustain, release);
     }
 
     using SynthesiserVoice::renderNextBlock;

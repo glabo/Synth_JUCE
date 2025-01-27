@@ -36,7 +36,7 @@ void Oscillator::setEnvelopeSampleRate(double sampleRate) {
 	envelope.setSampleRate(sampleRate);
 }
 
-void Oscillator::linkEnvelopeParams(float level,
+void Oscillator::pushEnvelopeParams(float level,
 									int ps,
 									std::atomic<float>* attack,
 									std::atomic<float>* decay,

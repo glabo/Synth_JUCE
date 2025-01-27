@@ -14,7 +14,7 @@ public:
 	void clearNote();
 	void setWaveType(WAVE_TYPE newWaveType);
 	void setEnvelopeSampleRate(double sampleRate);
-	void linkEnvelopeParams(float level,
+	void pushEnvelopeParams(float level,
 							int pitch,
 							std::atomic<float>* attack,
 							std::atomic<float>* decay,
