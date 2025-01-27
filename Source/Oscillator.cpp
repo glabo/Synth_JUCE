@@ -1,24 +1,31 @@
 #include "Oscillator.h"
 
-Oscillator::Oscillator(int initId) {
+Oscillator::Oscillator(int initId, double sampleRate) {
 	id = initId;
 	knobLevel = 0.0;
 	velocityLevel = 0.0;
-	cyclesPerSecond = 0.0;
+	pitch.setSampleRate(sampleRate);
+	envelope.setSampleRate(sampleRate);
 }
 
-void Oscillator::startNote(double velocity, double cps) {
+void Oscillator::startNote(double velocity, int midiNoteNumber) {
 	velocityLevel = velocity;
-	cyclesPerSecond = cps;
 	envelope.noteOn();
+	pitch.noteOn(midiNoteNumber);
 }
 
 void Oscillator::noteOn() {
 	envelope.noteOn();
 }
 
+// Only triggers envelope note off, doesn't touch pitch
 void Oscillator::noteOff() {
 	envelope.noteOff();
+}
+
+void Oscillator::clearNote()
+{
+	pitch.clearNote();
 }
 
 void Oscillator::setWaveType(WAVE_TYPE newWaveType) {
@@ -30,14 +37,14 @@ void Oscillator::setEnvelopeSampleRate(double sampleRate) {
 }
 
 void Oscillator::linkEnvelopeParams(float level,
-									int pitch,
+									int ps,
 									std::atomic<float>* attack,
 									std::atomic<float>* decay,
 									std::atomic<float>* sustain,
 									std::atomic<float>* release)
 {
 	knobLevel = level;
-	pitchShift = pitch;
+	pitch.setPitchShift(ps);
 	envelopeParams.attack = *attack;
 	envelopeParams.decay = *decay;
 	envelopeParams.sustain = *sustain;
@@ -57,16 +64,17 @@ int Oscillator::getId()
 	return id;
 }
 
-int Oscillator::getPitchShift()
+bool Oscillator::angleApproxZero()
 {
-	return pitchShift;
+	return pitch.angleApproxZero();
 }
 
-double Oscillator::generateSample(double currentAngle, double cps)
+double Oscillator::generateSample()
 {
 	if (isActive()) {
 		float envelopeLevel = envelope.getNextSample();
-		return getWaveformSample(waveType, currentAngle, cps) * velocityLevel * envelopeLevel * knobLevel;
+		double currentAngle = pitch.getNextSample();
+		return getWaveformSample(waveType, currentAngle) * velocityLevel * envelopeLevel * knobLevel;
 	}
 	else {
 		return 0.0;

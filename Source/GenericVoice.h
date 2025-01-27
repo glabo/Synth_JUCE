@@ -23,13 +23,13 @@ class GenericVoice final : public juce::SynthesiserVoice
 public:
     GenericVoice() {
         for (auto i = 0; i < NUM_OSC; i++) {
-            osc.push_back(std::make_unique<Oscillator>(i));
+            osc.push_back(std::make_unique<Oscillator>(i, getSampleRate()));
         }
     }
     GenericVoice(WAVE_TYPE waveType) {
         waveType = waveType;
         for (auto i = 0; i < NUM_OSC; i++) {
-            osc.push_back(std::make_unique<Oscillator>(i));
+            osc.push_back(std::make_unique<Oscillator>(i, getSampleRate()));
         }
     }
 
@@ -38,25 +38,20 @@ public:
         return dynamic_cast<GenericSound*> (sound) != nullptr;
     }
 
-    void calculateOscillatorNoteValues(int midiNoteNumber, int oscId, int pitchShift) {
-        // Calculate pitch offset and per-oscillator pitch
-        auto newNote = midiNoteNumber + pitchShift;
-        perOscillatorCyclesPerSecond[oscId] =
-            juce::MidiMessage::getMidiNoteInHertz(newNote);
-        auto cyclesPerSample = perOscillatorCyclesPerSecond[oscId] / getSampleRate();
-        angleDelta[oscId] = cyclesPerSample * juce::MathConstants<double>::twoPi;
-    }
-
     void startNote(int midiNoteNumber, float velocity,
         juce::SynthesiserSound* /*sound*/,
         int /*currentPitchWheelPosition*/) override
     {
         velocityLevel = velocity * 0.15;
         for (const auto& o : osc) {
-            // Trigger note start
-            o->startNote(velocityLevel, perOscillatorCyclesPerSecond[o->getId()]);
-            calculateOscillatorNoteValues(midiNoteNumber, o->getId(), o->getPitchShift());
-            currentAngle[o->getId()] = 0.0;
+            o->startNote(velocityLevel, midiNoteNumber);
+        }
+    }
+
+    void clearNote() {
+        clearCurrentNote();
+        for (auto& o : osc) {
+            o->clearNote();
         }
     }
 
@@ -73,9 +68,7 @@ public:
         else
         {
             // we're being told to stop playing immediately, so reset everything..
-            clearCurrentNote();
-            for (auto i = 0; i<NUM_OSC; i++)
-                angleDelta[i] = 0.0;
+            clearNote();
         }
     }
 
@@ -98,8 +91,8 @@ public:
     }
 
     bool allAngleDeltaEqualZero() {
-        for (auto i : angleDelta) {
-            if (!juce::approximatelyEqual(i, 0.0))
+        for (auto& o : osc) {
+            if (!o->angleApproxZero())
                 return false;
         }
         return true;
@@ -116,21 +109,14 @@ public:
                 if (anyEnvelopeActive()) {
                     float summedSample = 0.0f;
                     for (auto& o : osc) {
-                        calculateOscillatorNoteValues(getCurrentlyPlayingNote(), o->getId(), o->getPitchShift());
-                        summedSample += (float)o->generateSample(currentAngle[o->getId()],
-                                                                 perOscillatorCyclesPerSecond[o->getId()]);
-
-                        currentAngle[o->getId()] += angleDelta[o->getId()];
+                        summedSample += (float)o->generateSample();
                     }
                     for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
                         outputBuffer.addSample(i, startSample, summedSample);
                     ++startSample;
                 }
                 else {
-                    clearCurrentNote();
-                    for (auto& o : osc) {
-                        angleDelta[o->getId()] = 0.0;
-                    }
+                    clearNote();
                     break;
 
                 }
@@ -163,9 +149,6 @@ public:
     using SynthesiserVoice::renderNextBlock;
 
 private:
-    double perOscillatorCyclesPerSecond[NUM_OSC];
-    double currentAngle[NUM_OSC];
-    double angleDelta[NUM_OSC];
     double velocityLevel = 0.0;
 
     std::vector<std::unique_ptr<Oscillator>> osc;

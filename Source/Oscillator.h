@@ -2,14 +2,16 @@
 
 #include <JuceHeader.h>
 #include "WaveGenerator.h"
+#include "Pitch.h"
 
 class Oscillator {
 public:
-	Oscillator(int initId = 0);
+	Oscillator(int initId, double sampleRate);
 
-	void startNote(double velocityLevel, double cyclesPerSecond);
+	void startNote(double velocityLevel, int midiNoteNumber);
 	void noteOn();
 	void noteOff();
+	void clearNote();
 	void setWaveType(WAVE_TYPE newWaveType);
 	void setEnvelopeSampleRate(double sampleRate);
 	void linkEnvelopeParams(float level,
@@ -22,18 +24,20 @@ public:
 
 	bool isActive();
 	int getId();
-	int getPitchShift();
-	double generateSample(double currentAngle, double cyclesPerSecond);
+
+	bool angleApproxZero();
+	double generateSample();
 private:
 	int id;
 	bool fixedFreq = false;
 	
 	double velocityLevel;
-	double cyclesPerSecond;
-	WAVE_TYPE waveType = SINE;
 
+	Pitch pitch;
+
+	// GUI Parameters
+	WAVE_TYPE waveType = SINE;
 	float knobLevel;
-	int pitchShift;
 	juce::ADSR envelope;
 	juce::ADSR::Parameters envelopeParams;
 };
