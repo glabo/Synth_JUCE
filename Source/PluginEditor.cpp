@@ -74,15 +74,14 @@ void Synth_JUCEAudioProcessorEditor::resized()
     oscillatorBorder.removeFromRight(verticalDivision * 4);
     oscillatorBorder.removeFromBottom(oscillatorBorder.getHeight() - 4 * OscillatorComponent::getHeight());
 
-    oscillatorComponent0.setBounds(oscillatorBorder.removeFromTop(80));
-    oscillatorComponent1.setBounds(oscillatorBorder.removeFromTop(80));
-    oscillatorComponent2.setBounds(oscillatorBorder.removeFromTop(80));
-    oscillatorComponent3.setBounds(oscillatorBorder.removeFromTop(80));
+    oscillatorComponent0.setBounds(oscillatorBorder.removeFromTop(GUI_ROW_HEIGHT));
+    oscillatorComponent1.setBounds(oscillatorBorder.removeFromTop(GUI_ROW_HEIGHT));
+    oscillatorComponent2.setBounds(oscillatorBorder.removeFromTop(GUI_ROW_HEIGHT));
+    oscillatorComponent3.setBounds(oscillatorBorder.removeFromTop(GUI_ROW_HEIGHT));
 
     filterBorder = sliderArea;
     filterBorder.removeFromLeft(oscillatorBorder.getWidth());
-    // Assuming 80px line height
-    filterBorder.removeFromBottom(filterBorder.getHeight() - 2 * 80);
+    filterBorder.removeFromBottom(filterBorder.getHeight() - 2 * GUI_ROW_HEIGHT);
 
     filterComponent.setBounds(filterBorder);
 

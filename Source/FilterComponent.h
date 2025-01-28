@@ -17,7 +17,7 @@ private:
 	juce::Slider cutoffFreqSlider, qSlider, resonanceSlider;
 	juce::AudioProcessorValueTreeState::SliderAttachment cutoffFreqAttachment, qAttachment, resonanceAttachment;
 
-	juce::Label filterTypeLabel{ {}, "Type:" },
+	juce::Label filterTypeLabel{ {}, "Filter Type:" },
 				cutoffFreqLabel{ {}, "Frequency:" },
 				qLabel{ {}, "Q:" },
 				resonanceLabel{ {}, "Resonance:" };

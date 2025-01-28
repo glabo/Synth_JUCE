@@ -45,7 +45,8 @@ private:
 
     juce::Label timecodeDisplayLabel;
 
-    static const int NUM_OSC = 4; // Hints for future
+    static const int GUI_ROW_HEIGHT = 80;
+    static const int NUM_OSC = 4;
 
     // GUI Components
     OscillatorComponent oscillatorComponent0;

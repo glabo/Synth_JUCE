@@ -62,6 +62,7 @@ void FilterComponent::paint(juce::Graphics& g)
 	g.fillRect(componentBorder);
 
 	g.setColour(juce::Colours::black);
+	g.drawRect(componentBorder, 3.0f);
 	g.drawRect(filterBorder);
 	g.drawRect(adsrBorder);
 }
@@ -86,8 +87,12 @@ void FilterComponent::resized()
 	filterTypeBounds.removeFromLeft(10);
 	filterTypeBounds.removeFromRight(10);
 	filterTypeSelection.setBounds(filterTypeBounds);
+
+	cutoffFreqBounds.removeFromTop(20);
 	cutoffFreqSlider.setBounds(cutoffFreqBounds);
+	qBounds.removeFromTop(20);
 	qSlider.setBounds(qBounds);
+	resonanceBounds.removeFromTop(20);
 	resonanceSlider.setBounds(resonanceBounds);
 
 	auto adsrSubdivision = juce::jmin(180, adsrBorder.proportionOfWidth(0.25f));
