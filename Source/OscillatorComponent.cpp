@@ -38,6 +38,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     addAndMakeVisible(gainSlider);
     gainSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     gainSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+    gainSlider.setDoubleClickReturnValue(true, 0.0);
 
     gainLabel.attachToComponent(&gainSlider, false);
     gainLabel.setFont(juce::FontOptions(11.0f));
@@ -67,6 +68,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     addAndMakeVisible(attackSlider);
     attackSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     attackSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+    attackSlider.setDoubleClickReturnValue(true, 0.0);
 
     attackLabel.attachToComponent(&attackSlider, false);
     attackLabel.setFont(juce::FontOptions(11.0f));
@@ -76,6 +78,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     addAndMakeVisible(decaySlider);
     decaySlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     decaySlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+    decaySlider.setDoubleClickReturnValue(true, 0.0);
 
     decayLabel.attachToComponent(&decaySlider, false);
     decayLabel.setFont(juce::FontOptions(11.0f));
@@ -85,6 +88,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     addAndMakeVisible(sustainSlider);
     sustainSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     sustainSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+    sustainSlider.setDoubleClickReturnValue(true, 1.0);
 
     sustainLabel.attachToComponent(&sustainSlider, false);
     sustainLabel.setFont(juce::FontOptions(11.0f));
@@ -94,6 +98,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     addAndMakeVisible(releaseSlider);
     releaseSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     releaseSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+    releaseSlider.setDoubleClickReturnValue(true, 0.0);
 
     releaseLabel.attachToComponent(&releaseSlider, false);
     releaseLabel.setFont(juce::FontOptions(11.0f));
