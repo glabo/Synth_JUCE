@@ -52,6 +52,9 @@ void Synth_JUCEAudioProcessorEditor::paint (juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.setColour(backgroundColour);
     g.fillAll ();
+
+    //g.setColour(juce::Colours::orange);
+    //g.drawRect(filterBorder);
 }
 
 void Synth_JUCEAudioProcessorEditor::resized()
@@ -62,10 +65,22 @@ void Synth_JUCEAudioProcessorEditor::resized()
     auto sliderArea = getLocalBounds().reduced(2);
     sliderArea.removeFromTop(40);
 
-    oscillatorComponent0.setBounds(sliderArea.removeFromTop(80));
-    oscillatorComponent1.setBounds(sliderArea.removeFromTop(80));
-    oscillatorComponent2.setBounds(sliderArea.removeFromTop(80));
-    oscillatorComponent3.setBounds(sliderArea.removeFromTop(80));
+    auto verticalDivision = juce::jmin(180, sliderArea.proportionOfWidth(0.1f));
+
+    // Define UI regions
+    oscillatorBorder = sliderArea;
+    oscillatorBorder.removeFromRight(verticalDivision * 4);
+    oscillatorBorder.removeFromBottom(oscillatorBorder.getHeight() - 4 * OscillatorComponent::getHeight());
+
+    filterBorder = sliderArea;
+    filterBorder.removeFromLeft(verticalDivision * 6);
+    // Assuming 80px line height
+    filterBorder.removeFromBottom(filterBorder.getHeight() - 2 * 80);
+
+    oscillatorComponent0.setBounds(oscillatorBorder.removeFromTop(80));
+    oscillatorComponent1.setBounds(oscillatorBorder.removeFromTop(80));
+    oscillatorComponent2.setBounds(oscillatorBorder.removeFromTop(80));
+    oscillatorComponent3.setBounds(oscillatorBorder.removeFromTop(80));
 
     lastUIWidth = getWidth();
     lastUIHeight = getHeight();

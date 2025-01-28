@@ -100,14 +100,40 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     releaseLabel.setJustificationType(juce::Justification::centred);
 }
 
+void OscillatorComponent::paint(juce::Graphics& g)
+{
+
+    g.setColour(juce::Colours::dimgrey);
+    g.fillRect(oscillatorBorder);
+    g.fillRect(waveTypeSelectionBorder);
+    g.fillRect(masterControlBorder);
+    g.fillRect(adsrBorder);
+
+    g.setColour(juce::Colours::black);
+    g.drawRect(oscillatorBorder, 3.0f);
+    g.drawRect(waveTypeSelectionBorder, 2.0f);
+    g.drawRect(masterControlBorder);
+    g.drawRect(adsrBorder);
+
+    // Layout aid
+    //g.setColour(juce::Colours::aliceblue);
+    //for (auto r : subDivisions) {
+    //    g.drawRect(r);
+    //}
+}
+
 void OscillatorComponent::resized() {
     auto controlArea = getLocalBounds();
+    // Layout aid
+    // subDivisions.clear();
 
     // Layout:
     // Wave selector is left quarter of initial size
     // Gain slider is left half of REMAINING size
-    auto boxSubDivision = juce::jmin(180, controlArea.getWidth() / 7);
-    auto waveTypeSelectionBounds = controlArea.removeFromLeft(boxSubDivision);
+    oscillatorBorder = controlArea;
+    auto boxSubDivision = juce::jmin(180, controlArea.proportionOfWidth(0.2f));
+    waveTypeSelectionBorder = controlArea.removeFromLeft(boxSubDivision);
+    auto waveTypeSelectionBounds = waveTypeSelectionBorder;
     waveTypeSelectionBounds.removeFromTop(30);
     waveTypeSelectionBounds.removeFromBottom(30);
     waveTypeSelectionBounds.removeFromRight(10);
@@ -115,14 +141,16 @@ void OscillatorComponent::resized() {
     waveTypeSelection.setBounds(waveTypeSelectionBounds);
 
     controlArea.removeFromTop(20);
-    auto controlBounds = controlArea.removeFromLeft(boxSubDivision);
-    auto gainSliderBounds = controlBounds.removeFromLeft(controlBounds.getWidth() / 2);
-    auto pitchSliderBounds = controlBounds;
+    masterControlBorder = controlArea.removeFromLeft(boxSubDivision * 1.5);
+    auto masterControlBounds = masterControlBorder;
+    auto gainSliderBounds = masterControlBounds.removeFromLeft(masterControlBounds.proportionOfWidth(0.5f));
+    auto pitchSliderBounds = masterControlBounds;
     gainSlider.setBounds(gainSliderBounds);
     pitchSlider.setBounds(pitchSliderBounds);
 
-    auto adsrBounds = controlArea.removeFromLeft(boxSubDivision * 2);
-    auto adsrBoxSubDivision = adsrBounds.getWidth() / 4;
+    adsrBorder = controlArea.removeFromLeft(boxSubDivision * 2.5);
+    auto adsrBounds = adsrBorder;
+    auto adsrBoxSubDivision = adsrBounds.proportionOfWidth(0.25f);
     auto attackSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
     attackSlider.setBounds(attackSliderBounds);
     auto decaySliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
@@ -131,9 +159,6 @@ void OscillatorComponent::resized() {
     sustainSlider.setBounds(sustainSliderBounds);
     auto releaseSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
     releaseSlider.setBounds(releaseSliderBounds);
-
-    //auto delaySliderBounds = controlArea.removeFromLeft(boxSubDivision);
-    //delaySlider.setBounds(delaySliderBounds);
 }
 
 void OscillatorComponent::waveTypeSelectionChanged(int oscId) {
@@ -153,4 +178,9 @@ int OscillatorComponent::getControlParameterIndex(Component& control)
         return 2;
 
     return -1;
+}
+
+int OscillatorComponent::getHeight()
+{
+    return 80;
 }

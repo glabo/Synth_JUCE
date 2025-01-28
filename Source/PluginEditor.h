@@ -51,6 +51,10 @@ private:
     OscillatorComponent oscillatorComponent2;
     OscillatorComponent oscillatorComponent3;
 
+    // UI regions
+    juce::Rectangle<int> oscillatorBorder;
+    juce::Rectangle<int> filterBorder;
+
     juce::Colour backgroundColour;
 
     // these are used to persist the UI's size - the values are stored along with the

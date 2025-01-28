@@ -17,6 +17,7 @@ public:
                         juce::String releaseId);
 
     int getControlParameterIndex(Component& control);
+    static int getHeight();
 private:
     Synth_JUCEAudioProcessor& audioProcessor;
 
@@ -48,8 +49,16 @@ private:
                 sustainLabel{ {}, "Sustain:" },
                 releaseLabel{ {}, "Release:" };
 
+    // Visual areas
+    juce::Rectangle<int> oscillatorBorder;
+    juce::Rectangle<int> waveTypeSelectionBorder;
+    juce::Rectangle<int> masterControlBorder;
+    juce::Rectangle<int> adsrBorder;
+    // std::vector<juce::Rectangle<int>> subDivisions; // Layout aid
+
     void waveTypeSelectionChanged(int oscId = 0);
 
+    void paint(juce::Graphics&) override;
     void resized() override;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OscillatorComponent)
