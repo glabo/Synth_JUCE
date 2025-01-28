@@ -146,6 +146,7 @@ void OscillatorComponent::resized() {
 
     controlArea.removeFromTop(20);
     masterControlBorder = controlArea.removeFromLeft(boxSubDivision * 1.5);
+    masterControlBorder.setLeft(waveTypeSelectionBorder.getRight());
     auto masterControlBounds = masterControlBorder;
     auto gainSliderBounds = masterControlBounds.removeFromLeft(masterControlBounds.proportionOfWidth(0.5f));
     auto pitchSliderBounds = masterControlBounds;
@@ -153,6 +154,7 @@ void OscillatorComponent::resized() {
     pitchSlider.setBounds(pitchSliderBounds);
 
     adsrBorder = controlArea.removeFromLeft(boxSubDivision * 2.5);
+    adsrBorder.setLeft(masterControlBorder.getRight());
     auto adsrBounds = adsrBorder;
     auto adsrBoxSubDivision = adsrBounds.proportionOfWidth(0.25f);
     auto attackSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
