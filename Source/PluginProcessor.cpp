@@ -326,23 +326,21 @@ Synth_JUCEAudioProcessor::createParameterLayout()
 
     // -------------------------- FILTER --------------------------------------------------- 
     layout.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ FILTER_TYPE_ID,  1 },
-        "Waveform",
-        juce::StringArray{ "Low Pass", "High Pass", "Band Pass"},
-        0));
+                                                            "Waveform",
+                                                            juce::StringArray{ "Low Pass", "High Pass", "Band Pass"},
+                                                            0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(CUTOFF_FREQ_ID,
-        "Cutoff Freq",
-        juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f),
-        20.f));
-
+                                                            "Cutoff Freq",
+                                                            juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f),
+                                                            20.f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(Q_ID,
-        "Quality",
-        juce::NormalisableRange<float>(-0.1f, 10.f, 0.05f, 1.f),
-        1.f));
-
+                                                            "Quality",
+                                                            juce::NormalisableRange<float>(-0.1f, 10.f, 0.05f, 1.f),
+                                                            1.f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(RESONANCE_ID,
-        "Resonance",
-        juce::NormalisableRange<float>(-0.1f, 10.f, 0.05f, 1.f),
-        1.f));
+                                                            "Resonance",
+                                                            juce::NormalisableRange<float>(-0.1f, 10.f, 0.05f, 1.f),
+                                                            1.f));
     // FILTER STUFF that we'll use later
  /*   layout.add(std::make_unique<juce::AudioParameterFloat>( "LowCut Freq",
                                                             "LowCut Freq",
