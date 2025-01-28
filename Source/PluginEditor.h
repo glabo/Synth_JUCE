@@ -12,6 +12,7 @@
 #include "PluginProcessor.h"
 #include "WaveGenerator.h"
 #include "OscillatorComponent.h"
+#include "FilterComponent.h"
 
 //==============================================================================
 /**
@@ -46,10 +47,12 @@ private:
 
     static const int NUM_OSC = 4; // Hints for future
 
+    // GUI Components
     OscillatorComponent oscillatorComponent0;
     OscillatorComponent oscillatorComponent1;
     OscillatorComponent oscillatorComponent2;
     OscillatorComponent oscillatorComponent3;
+    FilterComponent filterComponent;
 
     // UI regions
     juce::Rectangle<int> oscillatorBorder;

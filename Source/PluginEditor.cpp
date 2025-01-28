@@ -9,13 +9,14 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p),
+Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor(Synth_JUCEAudioProcessor& p)
+    : AudioProcessorEditor(&p), audioProcessor(p),
     midiKeyboard(p.keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
     oscillatorComponent0(p, OSC_0, WAVETYPE_ID_0, GAIN_ID_0, PITCH_ID_0, DELAY_ID_0, ATTACK_ID_0, DECAY_ID_0, SUSTAIN_ID_0, RELEASE_ID_0),
     oscillatorComponent1(p, OSC_1, WAVETYPE_ID_1, GAIN_ID_1, PITCH_ID_1, DELAY_ID_1, ATTACK_ID_1, DECAY_ID_1, SUSTAIN_ID_1, RELEASE_ID_1),
     oscillatorComponent2(p, OSC_2, WAVETYPE_ID_2, GAIN_ID_2, PITCH_ID_2, DELAY_ID_2, ATTACK_ID_2, DECAY_ID_2, SUSTAIN_ID_2, RELEASE_ID_2),
-    oscillatorComponent3(p, OSC_3, WAVETYPE_ID_3, GAIN_ID_3, PITCH_ID_3, DELAY_ID_3, ATTACK_ID_3, DECAY_ID_3, SUSTAIN_ID_3, RELEASE_ID_3)
+    oscillatorComponent3(p, OSC_3, WAVETYPE_ID_3, GAIN_ID_3, PITCH_ID_3, DELAY_ID_3, ATTACK_ID_3, DECAY_ID_3, SUSTAIN_ID_3, RELEASE_ID_3),
+    filterComponent(p, FILTER_TYPE_ID, CUTOFF_FREQ_ID, Q_ID, RESONANCE_ID)
 {
 
     // add the midi keyboard component..
@@ -34,6 +35,7 @@ Synth_JUCEAudioProcessorEditor::Synth_JUCEAudioProcessorEditor (Synth_JUCEAudioP
     addAndMakeVisible(oscillatorComponent1);
     addAndMakeVisible(oscillatorComponent2);
     addAndMakeVisible(oscillatorComponent3);
+    addAndMakeVisible(filterComponent);
 
     setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
 
@@ -72,15 +74,17 @@ void Synth_JUCEAudioProcessorEditor::resized()
     oscillatorBorder.removeFromRight(verticalDivision * 4);
     oscillatorBorder.removeFromBottom(oscillatorBorder.getHeight() - 4 * OscillatorComponent::getHeight());
 
-    filterBorder = sliderArea;
-    filterBorder.removeFromLeft(verticalDivision * 6);
-    // Assuming 80px line height
-    filterBorder.removeFromBottom(filterBorder.getHeight() - 2 * 80);
-
     oscillatorComponent0.setBounds(oscillatorBorder.removeFromTop(80));
     oscillatorComponent1.setBounds(oscillatorBorder.removeFromTop(80));
     oscillatorComponent2.setBounds(oscillatorBorder.removeFromTop(80));
     oscillatorComponent3.setBounds(oscillatorBorder.removeFromTop(80));
+
+    filterBorder = sliderArea;
+    filterBorder.removeFromLeft(oscillatorBorder.getWidth());
+    // Assuming 80px line height
+    filterBorder.removeFromBottom(filterBorder.getHeight() - 2 * 80);
+
+    filterComponent.setBounds(filterBorder);
 
     lastUIWidth = getWidth();
     lastUIHeight = getHeight();

@@ -44,6 +44,10 @@ public:
         for (auto i = 0; i < synth.getNumVoices(); i++) {
             auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
             voice->setEnvelopeSampleRate(getSampleRate());
+            voice->setFilterParams(
+                apvts.getRawParameterValue(CUTOFF_FREQ_ID),
+                apvts.getRawParameterValue(Q_ID),
+                apvts.getRawParameterValue(RESONANCE_ID));
             // This is where we'll associate an OSC_ID with its envelope parameters.
             // Can't do this at a lower level because we have to access the raw param value
             voice->pushEnvelopeParams(OSC_0,
@@ -115,6 +119,7 @@ public:
 
     void initialiseSynth();
     void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType);
+    void Synth_JUCEAudioProcessor::setFilterType(FILTER_TYPE filterType);
     void updateCurrentTimeInfoFromHost();
 
     //==============================================================================

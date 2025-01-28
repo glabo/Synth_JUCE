@@ -1,5 +1,11 @@
 #pragma once
 
+// ========================= OSCILLATOR ==================================
+static const int OSC_0 = 0;
+static const int OSC_1 = 1;
+static const int OSC_2 = 2;
+static const int OSC_3 = 3;
+
 static const juce::String WAVETYPE_ID_0 = "wavetype_0";
 static const juce::String WAVETYPE_ID_1 = "wavetype_1";
 static const juce::String WAVETYPE_ID_2 = "wavetype_2";
@@ -40,7 +46,8 @@ static const juce::String RELEASE_ID_1 = "release_1";
 static const juce::String RELEASE_ID_2 = "release_2";
 static const juce::String RELEASE_ID_3 = "release_3";
 
-static const int OSC_0 = 0;
-static const int OSC_1 = 1;
-static const int OSC_2 = 2;
-static const int OSC_3 = 3;
+// ========================= FILTER ==================================
+static const juce::String FILTER_TYPE_ID = "filter_type";
+static const juce::String CUTOFF_FREQ_ID = "cutoff_freq";
+static const juce::String Q_ID = "q";
+static const juce::String RESONANCE_ID = "resonance";
