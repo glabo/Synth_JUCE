@@ -5,12 +5,22 @@ FilterComponent::FilterComponent(Synth_JUCEAudioProcessor& p,
 									juce::String filterTypeId,
 									juce::String cutoffFreqId,
 									juce::String qId,
-									juce::String resonanceId) :
+									juce::String resonanceId,
+									juce::String adsrAmountId,
+									juce::String attackId,
+									juce::String decayId,
+									juce::String sustainId,
+									juce::String releaseId) :
 	audioProcessor(p),
 	filterTypeAttachment(p.apvts, filterTypeId, filterTypeSelection),
 	cutoffFreqAttachment(p.apvts, cutoffFreqId, cutoffFreqSlider),
 	qAttachment(p.apvts, qId, qSlider),
-	resonanceAttachment(p.apvts, resonanceId, resonanceSlider)
+	resonanceAttachment(p.apvts, resonanceId, resonanceSlider),
+	adsrAmountAttachment(p.apvts, adsrAmountId, adsrAmountSlider),
+	attackAttachment(p.apvts, attackId, attackSlider),
+	decayAttachment(p.apvts, decayId, decaySlider),
+	sustainAttachment(p.apvts, sustainId, sustainSlider),
+	releaseAttachment(p.apvts, releaseId, releaseSlider)
 {
 	// Filter type selector
 	addAndMakeVisible(filterTypeSelection);
@@ -54,6 +64,56 @@ FilterComponent::FilterComponent(Synth_JUCEAudioProcessor& p,
 	resonanceLabel.attachToComponent(&resonanceSlider, false);
 	resonanceLabel.setFont(juce::FontOptions(11.0f));
 	resonanceLabel.setJustificationType(juce::Justification::centred);
+	
+	// ADSR Amount slider
+	addAndMakeVisible(adsrAmountSlider);
+	adsrAmountSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+	adsrAmountSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+	adsrAmountSlider.setDoubleClickReturnValue(true, 0.0);
+
+	adsrAmountLabel.attachToComponent(&adsrAmountSlider, false);
+	adsrAmountLabel.setFont(juce::FontOptions(11.0f));
+	adsrAmountLabel.setJustificationType(juce::Justification::centred);
+
+	// Attack slider
+	addAndMakeVisible(attackSlider);
+	attackSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+	attackSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+	attackSlider.setDoubleClickReturnValue(true, 0.0);
+
+	attackLabel.attachToComponent(&attackSlider, false);
+	attackLabel.setFont(juce::FontOptions(11.0f));
+	attackLabel.setJustificationType(juce::Justification::centred);
+
+	// Decay slider
+	addAndMakeVisible(decaySlider);
+	decaySlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+	decaySlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+	decaySlider.setDoubleClickReturnValue(true, 0.0);
+
+	decayLabel.attachToComponent(&decaySlider, false);
+	decayLabel.setFont(juce::FontOptions(11.0f));
+	decayLabel.setJustificationType(juce::Justification::centred);
+
+	// Sustain slider
+	addAndMakeVisible(sustainSlider);
+	sustainSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+	sustainSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+	sustainSlider.setDoubleClickReturnValue(true, 1.0);
+
+	sustainLabel.attachToComponent(&sustainSlider, false);
+	sustainLabel.setFont(juce::FontOptions(11.0f));
+	sustainLabel.setJustificationType(juce::Justification::centred);
+
+	// Release slider
+	addAndMakeVisible(releaseSlider);
+	releaseSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+	releaseSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
+	releaseSlider.setDoubleClickReturnValue(true, 0.0);
+
+	releaseLabel.attachToComponent(&releaseSlider, false);
+	releaseLabel.setFont(juce::FontOptions(11.0f));
+	releaseLabel.setJustificationType(juce::Justification::centred);
 }
 
 void FilterComponent::paint(juce::Graphics& g)
@@ -64,7 +124,9 @@ void FilterComponent::paint(juce::Graphics& g)
 	g.setColour(juce::Colours::black);
 	g.drawRect(componentBorder, 3);
 	g.drawRect(filterBorder);
+	g.drawRect(adsrAmountBorder);
 	g.drawRect(adsrBorder);
+	g.drawRect(adsrSubBorder);
 }
 
 void FilterComponent::resized()
@@ -95,7 +157,23 @@ void FilterComponent::resized()
 	resonanceBounds.removeFromTop(20);
 	resonanceSlider.setBounds(resonanceBounds);
 
-	//auto adsrSubdivision = juce::jmin(180, adsrBorder.proportionOfWidth(0.25f));
+	auto adsrBounds = adsrBorder;
+	adsrAmountBorder = adsrBounds.removeFromLeft(filterSubdivision);
+	auto adsrAmountBox = adsrAmountBorder;
+	adsrAmountBox.removeFromTop(20);
+	adsrAmountSlider.setBounds(adsrAmountBox);
+
+	adsrBounds.removeFromTop(20);
+	adsrSubBorder = adsrBounds;
+	auto adsrBoxSubDivision = juce::jmin(180, adsrBounds.proportionOfWidth(0.25f));
+	auto attackSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
+	attackSlider.setBounds(attackSliderBounds);
+	auto decaySliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
+	decaySlider.setBounds(decaySliderBounds);
+	auto sustainSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
+	sustainSlider.setBounds(sustainSliderBounds);
+	auto releaseSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
+	releaseSlider.setBounds(releaseSliderBounds);
 }
 
 void FilterComponent::filterTypeSelectionChanged()

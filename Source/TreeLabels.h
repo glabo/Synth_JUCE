@@ -51,3 +51,9 @@ static const juce::String FILTER_TYPE_ID = "filter_type";
 static const juce::String CUTOFF_FREQ_ID = "cutoff_freq";
 static const juce::String Q_ID = "q";
 static const juce::String RESONANCE_ID = "resonance";
+
+static const juce::String FILTER_ADSR_AMOUNT_ID = "filter_adsr_amount";
+static const juce::String FILTER_ATTACK_ID = "filter_attack";
+static const juce::String FILTER_DECAY_ID = "filter_decay";
+static const juce::String FILTER_SUSTAIN_ID = "filter_sustain";
+static const juce::String FILTER_RELEASE_ID = "filter_release";
