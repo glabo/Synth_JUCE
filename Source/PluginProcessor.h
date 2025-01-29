@@ -37,11 +37,7 @@ public:
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     void processBlock(juce::AudioBuffer<double>&, juce::MidiBuffer&) override;
 
-    template <typename FloatType>
-    void process(juce::AudioBuffer<FloatType>& buffer, juce::MidiBuffer& midiMessages, juce::AudioBuffer<FloatType>& delayBuffer)
-    {
-        auto masterGain = 1.0;
-        //auto delayParamValue = apvts.getParameter(DELAY_ID)->getValue();
+    void getStateParameters() {
         filter.setFilterParams(
             apvts.getRawParameterValue(CUTOFF_FREQ_ID),
             apvts.getRawParameterValue(Q_ID),
@@ -84,6 +80,17 @@ public:
                 apvts.getRawParameterValue(RELEASE_ID_3)
             );
         }
+    }
+
+    template <typename FloatType>
+    void process(juce::AudioBuffer<FloatType>& buffer, juce::MidiBuffer& midiMessages, juce::AudioBuffer<FloatType>& delayBuffer)
+    {
+        // Eventually will be parametrized
+        auto masterGain = 1.0;
+
+        // Grab parameters from tree state
+        getStateParameters();
+       
         auto numSamples = buffer.getNumSamples();
 
         // In case we have more outputs than inputs, we'll clear any output
@@ -167,11 +174,11 @@ public:
     SpinLockedPosInfo lastPosInfo;
 private:
 
-    //using Filter = juce::dsp::IIR::Filter<float>;
-    //using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
+    using IIRFilter = juce::dsp::IIR::Filter<float>;
+    using CutFilter = juce::dsp::ProcessorChain<IIRFilter, IIRFilter, IIRFilter, IIRFilter>;
     // Mono signal path: LowCut Filter --> Peak Filter --> HighCut Filter
-    //using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
-    //MonoChain leftChain, rightChain;
+    using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
+    MonoChain leftChain, rightChain;
 
     juce::AudioBuffer<float> delayBufferFloat;
     juce::AudioBuffer<double> delayBufferDouble;
