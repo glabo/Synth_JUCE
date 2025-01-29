@@ -28,13 +28,15 @@ Synth_JUCEAudioProcessor::~Synth_JUCEAudioProcessor()
 }
 
 //==============================================================================
-void Synth_JUCEAudioProcessor::prepareToPlay (double newSampleRate, int /*samplesPerBlock*/)
+void Synth_JUCEAudioProcessor::prepareToPlay (double newSampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
     synth.setCurrentPlaybackSampleRate(newSampleRate);
     keyboardState.reset();
 
+    // Prep filter chains
+    filter.prepareToPlay(newSampleRate, samplesPerBlock);
+
+    // Prep delay buffer
     if (isUsingDoublePrecision())
     {
         delayBufferDouble.setSize(2, 12000);
@@ -87,12 +89,6 @@ void Synth_JUCEAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 {
     jassert(!isUsingDoublePrecision());
     process(buffer, midiMessages, delayBufferFloat);
-}
-
-void Synth_JUCEAudioProcessor::processBlock(juce::AudioBuffer<double>& buffer, juce::MidiBuffer& midiMessages)
-{
-    jassert(isUsingDoublePrecision());
-    process(buffer, midiMessages, delayBufferDouble);
 }
 
 void Synth_JUCEAudioProcessor::initialiseSynth()

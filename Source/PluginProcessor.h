@@ -35,7 +35,6 @@ public:
    #endif
 
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
-    void processBlock(juce::AudioBuffer<double>&, juce::MidiBuffer&) override;
 
     void getStateParameters() {
         filter.setFilterParams(
@@ -86,7 +85,7 @@ public:
     void process(juce::AudioBuffer<FloatType>& buffer, juce::MidiBuffer& midiMessages, juce::AudioBuffer<FloatType>& delayBuffer)
     {
         // Eventually will be parametrized
-        auto masterGain = 1.0;
+        auto masterGain = 1.0f;
 
         // Grab parameters from tree state
         getStateParameters();
@@ -102,6 +101,9 @@ public:
         // Now pass any incoming midi messages to our keyboard state object, and let it
         // add messages to the buffer if the user is clicking on the on-screen keys
         keyboardState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
+
+        // Perform filter processing
+        filter.process(buffer);
 
         // and now get our synth to process these midi events and generate its output.
         synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
@@ -173,13 +175,6 @@ public:
     // callback - the UI component will read this and display it.
     SpinLockedPosInfo lastPosInfo;
 private:
-
-    using IIRFilter = juce::dsp::IIR::Filter<float>;
-    using CutFilter = juce::dsp::ProcessorChain<IIRFilter, IIRFilter, IIRFilter, IIRFilter>;
-    // Mono signal path: LowCut Filter --> Peak Filter --> HighCut Filter
-    using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
-    MonoChain leftChain, rightChain;
-
     juce::AudioBuffer<float> delayBufferFloat;
     juce::AudioBuffer<double> delayBufferDouble;
 
