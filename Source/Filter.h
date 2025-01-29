@@ -2,32 +2,47 @@
 
 #include <JuceHeader.h>
 
-enum FILTER_TYPE {
+enum class FilterType {
+	NONE, // Placeholder for 1-justified selection box behavior
 	LOWPASS,
 	HIGHPASS,
-	BANDPASS
+	BANDPASS,
+	PEAK
+};
+
+enum class FilterChain {
+	HIGHPASS,
+	PEAK,
+	LOWPASS
 };
 
 class Filter {
 public:
 	void prepareToPlay(double newSampleRate, int samplesPerBlock);
-	void setFilterType(FILTER_TYPE ft);
+	void setFilterType(FilterType ft);
 	void setFilterParams(std::atomic<float>* cutoffFreq, std::atomic<float>* q, std::atomic<float>* resonance);
 
 	void process(juce::AudioBuffer<float>& buffer);
 	double generateSample(double sample);
 private:
+	void setFilters();
+	void bypassPeak(bool bypass);
+	void bypassLowCut(bool bypass);
+	void bypassHighCut(bool bypass);
+	void setProcessorBypass(bool highPassBypass, bool peakBypass, bool lowPassBypass);
+
 	using IIRFilter = juce::dsp::IIR::Filter<float>;
 	using CutFilter = juce::dsp::ProcessorChain<IIRFilter, IIRFilter, IIRFilter, IIRFilter>;
 	// Mono signal path: LowCut Filter --> Peak Filter --> HighCut Filter
-	using MonoChain = juce::dsp::ProcessorChain<CutFilter, IIRFilter, CutFilter>;
+	//using MonoChain = juce::dsp::ProcessorChain<CutFilter, IIRFilter, CutFilter>;
+	using MonoChain = juce::dsp::ProcessorChain<IIRFilter, IIRFilter, IIRFilter>;
 	MonoChain leftChain, rightChain;
 
 	double sampleRate;
 	float cutoffFreq;
 	float q;
 	float resonance;
-	FILTER_TYPE filterType;
+	FilterType filterType;
 
 	juce::dsp::IIR::Filter<float> filter;
 

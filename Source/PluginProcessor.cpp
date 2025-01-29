@@ -110,7 +110,7 @@ void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType) {
     }
 }
 
-void Synth_JUCEAudioProcessor::setFilterType(FILTER_TYPE filterType) {
+void Synth_JUCEAudioProcessor::setFilterType(FilterType filterType) {
     filter.setFilterType(filterType);
 }
 
@@ -320,15 +320,15 @@ Synth_JUCEAudioProcessor::createParameterLayout()
     // -------------------------- FILTER --------------------------------------------------- 
     layout.add(std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ FILTER_TYPE_ID,  1 },
                                                             "Waveform",
-                                                            juce::StringArray{ "Low Pass", "High Pass", "Band Pass"},
+                                                            juce::StringArray{ "Low Pass", "High Pass", "Band Pass", "Peak"},
                                                             0));
     layout.add(std::make_unique<juce::AudioParameterFloat>(CUTOFF_FREQ_ID,
                                                             "Cutoff Freq",
-                                                            juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f),
+                                                            juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 0.35f),
                                                             20.f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(Q_ID,
                                                             "Quality",
-                                                            juce::NormalisableRange<float>(-0.1f, 10.f, 0.05f, 1.f),
+                                                            juce::NormalisableRange<float>(0.1f, 10.f, 0.05f, 1.f),
                                                             1.f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(RESONANCE_ID,
                                                             "Resonance",

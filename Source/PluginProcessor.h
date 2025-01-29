@@ -102,14 +102,14 @@ public:
         // add messages to the buffer if the user is clicking on the on-screen keys
         keyboardState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
 
-        // Perform filter processing
-        filter.process(buffer);
-
         // and now get our synth to process these midi events and generate its output.
         synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 
         // Apply our delay effect to the new output..
         //applyDelay(buffer, delayBuffer, delayParamValue);
+
+        // Perform filter processing
+        filter.process(buffer);
 
         // Apply our gain change to the outgoing data..
         applyGain(buffer, delayBuffer, masterGain);
@@ -129,7 +129,7 @@ public:
 
     void initialiseSynth();
     void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType);
-    void Synth_JUCEAudioProcessor::setFilterType(FILTER_TYPE filterType);
+    void Synth_JUCEAudioProcessor::setFilterType(FilterType filterType);
     void updateCurrentTimeInfoFromHost();
 
     //==============================================================================

@@ -39,7 +39,7 @@ FilterComponent::FilterComponent(Synth_JUCEAudioProcessor& p,
 	addAndMakeVisible(qSlider);
 	qSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
 	qSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 50, 12);
-	qSlider.setDoubleClickReturnValue(true, 0.0);
+	qSlider.setDoubleClickReturnValue(true, 0.1);
 
 	qLabel.attachToComponent(&qSlider, false);
 	qLabel.setFont(juce::FontOptions(11.0f));
@@ -100,6 +100,6 @@ void FilterComponent::resized()
 
 void FilterComponent::filterTypeSelectionChanged()
 {
-	FILTER_TYPE filterType = static_cast<FILTER_TYPE>(this->filterTypeSelection.getSelectedId());
+	FilterType filterType = static_cast<FilterType>(this->filterTypeSelection.getSelectedId());
 	audioProcessor.setFilterType(filterType);
 }
