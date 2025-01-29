@@ -19,5 +19,7 @@ private:
 	float resonance;
 	FILTER_TYPE filterType;
 
+	juce::dsp::IIR::Filter<float> filter;
+
 	juce::ADSR envelope;
 };

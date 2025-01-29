@@ -4,7 +4,6 @@
 #include <JuceHeader.h>
 #include "WaveGenerator.h"
 #include "Oscillator.h"
-#include "Filter.h"
 
 const int NUM_OSC = 4;
 
@@ -113,8 +112,6 @@ public:
                     for (auto& o : osc) {
                         summedSample += (float)o->generateSample();
                     }
-                    // Apply filter
-                    filter.generateSample(summedSample);
 
                     // Populate output buffer
                     for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
@@ -134,10 +131,6 @@ public:
         osc[oscId]->setWaveType(newWaveType);
     }
 
-    void setFilterType(FILTER_TYPE newFilterType) {
-        filter.setFilterType(newFilterType);
-    }
-
     void setEnvelopeSampleRate(double sampleRate) {
         for (auto& o : osc) {
             o->setEnvelopeSampleRate(sampleRate);
@@ -155,17 +148,12 @@ public:
         osc[oscId]->pushEnvelopeParams(level, pitchShift, attack, decay, sustain, release);
     }
 
-    void setFilterParams(std::atomic<float>* cutoffFreq, std::atomic<float>* q, std::atomic<float>* resonance) {
-        filter.setFilterParams(cutoffFreq, q, resonance);
-    }
-
     using SynthesiserVoice::renderNextBlock;
 
 private:
     double velocityLevel = 0.0;
 
     std::vector<std::unique_ptr<Oscillator>> osc;
-    Filter filter;
 
     juce::ADSR envelope;
 };

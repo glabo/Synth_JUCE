@@ -115,10 +115,7 @@ void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType) {
 }
 
 void Synth_JUCEAudioProcessor::setFilterType(FILTER_TYPE filterType) {
-    for (auto i = 0; i < synth.getNumVoices(); i++) {
-        auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
-        voice->setFilterType(filterType);
-    }
+    filter.setFilterType(filterType);
 }
 
 void Synth_JUCEAudioProcessor::updateCurrentTimeInfoFromHost()

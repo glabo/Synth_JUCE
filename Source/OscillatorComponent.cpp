@@ -114,8 +114,8 @@ void OscillatorComponent::paint(juce::Graphics& g)
     g.fillRect(adsrBorder);
 
     g.setColour(juce::Colours::black);
-    g.drawRect(oscillatorBorder, 3.0f);
-    g.drawRect(waveTypeSelectionBorder, 2.0f);
+    g.drawRect(oscillatorBorder, 3);
+    g.drawRect(waveTypeSelectionBorder, 2);
     g.drawRect(masterControlBorder);
     g.drawRect(adsrBorder);
 
@@ -145,7 +145,7 @@ void OscillatorComponent::resized() {
     waveTypeSelection.setBounds(waveTypeSelectionBounds);
 
     controlArea.removeFromTop(20);
-    masterControlBorder = controlArea.removeFromLeft(boxSubDivision * 1.5);
+    masterControlBorder = controlArea.removeFromLeft((int)(boxSubDivision * 1.5));
     masterControlBorder.setLeft(waveTypeSelectionBorder.getRight());
     auto masterControlBounds = masterControlBorder;
     auto gainSliderBounds = masterControlBounds.removeFromLeft(masterControlBounds.proportionOfWidth(0.5f));
@@ -153,7 +153,7 @@ void OscillatorComponent::resized() {
     gainSlider.setBounds(gainSliderBounds);
     pitchSlider.setBounds(pitchSliderBounds);
 
-    adsrBorder = controlArea.removeFromLeft(boxSubDivision * 2.5);
+    adsrBorder = controlArea.removeFromLeft((int)(boxSubDivision * 2.5));
     adsrBorder.setLeft(masterControlBorder.getRight());
     auto adsrBounds = adsrBorder;
     auto adsrBoxSubDivision = adsrBounds.proportionOfWidth(0.25f);

@@ -13,6 +13,7 @@
 #include "SineWave.h"
 #include "GenericVoice.h"
 #include "TreeLabels.h"
+#include "Filter.h"
 
 //==============================================================================
 /**
@@ -41,13 +42,13 @@ public:
     {
         auto masterGain = 1.0;
         //auto delayParamValue = apvts.getParameter(DELAY_ID)->getValue();
+        filter.setFilterParams(
+            apvts.getRawParameterValue(CUTOFF_FREQ_ID),
+            apvts.getRawParameterValue(Q_ID),
+            apvts.getRawParameterValue(RESONANCE_ID));
         for (auto i = 0; i < synth.getNumVoices(); i++) {
             auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
             voice->setEnvelopeSampleRate(getSampleRate());
-            voice->setFilterParams(
-                apvts.getRawParameterValue(CUTOFF_FREQ_ID),
-                apvts.getRawParameterValue(Q_ID),
-                apvts.getRawParameterValue(RESONANCE_ID));
             // This is where we'll associate an OSC_ID with its envelope parameters.
             // Can't do this at a lower level because we have to access the raw param value
             voice->pushEnvelopeParams(OSC_0,
@@ -166,11 +167,11 @@ public:
     SpinLockedPosInfo lastPosInfo;
 private:
 
-    using Filter = juce::dsp::IIR::Filter<float>;
-    using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
+    //using Filter = juce::dsp::IIR::Filter<float>;
+    //using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
     // Mono signal path: LowCut Filter --> Peak Filter --> HighCut Filter
-    using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
-    MonoChain leftChain, rightChain;
+    //using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
+    //MonoChain leftChain, rightChain;
 
     juce::AudioBuffer<float> delayBufferFloat;
     juce::AudioBuffer<double> delayBufferDouble;
@@ -178,6 +179,7 @@ private:
     int delayPosition = 0;
 
     juce::Synthesiser synth;
+    Filter filter;
 
     juce::CriticalSection trackPropertiesLock;
     TrackProperties trackProperties;
