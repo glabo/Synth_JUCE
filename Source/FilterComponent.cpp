@@ -26,11 +26,11 @@ FilterComponent::FilterComponent(Synth_JUCEAudioProcessor& p,
 	addAndMakeVisible(filterTypeSelection);
 
 	auto* parameter = p.apvts.getParameter(filterTypeId);
-	auto waveType = static_cast<WAVE_TYPE>(parameter->convertFrom0to1(parameter->getValue()) + 1);
+	auto filterType = static_cast<FilterType>(parameter->convertFrom0to1(parameter->getValue()) + 1);
 	filterTypeSelection.addItemList(parameter->getAllValueStrings(), 1);
 
 	filterTypeSelection.onChange = [this] { filterTypeSelectionChanged(); };
-	filterTypeSelection.setSelectedId(waveType);
+	filterTypeSelection.setSelectedId(int(filterType));
 
 	filterTypeLabel.attachToComponent(&filterTypeSelection, false);
 	filterTypeLabel.setFont(juce::FontOptions(11.0f));

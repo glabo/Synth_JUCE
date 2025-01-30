@@ -13,7 +13,7 @@
 #include "SineWave.h"
 #include "GenericVoice.h"
 #include "TreeLabels.h"
-#include "Filter.h"
+#include "Synthesizer.h"
 
 //==============================================================================
 /**
@@ -37,7 +37,7 @@ public:
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     void getStateParameters() {
-        filter.setFilterParams(
+        synth.setFilterParams(
             apvts.getRawParameterValue(CUTOFF_FREQ_ID),
             apvts.getRawParameterValue(Q_ID),
             apvts.getRawParameterValue(RESONANCE_ID));
@@ -108,9 +108,6 @@ public:
         // Apply our delay effect to the new output..
         //applyDelay(buffer, delayBuffer, delayParamValue);
 
-        // Perform filter processing
-        filter.process(buffer);
-
         // Apply our gain change to the outgoing data..
         applyGain(buffer, delayBuffer, masterGain);
 
@@ -180,8 +177,7 @@ private:
 
     int delayPosition = 0;
 
-    juce::Synthesiser synth;
-    Filter filter;
+    Synthesizer synth;
 
     juce::CriticalSection trackPropertiesLock;
     TrackProperties trackProperties;

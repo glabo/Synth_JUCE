@@ -22,10 +22,15 @@ public:
 	void setFilterType(FilterType ft);
 	void setFilterParams(std::atomic<float>* cutoffFreq, std::atomic<float>* q, std::atomic<float>* resonance);
 
+	void startNote();
+	void noteOn();
+	void noteOff();
+
 	void process(juce::AudioBuffer<float>& buffer);
 	double generateSample(double sample);
 private:
 	void setFilters();
+	void resetFilters();
 	void bypassPeak(bool bypass);
 	void bypassLowCut(bool bypass);
 	void bypassHighCut(bool bypass);
@@ -38,6 +43,7 @@ private:
 	using MonoChain = juce::dsp::ProcessorChain<IIRFilter, IIRFilter, IIRFilter>;
 	MonoChain leftChain, rightChain;
 
+	bool paramsUpdated = true;
 	double sampleRate;
 	float cutoffFreq;
 	float q;

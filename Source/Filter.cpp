@@ -11,27 +11,52 @@ void Filter::prepareToPlay(double newSampleRate, int samplesPerBlock)
 
     leftChain.prepare(spec);
     rightChain.prepare(spec);
-
-    // Initial filter setup
-    setFilters();
 }
 
 void Filter::setFilterType(FilterType ft)
 {
 	filterType = ft;
+    paramsUpdated = true;
 }
 
 void Filter::setFilterParams(std::atomic<float>* cof, std::atomic<float>* newQ, std::atomic<float>* res)
 {
-	cutoffFreq = *cof;
-	this->q = *newQ;
-	this->resonance = *res;
+    if (cutoffFreq != *cof) {
+        paramsUpdated = true;
+        cutoffFreq = *cof;
+    }
+    if (q != *newQ) {
+        paramsUpdated = true;
+        q = *newQ;
+    }
+    if (resonance != *res) {
+        paramsUpdated = true;
+        resonance = *res;
+    }
+}
+
+void Filter::startNote()
+{
+    envelope.noteOn();
+}
+
+void Filter::noteOn()
+{
+    envelope.noteOn();
+}
+
+void Filter::noteOff()
+{
+    envelope.noteOff();
 }
 
 void Filter::process(juce::AudioBuffer<float>& buffer)
 {
-    // live update filter state
-    setFilters();
+    // Push input coefficients to filters before processing
+    if (paramsUpdated) {
+        setFilters();
+        resetFilters();
+    }
 
     juce::dsp::AudioBlock<float> block(buffer);
     auto leftBlock = block.getSingleChannelBlock(0);
@@ -80,6 +105,19 @@ void Filter::setFilters()
         setProcessorBypass(true, false, true);
         break;
     }
+
+    paramsUpdated = false;
+}
+
+void Filter::resetFilters()
+{
+    // Claimed good practice? Resetting filters AFTER setting their values
+    leftChain.get<int(FilterChain::LOWPASS)>().reset();
+    rightChain.get<int(FilterChain::LOWPASS)>().reset();
+    leftChain.get<int(FilterChain::PEAK)>().reset();
+    rightChain.get<int(FilterChain::PEAK)>().reset();
+    leftChain.get<int(FilterChain::HIGHPASS)>().reset();
+    rightChain.get<int(FilterChain::HIGHPASS)>().reset();
 }
 
 void Filter::bypassPeak(bool bypass)

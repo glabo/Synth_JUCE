@@ -30,11 +30,8 @@ Synth_JUCEAudioProcessor::~Synth_JUCEAudioProcessor()
 //==============================================================================
 void Synth_JUCEAudioProcessor::prepareToPlay (double newSampleRate, int samplesPerBlock)
 {
-    synth.setCurrentPlaybackSampleRate(newSampleRate);
+    synth.prepareToPlay(newSampleRate, samplesPerBlock);
     keyboardState.reset();
-
-    // Prep filter chains
-    filter.prepareToPlay(newSampleRate, samplesPerBlock);
 
     // Prep delay buffer
     if (isUsingDoublePrecision())
@@ -111,7 +108,7 @@ void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType) {
 }
 
 void Synth_JUCEAudioProcessor::setFilterType(FilterType filterType) {
-    filter.setFilterType(filterType);
+    synth.setFilterType(filterType);
 }
 
 void Synth_JUCEAudioProcessor::updateCurrentTimeInfoFromHost()
