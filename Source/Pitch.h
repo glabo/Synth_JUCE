@@ -14,7 +14,7 @@ private:
 public:
 	void setSampleRate(double sr);
 	void setPitchShift(int pitchShift);
-	void noteOn(int midiNoteNumber);
+	void noteOn(int midiNoteNumber, double sampleRate);
 	void clearNote();
 
 	bool angleApproxZero();

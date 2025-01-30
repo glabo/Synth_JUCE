@@ -44,7 +44,7 @@ public:
     {
         velocityLevel = velocity * 0.15;
         for (const auto& o : osc) {
-            o->startNote(velocityLevel, midiNoteNumber);
+            o->startNote(velocityLevel, midiNoteNumber, getSampleRate());
         }
     }
 

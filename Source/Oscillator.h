@@ -8,7 +8,7 @@ class Oscillator {
 public:
 	Oscillator(int initId, double sampleRate);
 
-	void startNote(double velocityLevel, int midiNoteNumber);
+	void startNote(double velocityLevel, int midiNoteNumber, double sampleRate);
 	void noteOn();
 	void noteOff();
 	void clearNote();

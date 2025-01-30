@@ -18,9 +18,10 @@ void Pitch::setPitchShift(int ps)
 	pitchShift = ps;
 }
 
-void Pitch::noteOn(int midiNoteNumber)
+void Pitch::noteOn(int midiNoteNumber, double sr)
 {
 	currentMidiNote = midiNoteNumber;
+	sampleRate = sr;
 	calculateAngleDelta();
 	currentAngle = 0.0;
 }

@@ -8,10 +8,10 @@ Oscillator::Oscillator(int initId, double sampleRate) {
 	envelope.setSampleRate(sampleRate);
 }
 
-void Oscillator::startNote(double velocity, int midiNoteNumber) {
+void Oscillator::startNote(double velocity, int midiNoteNumber, double sampleRate) {
 	velocityLevel = velocity;
 	envelope.noteOn();
-	pitch.noteOn(midiNoteNumber);
+	pitch.noteOn(midiNoteNumber, sampleRate);
 }
 
 void Oscillator::noteOn() {
