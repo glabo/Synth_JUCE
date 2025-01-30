@@ -8,9 +8,16 @@ void Synthesizer::prepareToPlay(double newSampleRate, int samplesPerBlock)
     filter.prepareToPlay(newSampleRate, samplesPerBlock);
 }
 
-void Synthesizer::setFilterParams(std::atomic<float>* cutoffFreq, std::atomic<float>* q, std::atomic<float>* resonance)
+void Synthesizer::setFilterParams(std::atomic<float>* cutoffFreq,
+                                    std::atomic<float>* q,
+                                    std::atomic<float>* resonance,
+                                    std::atomic<float>* adsrAmount,
+                                    std::atomic<float>* attack,
+                                    std::atomic<float>* decay,
+                                    std::atomic<float>* sustain,
+                                    std::atomic<float>* release)
 {
-    filter.setFilterParams(cutoffFreq, q, resonance);
+    filter.setFilterParams(cutoffFreq, q, resonance, adsrAmount, attack, decay, sustain, release);
 }
 
 void Synthesizer::setFilterType(FilterType filterType)

@@ -331,6 +331,27 @@ Synth_JUCEAudioProcessor::createParameterLayout()
                                                             "Resonance",
                                                             juce::NormalisableRange<float>(-0.1f, 10.f, 0.05f, 1.f),
                                                             1.f));
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ FILTER_ADSR_AMOUNT_ID,  1 },
+                                                            "Amount",
+                                                            juce::NormalisableRange<float>(-1.0f, 1.0f),
+                                                            0.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ FILTER_ATTACK_ID,  1 },
+                                                            "Attack",
+                                                            juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+                                                            1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ FILTER_DECAY_ID,  1 },
+                                                            "Decay",
+                                                            juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+                                                            1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ FILTER_SUSTAIN_ID,  1 },
+                                                            "Sustain Level",
+                                                            juce::NormalisableRange<float>(0.0f, 1.0f),
+                                                            1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ FILTER_RELEASE_ID,  1 },
+                                                            "Release",
+                                                            juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+                                                            1.0f));
     // FILTER STUFF that we'll use later
  /*   layout.add(std::make_unique<juce::AudioParameterFloat>( "LowCut Freq",
                                                             "LowCut Freq",

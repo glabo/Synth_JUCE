@@ -8,6 +8,7 @@ void Filter::prepareToPlay(double newSampleRate, int samplesPerBlock)
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = 1; // spec for a mono channel
     spec.sampleRate = newSampleRate;
+    envelope.setSampleRate(newSampleRate);
 
     leftChain.prepare(spec);
     rightChain.prepare(spec);
@@ -19,7 +20,14 @@ void Filter::setFilterType(FilterType ft)
     paramsUpdated = true;
 }
 
-void Filter::setFilterParams(std::atomic<float>* cof, std::atomic<float>* newQ, std::atomic<float>* res)
+void Filter::setFilterParams(std::atomic<float>* cof,
+    std::atomic<float>* newQ,
+    std::atomic<float>* res,
+    std::atomic<float>* newAdsrAmount,
+    std::atomic<float>* attack,
+    std::atomic<float>* decay,
+    std::atomic<float>* sustain,
+    std::atomic<float>* release)
 {
     if (cutoffFreq != *cof) {
         paramsUpdated = true;
@@ -33,6 +41,13 @@ void Filter::setFilterParams(std::atomic<float>* cof, std::atomic<float>* newQ, 
         paramsUpdated = true;
         resonance = *res;
     }
+
+    adsrAmount = *newAdsrAmount;
+    envelopeParams.attack = *attack;
+    envelopeParams.decay = *decay;
+    envelopeParams.sustain = *sustain;
+    envelopeParams.release = *release;
+    envelope.setParameters(envelopeParams);
 }
 
 void Filter::startNote()
@@ -42,6 +57,7 @@ void Filter::startNote()
 
 void Filter::noteOn()
 {
+    envelope.reset();
     envelope.noteOn();
 }
 
@@ -53,10 +69,8 @@ void Filter::noteOff()
 void Filter::process(juce::AudioBuffer<float>& buffer)
 {
     // Push input coefficients to filters before processing
-    if (paramsUpdated) {
-        setFilters();
-        resetFilters();
-    }
+    setFilters();
+    resetFilters();
 
     juce::dsp::AudioBlock<float> block(buffer);
     auto leftBlock = block.getSingleChannelBlock(0);
@@ -76,9 +90,12 @@ double Filter::generateSample(double sample)
 
 void Filter::setFilters()
 {
-    auto lowPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, cutoffFreq, q);
-    auto highPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, cutoffFreq, q);
-    auto peakCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, cutoffFreq, q,
+    // Modulate frequency with envelope value
+    auto modulatedFreq = getModulatedCutoffFreq();
+
+    auto lowPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, modulatedFreq, q);
+    auto highPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, modulatedFreq, q);
+    auto peakCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, modulatedFreq, q,
         juce::Decibels::decibelsToGain(resonance));
 
     switch (filterType) {
@@ -143,4 +160,18 @@ void Filter::setProcessorBypass(bool highCutBypass, bool peakBypass, bool lowCut
     bypassPeak(peakBypass);
     bypassLowCut(lowCutBypass);
     bypassHighCut(highCutBypass);
+}
+
+float Filter::getModulatedCutoffFreq()
+{
+    // Filter logic:
+    // When adsrAmount = +1
+    // freq follows env on positive slope starting from cutoffFreq, ceiling freq of 20k
+    float maxFreqRange = 20000.0f;
+
+    float modulatedFreq = cutoffFreq + (adsrAmount * (envelope.getNextSample() * maxFreqRange));
+    modulatedFreq = std::min(modulatedFreq, 20000.0f);
+    modulatedFreq = std::max(0.0f, modulatedFreq);
+
+    return modulatedFreq;
 }

@@ -20,7 +20,14 @@ class Filter {
 public:
 	void prepareToPlay(double newSampleRate, int samplesPerBlock);
 	void setFilterType(FilterType ft);
-	void setFilterParams(std::atomic<float>* cutoffFreq, std::atomic<float>* q, std::atomic<float>* resonance);
+	void setFilterParams(std::atomic<float>* cutoffFreq,
+		std::atomic<float>* q,
+		std::atomic<float>* resonance,
+		std::atomic<float>* newAdsrAmount,
+		std::atomic<float>* newAttack,
+		std::atomic<float>* newDecay,
+		std::atomic<float>* newSustain,
+		std::atomic<float>* newRelease);
 
 	void startNote();
 	void noteOn();
@@ -35,6 +42,8 @@ private:
 	void bypassLowCut(bool bypass);
 	void bypassHighCut(bool bypass);
 	void setProcessorBypass(bool highPassBypass, bool peakBypass, bool lowPassBypass);
+
+	float getModulatedCutoffFreq();
 
 	using IIRFilter = juce::dsp::IIR::Filter<float>;
 	using CutFilter = juce::dsp::ProcessorChain<IIRFilter, IIRFilter, IIRFilter, IIRFilter>;
@@ -52,5 +61,7 @@ private:
 
 	juce::dsp::IIR::Filter<float> filter;
 
+	float adsrAmount = 0.0;
 	juce::ADSR envelope;
+	juce::ADSR::Parameters envelopeParams;
 };
