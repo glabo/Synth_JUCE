@@ -57,6 +57,7 @@ void Filter::startNote()
 
 void Filter::noteOn()
 {
+    // Retrigger filter envelope on each new note, more intuitive
     envelope.reset();
     envelope.noteOn();
 }
@@ -70,7 +71,6 @@ void Filter::process(juce::AudioBuffer<float>& buffer)
 {
     // Push input coefficients to filters before processing
     setFilters();
-    resetFilters();
 
     juce::dsp::AudioBlock<float> block(buffer);
     auto leftBlock = block.getSingleChannelBlock(0);
