@@ -67,12 +67,12 @@ void Filter::noteOff()
     envelope.noteOff();
 }
 
-void Filter::process(juce::AudioBuffer<float>& buffer)
+void Filter::process(juce::AudioBuffer<float>& buffer, int startSample)
 {
     // Push input coefficients to filters before processing
     setFilters();
 
-    juce::dsp::AudioBlock<float> block(buffer);
+    juce::dsp::AudioBlock<float> block(buffer, startSample);
     auto leftBlock = block.getSingleChannelBlock(0);
     auto rightBlock = block.getSingleChannelBlock(1);
 
@@ -81,11 +81,6 @@ void Filter::process(juce::AudioBuffer<float>& buffer)
 
     leftChain.process(leftContext);
     rightChain.process(rightContext);
-}
-
-double Filter::generateSample(double sample)
-{
-	return sample;
 }
 
 void Filter::setFilters()

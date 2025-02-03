@@ -33,8 +33,7 @@ public:
 	void noteOn();
 	void noteOff();
 
-	void process(juce::AudioBuffer<float>& buffer);
-	double generateSample(double sample);
+	void process(juce::AudioBuffer<float>& buffer, int startSample);
 private:
 	void setFilters();
 	void resetFilters();

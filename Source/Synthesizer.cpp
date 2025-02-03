@@ -41,5 +41,5 @@ void Synthesizer::renderVoices(juce::AudioBuffer<float>& buffer, int startSample
 {
     // Do the same thing as parent but apply filtering afterwards
     juce::Synthesiser::renderVoices(buffer, startSample, numSamples);
-    filter.process(buffer);
+    filter.process(buffer, startSample);
 }
