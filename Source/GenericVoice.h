@@ -26,12 +26,6 @@ public:
             osc.push_back(std::make_unique<Oscillator>(i, getSampleRate()));
         }
     }
-    GenericVoice(WAVE_TYPE waveType) {
-        waveType = waveType;
-        for (auto i = 0; i < NUM_OSC; i++) {
-            osc.push_back(std::make_unique<Oscillator>(i, getSampleRate()));
-        }
-    }
 
     bool canPlaySound(juce::SynthesiserSound* sound) override
     {

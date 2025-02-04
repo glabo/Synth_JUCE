@@ -10,14 +10,6 @@ class Synthesizer : public juce::Synthesiser
 public:
 	Synthesizer(juce::AudioProcessorValueTreeState& apvts);
 	void prepareToPlay(double newSampleRate, int samplesPerBlock);
-	void setFilterParams(std::atomic<float>* cutoffFreq,
-							std::atomic<float>* q,
-							std::atomic<float>* resonance,
-							std::atomic<float>* adsrAmount,
-							std::atomic<float>* attack,
-							std::atomic<float>* decay,
-							std::atomic<float>* sustain,
-							std::atomic<float>* release);
 
 	static void createAndAddOscillatorParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout);
 	static void createAndAddFilterParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout);
