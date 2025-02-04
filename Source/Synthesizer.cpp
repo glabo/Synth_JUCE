@@ -1,5 +1,10 @@
 #include "Synthesizer.h"
 
+Synthesizer::Synthesizer(juce::AudioProcessorValueTreeState& apvts)
+    : filter(apvts)
+{
+}
+
 void Synthesizer::prepareToPlay(double newSampleRate, int samplesPerBlock)
 {
     juce::Synthesiser::setCurrentPlaybackSampleRate(newSampleRate);
@@ -17,12 +22,7 @@ void Synthesizer::setFilterParams(std::atomic<float>* cutoffFreq,
                                     std::atomic<float>* sustain,
                                     std::atomic<float>* release)
 {
-    filter.setFilterParams(cutoffFreq, q, resonance, adsrAmount, attack, decay, sustain, release);
-}
-
-void Synthesizer::setFilterType(FilterType filterType)
-{
-    filter.setFilterType(filterType);
+    //filter.setEnvelopeParams(cutoffFreq, q, resonance, adsrAmount, attack, decay, sustain, release);
 }
 
 void Synthesizer::createAndAddOscillatorParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout)

@@ -29,7 +29,7 @@ FilterComponent::FilterComponent(Synth_JUCEAudioProcessor& p,
 	auto filterType = static_cast<FilterType>(parameter->convertFrom0to1(parameter->getValue()) + 1);
 	filterTypeSelection.addItemList(parameter->getAllValueStrings(), 1);
 
-	filterTypeSelection.onChange = [this] { filterTypeSelectionChanged(); };
+	//filterTypeSelection.onChange = [this] { filterTypeSelectionChanged(); };
 	filterTypeSelection.setSelectedId(int(filterType));
 
 	filterTypeLabel.attachToComponent(&filterTypeSelection, false);
@@ -174,10 +174,4 @@ void FilterComponent::resized()
 	sustainSlider.setBounds(sustainSliderBounds);
 	auto releaseSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
 	releaseSlider.setBounds(releaseSliderBounds);
-}
-
-void FilterComponent::filterTypeSelectionChanged()
-{
-	FilterType filterType = static_cast<FilterType>(this->filterTypeSelection.getSelectedId());
-	audioProcessor.setFilterType(filterType);
 }

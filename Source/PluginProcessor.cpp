@@ -14,7 +14,8 @@
 Synth_JUCEAudioProcessor::Synth_JUCEAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (getBusesProperties()),
-       apvts(*this, nullptr, "apvts", createParameterLayout())
+       apvts(*this, nullptr, "apvts", createParameterLayout()),
+       synth(apvts)
 #endif
 {
     // Add a sub-tree to store the state of our UI
@@ -105,10 +106,6 @@ void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType) {
         auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
         voice->setWaveType(oscId, waveType);
     }
-}
-
-void Synth_JUCEAudioProcessor::setFilterType(FilterType filterType) {
-    synth.setFilterType(filterType);
 }
 
 void Synth_JUCEAudioProcessor::updateCurrentTimeInfoFromHost()

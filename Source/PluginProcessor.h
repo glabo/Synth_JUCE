@@ -37,15 +37,6 @@ public:
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     void getStateParameters() {
-        synth.setFilterParams(
-            apvts.getRawParameterValue(CUTOFF_FREQ_ID),
-            apvts.getRawParameterValue(Q_ID),
-            apvts.getRawParameterValue(RESONANCE_ID),
-            apvts.getRawParameterValue(FILTER_ADSR_AMOUNT_ID),
-            apvts.getRawParameterValue(FILTER_ATTACK_ID),
-            apvts.getRawParameterValue(FILTER_DECAY_ID),
-            apvts.getRawParameterValue(FILTER_SUSTAIN_ID),
-            apvts.getRawParameterValue(FILTER_RELEASE_ID));
         for (auto i = 0; i < synth.getNumVoices(); i++) {
             auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
             voice->setEnvelopeSampleRate(getSampleRate());
@@ -131,7 +122,6 @@ public:
 
     void initialiseSynth();
     void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType);
-    void Synth_JUCEAudioProcessor::setFilterType(FilterType filterType);
     void updateCurrentTimeInfoFromHost();
 
     //==============================================================================

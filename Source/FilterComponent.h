@@ -39,8 +39,6 @@ private:
 	juce::Rectangle<int> adsrBorder;
 	juce::Rectangle<int> adsrSubBorder;
 
-	void filterTypeSelectionChanged();
-
 	void paint(juce::Graphics&) override;
 	void resized() override;
 };

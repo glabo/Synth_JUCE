@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "TreeLabels.h"
 
 enum class FilterType {
 	NONE, // Placeholder for 1-justified selection box behavior
@@ -18,8 +19,8 @@ enum class FilterChain {
 
 class Filter {
 public:
+	Filter(juce::AudioProcessorValueTreeState& apvts);
 	void prepareToPlay(double newSampleRate, int samplesPerBlock);
-	void setFilterType(FilterType ft);
 
 	static std::unique_ptr<juce::AudioProcessorParameterGroup> createFilterParameterLayoutGroup(
 		juce::String filterTypeId,
@@ -31,14 +32,7 @@ public:
 		juce::String decayId,
 		juce::String sustainId,
 		juce::String releaseId);
-	void setFilterParams(std::atomic<float>* cutoffFreq,
-		std::atomic<float>* q,
-		std::atomic<float>* resonance,
-		std::atomic<float>* newAdsrAmount,
-		std::atomic<float>* newAttack,
-		std::atomic<float>* newDecay,
-		std::atomic<float>* newSustain,
-		std::atomic<float>* newRelease);
+	void setEnvelopeParams();
 
 	void startNote();
 	void noteOn();
@@ -53,6 +47,7 @@ private:
 	void bypassHighCut(bool bypass);
 	void setProcessorBypass(bool highPassBypass, bool peakBypass, bool lowPassBypass);
 
+	FilterType getFilterType();
 	float getModulatedCutoffFreq();
 
 	using IIRFilter = juce::dsp::IIR::Filter<float>;
@@ -64,14 +59,20 @@ private:
 
 	bool paramsUpdated = true;
 	double sampleRate;
-	float cutoffFreq;
-	float q;
-	float resonance;
-	FilterType filterType;
+	juce::AudioParameterChoice* filterType;
+	juce::AudioParameterFloat* cutoffFreq = nullptr;
+	juce::AudioParameterFloat* q = nullptr;
+	juce::AudioParameterFloat* resonance = nullptr;
 
 	juce::dsp::IIR::Filter<float> filter;
 
-	float adsrAmount = 0.0;
 	juce::ADSR envelope;
+	juce::AudioParameterFloat* adsrAmount = nullptr;
+	juce::AudioParameterFloat* attack = nullptr;
+	juce::AudioParameterFloat* decay = nullptr;
+	juce::AudioParameterFloat* sustain = nullptr;
+	juce::AudioParameterFloat* release = nullptr;
 	juce::ADSR::Parameters envelopeParams;
+
+	juce::AudioProcessorValueTreeState& apvts;
 };
