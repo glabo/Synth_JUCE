@@ -2,6 +2,8 @@
 
 #include <JuceHeader.h>
 #include "Filter.h"
+#include "TreeLabels.h"
+#include "GenericVoice.h"
 
 class Synthesizer : public juce::Synthesiser
 {
@@ -16,6 +18,10 @@ public:
 							std::atomic<float>* sustain,
 							std::atomic<float>* release);
 	void setFilterType(FilterType filterType);
+
+	static void createAndAddOscillatorParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout);
+	static void createAndAddFilterParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout);
+	static void createParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout);
 private:
 	void noteOn(int midiChannel, int midiNoteNumber, float velocity) override;
 	void noteOff(int midiChannel, int midiNoteNumber, float velocity, bool allowTailOff);

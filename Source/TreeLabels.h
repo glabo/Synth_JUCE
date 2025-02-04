@@ -6,6 +6,11 @@ static const int OSC_1 = 1;
 static const int OSC_2 = 2;
 static const int OSC_3 = 3;
 
+static const juce::String OSCILLATOR_0_ID = "oscillator_1";
+static const juce::String OSCILLATOR_1_ID = "oscillator_2";
+static const juce::String OSCILLATOR_2_ID = "oscillator_3";
+static const juce::String OSCILLATOR_3_ID = "oscillator_4";
+
 static const juce::String WAVETYPE_ID_0 = "wavetype_0";
 static const juce::String WAVETYPE_ID_1 = "wavetype_1";
 static const juce::String WAVETYPE_ID_2 = "wavetype_2";

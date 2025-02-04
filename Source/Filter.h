@@ -20,6 +20,17 @@ class Filter {
 public:
 	void prepareToPlay(double newSampleRate, int samplesPerBlock);
 	void setFilterType(FilterType ft);
+
+	static std::unique_ptr<juce::AudioProcessorParameterGroup> createFilterParameterLayoutGroup(
+		juce::String filterTypeId,
+		juce::String cutoffId,
+		juce::String qId,
+		juce::String resonanceId,
+		juce::String adsrAmountId,
+		juce::String attackId,
+		juce::String decayId,
+		juce::String sustainId,
+		juce::String releaseId);
 	void setFilterParams(std::atomic<float>* cutoffFreq,
 		std::atomic<float>* q,
 		std::atomic<float>* resonance,

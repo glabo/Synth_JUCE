@@ -137,6 +137,64 @@ public:
         }
     }
 
+    static std::unique_ptr<juce::AudioProcessorParameterGroup> createOscillatorParameterLayoutGroup(
+        juce::String oscId,
+        juce::String wavetypeId,
+        juce::String gainId,
+        juce::String pitchId,
+        juce::String delayId,
+        juce::String attackId,
+        juce::String decayId,
+        juce::String sustainId,
+        juce::String releaseId)
+    {
+        auto wavetype = std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ wavetypeId,  1 },
+            "Waveform",
+            juce::StringArray{ "Sine", "Square", "Triangle", "Saw Analog", "Noise" },
+            0);
+        auto gain = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ gainId,  1 },
+            "Gain",
+            juce::NormalisableRange<float>(0.0f, 1.0f),
+            0.9f);
+        auto pitch = std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ pitchId,  1 },
+            "Pitch",
+            -12, 12, 0);
+        auto delay = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ delayId, 1 },
+            "Delay Feedback",
+            juce::NormalisableRange<float>(0.0f, 1.0f),
+            0.5f);
+
+        // Oscillator envelope controls
+        auto attack = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ attackId,  1 },
+            "Attack",
+            juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+            1.0f);
+        auto decay = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ decayId,  1 },
+            "Decay",
+            juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+            1.0f);
+        auto sustain = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ sustainId,  1 },
+            "Sustain Level",
+            juce::NormalisableRange<float>(0.0f, 1.0f),
+            1.0f);
+        auto release = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ releaseId,  1 },
+            "Release",
+            juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+            1.0f);
+
+        auto group = std::make_unique<juce::AudioProcessorParameterGroup>(oscId, oscId, "|",
+            std::move(wavetype),
+            std::move(gain),
+            std::move(pitch),
+            std::move(delay),
+            std::move(attack),
+            std::move(decay),
+            std::move(sustain),
+            std::move(release)
+            );
+        return group;
+    }
+
     void setEnvelopeParams() {
         for (auto& o : osc) {
             o->setEnvelopeParams();
@@ -154,6 +212,4 @@ private:
     double velocityLevel = 0.0;
 
     std::vector<std::unique_ptr<Oscillator>> osc;
-
-    juce::ADSR envelope;
 };

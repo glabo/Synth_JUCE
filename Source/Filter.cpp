@@ -20,6 +20,60 @@ void Filter::setFilterType(FilterType ft)
     paramsUpdated = true;
 }
 
+std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParameterLayoutGroup(juce::String filterTypeId, juce::String cutoffId, juce::String qId, juce::String resonanceId, juce::String adsrAmountId, juce::String attackId, juce::String decayId, juce::String sustainId, juce::String releaseId)
+{
+
+    auto filterType = std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ filterTypeId,  1 },
+        "Waveform",
+        juce::StringArray{ "Low Pass", "High Pass", "Band Pass", "Peak" },
+        0);
+    auto cutoff = std::make_unique<juce::AudioParameterFloat>(cutoffId,
+        "Cutoff Freq",
+        juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 0.35f),
+        20.f);
+    auto q = std::make_unique<juce::AudioParameterFloat>(qId,
+        "Quality",
+        juce::NormalisableRange<float>(0.1f, 10.f, 0.05f, 1.f),
+        1.f);
+    auto resonance = std::make_unique<juce::AudioParameterFloat>(resonanceId,
+        "Resonance",
+        juce::NormalisableRange<float>(-0.1f, 10.f, 0.05f, 1.f),
+        1.f);
+
+    auto adsrAmount = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ adsrAmountId,  1 },
+        "Amount",
+        juce::NormalisableRange<float>(-1.0f, 1.0f),
+        0.0f);
+    auto attack = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ attackId,  1 },
+        "Attack",
+        juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+        1.0f);
+    auto decay = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ decayId,  1 },
+        "Decay",
+        juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+        1.0f);
+    auto sustain = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ sustainId,  1 },
+        "Sustain Level",
+        juce::NormalisableRange<float>(0.0f, 1.0f),
+        1.0f);
+    auto release = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ releaseId,  1 },
+        "Release",
+        juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+        1.0f);
+    auto group = std::make_unique<juce::AudioProcessorParameterGroup>("Filter", "Filter", "|",
+        std::move(filterType),
+        std::move(cutoff),
+        std::move(q),
+        std::move(resonance),
+        std::move(adsrAmount),
+        std::move(attack),
+        std::move(decay),
+        std::move(sustain),
+        std::move(release)
+        );
+    return group;
+}
+
 void Filter::setFilterParams(std::atomic<float>* cof,
     std::atomic<float>* newQ,
     std::atomic<float>* res,
