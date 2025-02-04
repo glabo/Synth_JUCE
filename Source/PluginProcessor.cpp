@@ -95,17 +95,10 @@ void Synth_JUCEAudioProcessor::initialiseSynth()
 
     // Add some voices...
     for (auto i = 0; i < numVoices; ++i)
-        synth.addVoice(new GenericVoice());
+        synth.addVoice(new GenericVoice(apvts));
 
     // ..and give the synth a sound to play
     synth.addSound(new GenericSound());
-}
-
-void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType) {
-    for (auto i = 0; i < synth.getNumVoices(); i++) {
-        auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
-        voice->setWaveType(oscId, waveType);
-    }
 }
 
 void Synth_JUCEAudioProcessor::updateCurrentTimeInfoFromHost()

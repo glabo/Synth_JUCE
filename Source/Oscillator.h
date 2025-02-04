@@ -6,20 +6,14 @@
 
 class Oscillator {
 public:
-	Oscillator(int initId, double sampleRate);
+	Oscillator(juce::AudioProcessorValueTreeState& apvts, int initId, double sampleRate);
 
 	void startNote(double velocityLevel, int midiNoteNumber, double sampleRate);
 	void noteOn();
 	void noteOff();
 	void clearNote();
-	void setWaveType(WAVE_TYPE newWaveType);
+	WAVE_TYPE getWaveType();
 	void setEnvelopeSampleRate(double sampleRate);
-	void pushEnvelopeParams(float level,
-							int pitch,
-							std::atomic<float>* attack,
-							std::atomic<float>* decay,
-							std::atomic<float>* sustain,
-							std::atomic<float>* release);
 	void setEnvelopeParams();
 
 	bool isActive();
@@ -36,8 +30,15 @@ private:
 	Pitch pitch;
 
 	// GUI Parameters
-	WAVE_TYPE waveType = SINE;
-	float knobLevel;
+	juce::AudioParameterChoice* waveType = nullptr;
+	
+	juce::AudioParameterFloat* knobLevel = nullptr;
+	juce::AudioParameterInt* pitchParam = nullptr;
+
 	juce::ADSR envelope;
+	juce::AudioParameterFloat* attack = nullptr;
+	juce::AudioParameterFloat* decay = nullptr;
+	juce::AudioParameterFloat* sustain = nullptr;
+	juce::AudioParameterFloat* release = nullptr;
 	juce::ADSR::Parameters envelopeParams;
 };

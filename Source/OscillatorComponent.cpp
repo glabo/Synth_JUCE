@@ -28,7 +28,7 @@ OscillatorComponent::OscillatorComponent(Synth_JUCEAudioProcessor& p,
     auto waveType = static_cast<WAVE_TYPE>(parameter->convertFrom0to1(parameter->getValue()) + 1);
     waveTypeSelection.addItemList(parameter->getAllValueStrings(), 1);
 
-    waveTypeSelection.onChange = [this] { waveTypeSelectionChanged(); };
+    //waveTypeSelection.onChange = [this] { waveTypeSelectionChanged(); };
     waveTypeSelection.setSelectedId(waveType);
 
     waveTypeLabel.attachToComponent(&waveTypeSelection, false);
@@ -165,11 +165,6 @@ void OscillatorComponent::resized() {
     sustainSlider.setBounds(sustainSliderBounds);
     auto releaseSliderBounds = adsrBounds.removeFromLeft(adsrBoxSubDivision);
     releaseSlider.setBounds(releaseSliderBounds);
-}
-
-void OscillatorComponent::waveTypeSelectionChanged() {
-    WAVE_TYPE waveType = static_cast<WAVE_TYPE>(this->waveTypeSelection.getSelectedId());
-    audioProcessor.setWaveType(oscId, waveType);
 }
 
 int OscillatorComponent::getControlParameterIndex(Component& control)

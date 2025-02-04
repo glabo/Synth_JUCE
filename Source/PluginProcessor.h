@@ -40,40 +40,6 @@ public:
         for (auto i = 0; i < synth.getNumVoices(); i++) {
             auto voice = dynamic_cast<GenericVoice*>(synth.getVoice(i));
             voice->setEnvelopeSampleRate(getSampleRate());
-            // This is where we'll associate an OSC_ID with its envelope parameters.
-            // Can't do this at a lower level because we have to access the raw param value
-            voice->pushEnvelopeParams(OSC_0,
-                apvts.getParameter(GAIN_ID_0)->getValue(),
-                ((juce::AudioParameterInt*)(apvts.getParameter(PITCH_ID_0)))->get(),
-                apvts.getRawParameterValue(ATTACK_ID_0),
-                apvts.getRawParameterValue(DECAY_ID_0),
-                apvts.getRawParameterValue(SUSTAIN_ID_0),
-                apvts.getRawParameterValue(RELEASE_ID_0)
-            );
-            voice->pushEnvelopeParams(OSC_1,
-                apvts.getParameter(GAIN_ID_1)->getValue(),
-                ((juce::AudioParameterInt*)(apvts.getParameter(PITCH_ID_1)))->get(),
-                apvts.getRawParameterValue(ATTACK_ID_1),
-                apvts.getRawParameterValue(DECAY_ID_1),
-                apvts.getRawParameterValue(SUSTAIN_ID_1),
-                apvts.getRawParameterValue(RELEASE_ID_1)
-            );
-            voice->pushEnvelopeParams(OSC_2,
-                apvts.getParameter(GAIN_ID_2)->getValue(),
-                ((juce::AudioParameterInt*)(apvts.getParameter(PITCH_ID_2)))->get(),
-                apvts.getRawParameterValue(ATTACK_ID_2),
-                apvts.getRawParameterValue(DECAY_ID_2),
-                apvts.getRawParameterValue(SUSTAIN_ID_2),
-                apvts.getRawParameterValue(RELEASE_ID_2)
-            );
-            voice->pushEnvelopeParams(OSC_3,
-                apvts.getParameter(GAIN_ID_3)->getValue(),
-                ((juce::AudioParameterInt*)(apvts.getParameter(PITCH_ID_3)))->get(),
-                apvts.getRawParameterValue(ATTACK_ID_3),
-                apvts.getRawParameterValue(DECAY_ID_3),
-                apvts.getRawParameterValue(SUSTAIN_ID_3),
-                apvts.getRawParameterValue(RELEASE_ID_3)
-            );
         }
     }
 
@@ -121,7 +87,6 @@ public:
     }
 
     void initialiseSynth();
-    void Synth_JUCEAudioProcessor::setWaveType(int oscId, WAVE_TYPE waveType);
     void updateCurrentTimeInfoFromHost();
 
     //==============================================================================

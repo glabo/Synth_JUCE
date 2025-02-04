@@ -56,8 +56,6 @@ private:
     juce::Rectangle<int> adsrBorder;
     // std::vector<juce::Rectangle<int>> subDivisions; // Layout aid
 
-    void waveTypeSelectionChanged();
-
     void paint(juce::Graphics&) override;
     void resized() override;
     //==============================================================================

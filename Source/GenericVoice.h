@@ -21,9 +21,9 @@ public:
 class GenericVoice final : public juce::SynthesiserVoice
 {
 public:
-    GenericVoice() {
+    GenericVoice(juce::AudioProcessorValueTreeState& apvts) {
         for (auto i = 0; i < NUM_OSC; i++) {
-            osc.push_back(std::make_unique<Oscillator>(i, getSampleRate()));
+            osc.push_back(std::make_unique<Oscillator>(apvts, i, getSampleRate()));
         }
     }
 
@@ -121,10 +121,6 @@ public:
         }
     }
 
-    void setWaveType(int oscId, WAVE_TYPE newWaveType) {
-        osc[oscId]->setWaveType(newWaveType);
-    }
-
     void setEnvelopeSampleRate(double sampleRate) {
         for (auto& o : osc) {
             o->setEnvelopeSampleRate(sampleRate);
@@ -193,11 +189,6 @@ public:
         for (auto& o : osc) {
             o->setEnvelopeParams();
         }
-    }
-
-    void pushEnvelopeParams(int oscId, float level, int pitchShift, std::atomic<float>* attack, std::atomic<float>* decay, std::atomic<float>* sustain, std::atomic<float>* release)
-    {
-        osc[oscId]->pushEnvelopeParams(level, pitchShift, attack, decay, sustain, release);
     }
 
     using SynthesiserVoice::renderNextBlock;
