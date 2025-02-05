@@ -13,11 +13,12 @@
 //==============================================================================
 Synth_JUCEAudioProcessor::Synth_JUCEAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (getBusesProperties()),
+     : MagicProcessor (getBusesProperties()),
        apvts(*this, nullptr, "apvts", createParameterLayout()),
        synth(apvts)
 #endif
 {
+    FOLEYS_SET_SOURCE_PATH(__FILE__);
     // Add a sub-tree to store the state of our UI
     apvts.state.addChild({ "uiState", { { "width",  400 }, { "height", 200 } }, {} }, -1, nullptr);
 
@@ -114,33 +115,6 @@ void Synth_JUCEAudioProcessor::updateCurrentTimeInfoFromHost()
     }();
 
     lastPosInfo.set(newInfo);
-}
-
-//==============================================================================
-bool Synth_JUCEAudioProcessor::hasEditor() const
-{
-    return true; // (change this to false if you choose to not supply an editor)
-}
-
-juce::AudioProcessorEditor* Synth_JUCEAudioProcessor::createEditor()
-{
-    return new Synth_JUCEAudioProcessorEditor (*this);
-}
-
-//==============================================================================
-void Synth_JUCEAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
-{
-    // Store an xml representation of our state.
-    if (auto xmlState = apvts.copyState().createXml())
-        copyXmlToBinary(*xmlState, destData);
-}
-
-void Synth_JUCEAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
-{
-    // Restore our plug-in's state from the xml representation stored in the above
-    // method.
-    if (auto xmlState = getXmlFromBinary(data, sizeInBytes))
-        apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
 void Synth_JUCEAudioProcessor::updateTrackProperties(const TrackProperties& properties)

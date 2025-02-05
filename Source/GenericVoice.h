@@ -149,10 +149,6 @@ public:
         auto pitch = std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ pitchId,  1 },
             "Pitch",
             -12, 12, 0);
-        auto delay = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ delayId, 1 },
-            "Delay Feedback",
-            juce::NormalisableRange<float>(0.0f, 1.0f),
-            0.5f);
 
         // Oscillator envelope controls
         auto attack = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ attackId,  1 },
@@ -176,7 +172,6 @@ public:
             std::move(wavetype),
             std::move(gain),
             std::move(pitch),
-            std::move(delay),
             std::move(attack),
             std::move(decay),
             std::move(sustain),

@@ -43,7 +43,7 @@ std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParamete
 {
 
     auto filterType = std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ filterTypeId,  1 },
-        "Waveform",
+        "Filter Type",
         juce::StringArray{ "Low Pass", "High Pass", "Band Pass", "Peak" },
         0);
     auto cutoff = std::make_unique<juce::AudioParameterFloat>(cutoffId,

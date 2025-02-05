@@ -18,7 +18,8 @@
 //==============================================================================
 /**
 */
-class Synth_JUCEAudioProcessor  : public juce::AudioProcessor
+
+class Synth_JUCEAudioProcessor  : public foleys::MagicProcessor
 {
 public:
     //==============================================================================
@@ -90,10 +91,6 @@ public:
     void updateCurrentTimeInfoFromHost();
 
     //==============================================================================
-    juce::AudioProcessorEditor* createEditor() override;
-    bool hasEditor() const override;
-
-    //==============================================================================
     const juce::String getName() const override { return JucePlugin_Name; };
 
     bool acceptsMidi() const override { return true; }
@@ -107,10 +104,6 @@ public:
     void setCurrentProgram(int) override {}
     const juce::String getProgramName(int) override { return "None"; }
     void changeProgramName(int, const juce::String&) override {}
-
-    //==============================================================================
-    void getStateInformation (juce::MemoryBlock& destData) override;
-    void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
     void updateTrackProperties(const TrackProperties& properties) override;
