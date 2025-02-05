@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<magic>
+  <Styles>
+    <Style name="default">
+      <Nodes/>
+      <Classes>
+        <plot-view border="2" background-color="black" border-color="silver" display="contents"/>
+        <nomargin margin="0" padding="0" border="0"/>
+        <group margin="5" padding="5" border="2" flex-direction="column" background-color="FF394F4A"
+               border-color="FF383838">
+          <media/>
+        </group>
+        <transparent background-color="transparentblack">
+          <media/>
+        </transparent>
+        <Waveform_selector max-width="150" max-height="50" combo-background="FF4A3118" combo-text="FFA9A9A9"
+                           combo-outline="FF303030" combo-menu-background="FF4A3118">
+          <media/>
+        </Waveform_selector>
+        <ADSRSlider rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                    slider-text-outline="004C4C4C" margin="0" padding="0" background-color=""
+                    flex-grow="1.0" slider-type="rotary-horizontal-vertical" slider-textbox="no-textbox">
+          <media/>
+        </ADSRSlider>
+        <OscSegment background-color="FF3A4846" margin="5" padding="1" border="1"
+                    radius="2" border-color="FF373737">
+          <media/>
+        </OscSegment>
+      </Classes>
+      <Types>
+        <Slider border="0" slider-textbox="textbox-below"/>
+        <ToggleButton border="0" max-height="50" caption-size="0" text="Active"/>
+        <TextButton border="0" max-height="50" caption-size="0"/>
+        <ComboBox border="0" max-height="50" caption-size="0"/>
+        <Plot border="0" margin="0" padding="0" background-color="00000000"
+              radius="0"/>
+        <XYDragComponent border="0" margin="0" padding="0" background-color="00000000"
+                         radius="0"/>
+      </Types>
+      <Palettes>
+        <default/>
+      </Palettes>
+    </Style>
+  </Styles>
+  <View id="root" resizable="1" resize-corner="1" flex-direction="column">
+    <View margin="0" padding="0" id="Controls">
+      <View class="parameters nomargin" flex-direction="column" id="Oscillator Box">
+        <View caption="OSC 1" class="group" flex-direction="row" caption-placement="top-left"
+              radius="5">
+          <View flex-grow=".4" caption-size="" caption="" class="OscSegment"
+                margin="5" padding="1" border="1" radius="2" flex-direction="column"
+                id="Wavetype">
+            <ComboBox parameter="wavetype_0" class="Waveform_selector" padding="" max-width="150"
+                      max-height="50" caption-placement="top-left" caption-size=""
+                      id="Wavetype"/>
+            <Slider parameter="gain_0" margin="0" padding="0" class="ADSRSlider"
+                    slider-textbox="no-textbox" caption="" flex-grow="1.7" id="Gain"/>
+          </View>
+          <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
+                radius="2" id="Pitch">
+            <Slider caption="Pitch" parameter="pitch_0" flex-grow="1.2" margin="0"
+                    padding="0" border="" class="ADSRSlider"/>
+          </View>
+          <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
+                radius="2" id="Adsr">
+            <Slider caption="Attack" parameter="attack_0" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Decay" parameter="decay_0" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Sustain" parameter="sustain_0" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Release" parameter="release_0" flex-grow="1.0" flex-align-self="stretch"
+                    rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                    class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+          </View>
+        </View>
+        <View caption="OSC 2" class="group" flex-direction="row" caption-placement="top-left"
+              radius="5">
+          <View flex-grow=".4" caption-size="" caption="" class="OscSegment"
+                margin="5" padding="1" border="1" radius="2" flex-direction="column"
+                id="Wavetype">
+            <ComboBox parameter="wavetype_1" max-width="150" max-height="50" class="Waveform_selector"
+                      padding="" caption-placement="top-left" caption="" caption-size="0"
+                      id="Wavetype"/>
+            <Slider parameter="gain_1" margin="0" padding="0" class="ADSRSlider"
+                    flex-grow="1.7" caption="" slider-textbox="no-textbox" id="Gain"/>
+          </View>
+          <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
+                radius="2" id="Pitch">
+            <Slider caption="Pitch" parameter="pitch_1" flex-grow="1.2" margin="0"
+                    padding="0" border="" class="ADSRSlider"/>
+          </View>
+          <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
+                radius="2" id="Adsr">
+            <Slider caption="Attack" parameter="attack_1" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Decay" parameter="decay_1" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Sustain" parameter="sustain_1" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Release" parameter="release_1" flex-grow="1.0" flex-align-self="stretch"
+                    rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                    class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+          </View>
+        </View>
+        <View caption="OSC 3" class="group" flex-direction="row" caption-placement="top-left"
+              radius="5">
+          <View flex-grow=".4" caption-size="" caption="" class="OscSegment"
+                margin="5" padding="1" border="1" radius="2" flex-direction="column"
+                id="Wavetype">
+            <ComboBox parameter="wavetype_2" max-width="150" max-height="50" class="Waveform_selector"
+                      padding="" caption-placement="top-left" caption="" caption-size="0"
+                      id="Wavetype"/>
+            <Slider parameter="gain_2" margin="0" padding="0" class="ADSRSlider"
+                    caption="" slider-textbox="no-textbox" flex-grow="1.7" id="Gain"/>
+          </View>
+          <View flex-grow=".6" class="OscSegment" margin="5" padding="1" radius="2"
+                border="1" id="Pitch">
+            <Slider caption="Pitch" parameter="pitch_2" flex-grow="1.2" margin="0"
+                    padding="0" border="" class="ADSRSlider"/>
+          </View>
+          <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
+                radius="2" id="Adsr">
+            <Slider caption="Attack" parameter="attack_2" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Decay" parameter="decay_2" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Sustain" parameter="sustain_2" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Release" parameter="release_2" flex-grow="1.0" flex-align-self="stretch"
+                    rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                    class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+          </View>
+        </View>
+        <View caption="OSC 4" class="group" flex-direction="row" caption-placement="top-left"
+              radius="5">
+          <View flex-grow=".4" caption-size="" caption="" class="OscSegment"
+                margin="5" padding="1" border="1" radius="2" flex-direction="column"
+                id="Wavetype">
+            <ComboBox parameter="wavetype_3" class="Waveform_selector" padding="" caption-placement="top-left"
+                      max-height="50" caption-size="0" caption="" id="Wavetype"/>
+            <Slider parameter="gain_3" margin="0" padding="0" class="ADSRSlider"
+                    slider-textbox="no-textbox" caption="" flex-grow="1.7" id="Gain"/>
+          </View>
+          <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
+                radius="2" id="Pitch">
+            <Slider caption="Pitch" parameter="pitch_3" flex-grow="1.2" margin="0"
+                    padding="0" border="" class="ADSRSlider"/>
+          </View>
+          <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
+                radius="2" id="Adsr">
+            <Slider caption="Attack" parameter="attack_3" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Decay" parameter="decay_3" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Sustain" parameter="sustain_3" flex-grow="1.0" class="ADSRSlider"
+                    padding="" margin=""/>
+            <Slider caption="Release" parameter="release_3" flex-grow="1.0" flex-align-self="stretch"
+                    rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                    class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+          </View>
+        </View>
+      </View>
+      <View flex-direction="column" id="Filter Box">
+        <View caption="Filter" class="group">
+          <View class="OscSegment" id="Filter">
+            <ComboBox caption="Filter Type" parameter="filter_type" caption-size="15"
+                      caption-placement="top-left" lookAndFeel="FoleysFinest" class="Waveform_selector"
+                      background-color="00000000"/>
+            <Slider caption="Cutoff Freq" parameter="cutoff_freq" class="ADSRSlider"/>
+            <Slider caption="Quality" parameter="q" class="ADSRSlider"/>
+            <Slider caption="Resonance" parameter="resonance" class="ADSRSlider"/>
+          </View>
+          <View class="OscSegment" id="Envelope">
+            <Slider caption="Amount" parameter="filter_adsr_amount" class="ADSRSlider"
+                    flex-grow="1.0"/>
+            <Slider caption="Attack" parameter="filter_attack" class="ADSRSlider"/>
+            <Slider caption="Decay" parameter="filter_decay" class="ADSRSlider"/>
+            <Slider caption="Sustain Level" parameter="filter_sustain" class="ADSRSlider"/>
+            <Slider caption="Release" parameter="filter_release" class="ADSRSlider"/>
+          </View>
+        </View>
+        <View/>
+      </View>
+    </View>
+    <View margin="0" padding="0" flex-grow=".3" id="Keyboard">
+      <KeyboardComponent flex-grow="1.0"/>
+    </View>
+  </View>
+</magic>
+ 

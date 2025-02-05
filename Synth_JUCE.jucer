@@ -3,7 +3,34 @@
 <JUCERPROJECT id="oY6CoR" name="Synth_JUCE" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
   <MAINGROUP id="cedKhj" name="Synth_JUCE">
+    <GROUP id="{0617922E-3F73-3FFF-F9A7-ED0E46D205B4}" name="Resources">
+      <FILE id="Khrre8" name="layout.xml" compile="0" resource="1" file="Resources/layout.xml"/>
+    </GROUP>
     <GROUP id="{C1840135-DD99-FB35-BD29-767955C43315}" name="Source">
+      <FILE id="qMVMxN" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
+      <FILE id="eH3ezW" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
+      <FILE id="fIKXlu" name="FilterComponent.cpp" compile="1" resource="0"
+            file="Source/FilterComponent.cpp"/>
+      <FILE id="wzHlGJ" name="FilterComponent.h" compile="0" resource="0"
+            file="Source/FilterComponent.h"/>
+      <FILE id="Djros0" name="GenericVoice.h" compile="0" resource="0" file="Source/GenericVoice.h"/>
+      <FILE id="DLLMdP" name="Oscillator.cpp" compile="1" resource="0" file="Source/Oscillator.cpp"/>
+      <FILE id="l3OSm0" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
+      <FILE id="tlK9V5" name="OscillatorComponent.cpp" compile="1" resource="0"
+            file="Source/OscillatorComponent.cpp"/>
+      <FILE id="m1bfx7" name="OscillatorComponent.h" compile="0" resource="0"
+            file="Source/OscillatorComponent.h"/>
+      <FILE id="LjRdhu" name="Pitch.cpp" compile="1" resource="0" file="Source/Pitch.cpp"/>
+      <FILE id="wLugkd" name="Pitch.h" compile="0" resource="0" file="Source/Pitch.h"/>
+      <FILE id="SPwOcQ" name="SineWave.h" compile="0" resource="0" file="Source/SineWave.h"/>
+      <FILE id="Wl6u09" name="SpinLockedPosInfo.h" compile="0" resource="0"
+            file="Source/SpinLockedPosInfo.h"/>
+      <FILE id="gz8M7w" name="Synthesizer.cpp" compile="1" resource="0" file="Source/Synthesizer.cpp"/>
+      <FILE id="dUfRwS" name="Synthesizer.h" compile="0" resource="0" file="Source/Synthesizer.h"/>
+      <FILE id="zR4tdX" name="TreeLabels.h" compile="0" resource="0" file="Source/TreeLabels.h"/>
+      <FILE id="LEoG9v" name="WaveGenerator.cpp" compile="1" resource="0"
+            file="Source/WaveGenerator.cpp"/>
+      <FILE id="srauec" name="WaveGenerator.h" compile="0" resource="0" file="Source/WaveGenerator.h"/>
       <FILE id="YTLwUr" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="e04ORe" name="PluginProcessor.h" compile="0" resource="0"

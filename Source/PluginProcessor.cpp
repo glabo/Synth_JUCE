@@ -21,6 +21,7 @@ Synth_JUCEAudioProcessor::Synth_JUCEAudioProcessor()
     FOLEYS_SET_SOURCE_PATH(__FILE__);
     // Add a sub-tree to store the state of our UI
     apvts.state.addChild({ "uiState", { { "width",  400 }, { "height", 200 } }, {} }, -1, nullptr);
+    magicState.setGuiValueTree(BinaryData::layout_xml, BinaryData::layout_xmlSize);
 
     initialiseSynth();
 }
