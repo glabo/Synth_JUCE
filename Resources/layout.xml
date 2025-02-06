@@ -185,7 +185,14 @@
             <Slider caption="Release" parameter="filter_release" class="ADSRSlider"/>
           </View>
         </View>
-        <View/>
+        <View>
+          <Plot source="output_analyser" class="OscSegment" plot-color="FFBE6522"
+                plot-fill-color="FF6B4B33" plot-inactive-color="" plot-gradient="linear-gradient(0,0% 85ff6b4b,100% ff555555)"
+                plot-decay=".4"/>
+          <Meter source="output_meter" flex-grow=".2" bar-background-color="FF393939"
+                 outline-color="FF7A7A7A" bar-fill-color="FFBE6522" tickmark-color="FFED4100"
+                 class="OscSegment"/>
+        </View>
       </View>
     </View>
     <View margin="0" padding="0" flex-grow=".3" id="Keyboard">

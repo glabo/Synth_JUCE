@@ -74,6 +74,10 @@ public:
         // Apply our gain change to the outgoing data..
         applyGain(buffer, delayBuffer, masterGain);
 
+        // Output analyser
+        analyser->pushSamples(buffer);
+        meter->pushSamples(buffer);
+
         // Now ask the host for the current time so we can store it to be displayed later...
         updateCurrentTimeInfoFromHost();
     }
@@ -131,6 +135,9 @@ private:
     int delayPosition = 0;
 
     Synthesizer synth;
+
+    foleys::MagicPlotSource* analyser = nullptr;
+    foleys::MagicLevelSource* meter = nullptr;
 
     juce::CriticalSection trackPropertiesLock;
     TrackProperties trackProperties;

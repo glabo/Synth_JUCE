@@ -23,6 +23,9 @@ Synth_JUCEAudioProcessor::Synth_JUCEAudioProcessor()
     apvts.state.addChild({ "uiState", { { "width",  400 }, { "height", 200 } }, {} }, -1, nullptr);
     magicState.setGuiValueTree(BinaryData::layout_xml, BinaryData::layout_xmlSize);
 
+    analyser = magicState.createAndAddObject<foleys::MagicAnalyser>("output_analyser");
+    meter = magicState.createAndAddObject<foleys::MagicLevelSource>("output_meter");
+
     initialiseSynth();
 }
 
@@ -47,6 +50,9 @@ void Synth_JUCEAudioProcessor::prepareToPlay (double newSampleRate, int samplesP
         delayBufferFloat.setSize(2, 12000);
         delayBufferDouble.setSize(1, 1);
     }
+
+    analyser->prepareToPlay(newSampleRate, samplesPerBlock);
+    meter->setupSource(getNumOutputChannels(), newSampleRate, 1000);
 
     reset();
 }
