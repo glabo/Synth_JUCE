@@ -10,6 +10,8 @@ class Synthesizer : public juce::Synthesiser
 public:
 	Synthesizer(juce::AudioProcessorValueTreeState& apvts);
 	void prepareToPlay(double newSampleRate, int samplesPerBlock);
+	void render(juce::AudioBuffer<float>& outputAudio, const juce::MidiBuffer& inputMidi,
+		int startSample, int numSamples);
 
 	static void createAndAddOscillatorParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout);
 	static void createAndAddFilterParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout);
@@ -17,7 +19,8 @@ public:
 private:
 	void noteOn(int midiChannel, int midiNoteNumber, float velocity) override;
 	void noteOff(int midiChannel, int midiNoteNumber, float velocity, bool allowTailOff);
-	void renderVoices(juce::AudioBuffer<float>& outputAudio, int startSample, int numSamples) override;
+
+	void processFilter(juce::AudioBuffer<float>& buffer, int startSample);
 
 	Filter filter;
 };

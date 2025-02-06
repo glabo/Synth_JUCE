@@ -66,7 +66,7 @@ public:
         keyboardState.processNextMidiBuffer(midiMessages, 0, numSamples, true);
 
         // and now get our synth to process these midi events and generate its output.
-        synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
+        synth.render(buffer, midiMessages, 0, numSamples);
 
         // Apply our delay effect to the new output..
         //applyDelay(buffer, delayBuffer, delayParamValue);

@@ -13,6 +13,12 @@ void Synthesizer::prepareToPlay(double newSampleRate, int samplesPerBlock)
     filter.prepareToPlay(newSampleRate, samplesPerBlock);
 }
 
+void Synthesizer::render(juce::AudioBuffer<float>& outputAudio, const juce::MidiBuffer& inputMidi, int startSample, int numSamples)
+{
+    juce::Synthesiser::renderNextBlock(outputAudio, inputMidi, startSample, numSamples);
+    filter.process(outputAudio, startSample);
+}
+
 void Synthesizer::createAndAddOscillatorParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout)
 {
     auto group = GenericVoice::createOscillatorParameterLayoutGroup(
@@ -104,9 +110,7 @@ void Synthesizer::noteOff(int midiChannel, int midiNoteNumber, float velocity, b
     filter.noteOff();
 }
 
-void Synthesizer::renderVoices(juce::AudioBuffer<float>& buffer, int startSample, int numSamples)
+void Synthesizer::processFilter(juce::AudioBuffer<float>& buffer, int startSample)
 {
-    // Do the same thing as parent but apply filtering afterwards
-    juce::Synthesiser::renderVoices(buffer, startSample, numSamples);
     filter.process(buffer, startSample);
 }
