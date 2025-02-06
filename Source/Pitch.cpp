@@ -3,8 +3,9 @@
 
 void Pitch::calculateAngleDelta()
 {
-	auto shiftedNote = currentMidiNote + pitchShift;
-	freq = juce::MidiMessage::getMidiNoteInHertz(shiftedNote);
+	auto shiftedNote = currentMidiNote + coarsePitchShift;
+	auto originalNoteInHz = juce::MidiMessage::getMidiNoteInHertz(shiftedNote);
+	freq = originalNoteInHz + calculateFinePitchShiftInHz(originalNoteInHz);
 	auto cyclesPerSample = freq / sampleRate;
 	angleDelta = cyclesPerSample * juce::MathConstants<double>::twoPi;
 }
@@ -13,9 +14,18 @@ void Pitch::setSampleRate(double sr) {
 	sampleRate = sr;
 }
 
-void Pitch::setPitchShift(int ps)
+void Pitch::setPitchShift(int ps, int fine)
 {
-	pitchShift = ps;
+	coarsePitchShift = ps;
+	finePitchShift = fine;
+}
+
+double Pitch::calculateFinePitchShiftInHz(double inFreq)
+{
+	// Fine pitch shift is the next octave mapped into 1000 (MAX_FINE_PITCH_SHIFT) steps
+	// Next octave is 2x current freq, so distance in Hz from this octave to the next is inFreq
+	double octaveRange = inFreq;
+	return ((double)finePitchShift / (double)MAX_FINE_PITCH_SHIFT) * octaveRange;
 }
 
 void Pitch::noteOn(int midiNoteNumber, double sr)

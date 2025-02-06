@@ -59,8 +59,9 @@
           </View>
           <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
                 radius="2" id="Pitch">
-            <Slider caption="Pitch" parameter="pitch_0" flex-grow="1.2" margin="0"
+            <Slider caption="Pitch" parameter="coarse_pitch_0" flex-grow="1.2" margin="0"
                     padding="0" border="" class="ADSRSlider"/>
+            <Slider class="ADSRSlider" parameter="fine_pitch_0" caption="Fine" flex-grow="1.0"/>
           </View>
           <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
                 radius="2" id="Adsr">
@@ -88,8 +89,9 @@
           </View>
           <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
                 radius="2" id="Pitch">
-            <Slider caption="Pitch" parameter="pitch_1" flex-grow="1.2" margin="0"
+            <Slider caption="Pitch" parameter="coarse_pitch_1" flex-grow="1.2" margin="0"
                     padding="0" border="" class="ADSRSlider"/>
+            <Slider class="ADSRSlider" parameter="fine_pitch_1" caption="Fine" flex-grow="1.0"/>
           </View>
           <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
                 radius="2" id="Adsr">
@@ -117,8 +119,9 @@
           </View>
           <View flex-grow=".6" class="OscSegment" margin="5" padding="1" radius="2"
                 border="1" id="Pitch">
-            <Slider caption="Pitch" parameter="pitch_2" flex-grow="1.2" margin="0"
+            <Slider caption="Pitch" parameter="coarse_pitch_2" flex-grow="1.2" margin="0"
                     padding="0" border="" class="ADSRSlider"/>
+            <Slider class="ADSRSlider" parameter="fine_pitch_2" caption="Fine" flex-grow="1.0"/>
           </View>
           <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
                 radius="2" id="Adsr">
@@ -145,8 +148,9 @@
           </View>
           <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
                 radius="2" id="Pitch">
-            <Slider caption="Pitch" parameter="pitch_3" flex-grow="1.2" margin="0"
+            <Slider caption="Pitch" parameter="coarse_pitch_3" flex-grow="1.2" margin="0"
                     padding="0" border="" class="ADSRSlider"/>
+            <Slider class="ADSRSlider" parameter="fine_pitch_3" caption="Fine" flex-grow="1.0"/>
           </View>
           <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
                 radius="2" id="Adsr">

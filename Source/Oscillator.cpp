@@ -12,9 +12,12 @@ Oscillator::Oscillator(juce::AudioProcessorValueTreeState& apvts, int initId, do
 	auto knobLevelId = "gain_" + std::to_string(initId);
 	knobLevel = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(knobLevelId));
 	jassert(knobLevel);
-	auto pitchId = "pitch_" + std::to_string(initId);
-	pitchParam = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(pitchId));
-	jassert(pitchParam);
+	auto coarsePitchId = "coarse_pitch_" + std::to_string(initId);
+	coarsePitchParam = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(coarsePitchId));
+	jassert(coarsePitchParam);
+	auto finePitchId = "fine_pitch_" + std::to_string(initId);
+	finePitchParam = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(finePitchId));
+	jassert(finePitchParam);
 
 	auto attackId = "attack_" + std::to_string(initId);
 	attack = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(attackId));
@@ -62,7 +65,7 @@ void Oscillator::setEnvelopeSampleRate(double sampleRate) {
 }
 
 void Oscillator::setEnvelopeParams() {
-	pitch.setPitchShift(pitchParam->get());
+	pitch.setPitchShift(coarsePitchParam->get(), finePitchParam->get());
 	envelopeParams.attack = attack->get();
 	envelopeParams.decay = decay->get();
 	envelopeParams.sustain = sustain->get();

@@ -8,12 +8,16 @@ private:
 	double freq = 0.0;
 	double sampleRate = 1.0; // Avoiding div by 0, maybe bad practice
 	int currentMidiNote = -1;
-	int pitchShift = 0;
+	int coarsePitchShift = 0;
+
+	const int MAX_FINE_PITCH_SHIFT = 1000;
+	int finePitchShift = 0;
 
 	void calculateAngleDelta();
 public:
 	void setSampleRate(double sr);
-	void setPitchShift(int pitchShift);
+	void setPitchShift(int coarsePitchShift, int finePitchShift);
+	double calculateFinePitchShiftInHz(double inFreq);
 	void noteOn(int midiNoteNumber, double sampleRate);
 	void clearNote();
 

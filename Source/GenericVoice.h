@@ -131,7 +131,8 @@ public:
         juce::String oscId,
         juce::String wavetypeId,
         juce::String gainId,
-        juce::String pitchId,
+        juce::String coarsePitchId,
+        juce::String finePitchId,
         juce::String delayId,
         juce::String attackId,
         juce::String decayId,
@@ -146,9 +147,12 @@ public:
             "Gain",
             juce::NormalisableRange<float>(0.0f, 1.0f),
             0.9f);
-        auto pitch = std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ pitchId,  1 },
-            "Pitch",
+        auto coarsePitch = std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ coarsePitchId,  1 },
+            "Coarse Pitch",
             -12, 12, 0);
+        auto finePitch = std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ finePitchId,  1 },
+            "Fine Pitch",
+            0, 1000, 0);
 
         // Oscillator envelope controls
         auto attack = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ attackId,  1 },
@@ -171,7 +175,8 @@ public:
         auto group = std::make_unique<juce::AudioProcessorParameterGroup>(oscId, oscId, "|",
             std::move(wavetype),
             std::move(gain),
-            std::move(pitch),
+            std::move(coarsePitch),
+            std::move(finePitch),
             std::move(attack),
             std::move(decay),
             std::move(sustain),
