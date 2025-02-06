@@ -7,7 +7,7 @@
       <Classes>
         <plot-view border="2" background-color="black" border-color="silver" display="contents"/>
         <nomargin margin="0" padding="0" border="0"/>
-        <group margin="5" padding="5" border="2" flex-direction="column" background-color="FF394F4A"
+        <group margin="2" padding="2" border="2" flex-direction="column" background-color="FF394F4A"
                border-color="FF383838">
           <media/>
         </group>
@@ -23,10 +23,13 @@
                     flex-grow="1.0" slider-type="rotary-horizontal-vertical" slider-textbox="no-textbox">
           <media/>
         </ADSRSlider>
-        <OscSegment background-color="FF3A4846" margin="5" padding="1" border="1"
-                    radius="2" border-color="FF373737">
+        <OscSegment background-color="FF3A4846" padding="1" border="1" radius="2"
+                    border-color="FF373737" margin="2">
           <media/>
         </OscSegment>
+        <OutputPlot plot-color="FFBE6522" plot-decay=".4" background-color="FF3C3C3C">
+          <media/>
+        </OutputPlot>
       </Classes>
       <Types>
         <Slider border="0" slider-textbox="textbox-below"/>
@@ -49,22 +52,19 @@
         <View caption="OSC 1" class="group" flex-direction="row" caption-placement="top-left"
               radius="5">
           <View flex-grow=".4" caption-size="" caption="" class="OscSegment"
-                margin="5" padding="1" border="1" radius="2" flex-direction="column"
-                id="Wavetype">
+                flex-direction="column" id="Wavetype">
             <ComboBox parameter="wavetype_0" class="Waveform_selector" padding="" max-width="150"
                       max-height="50" caption-placement="top-left" caption-size=""
                       id="Wavetype"/>
             <Slider parameter="gain_0" margin="0" padding="0" class="ADSRSlider"
                     slider-textbox="no-textbox" caption="" flex-grow="1.7" id="Gain"/>
           </View>
-          <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
-                radius="2" id="Pitch">
+          <View flex-grow=".6" class="OscSegment" id="Pitch">
             <Slider caption="Pitch" parameter="coarse_pitch_0" flex-grow="1.2" margin="0"
                     padding="0" border="" class="ADSRSlider"/>
             <Slider class="ADSRSlider" parameter="fine_pitch_0" caption="Fine" flex-grow="1.0"/>
           </View>
-          <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
-                radius="2" id="Adsr">
+          <View flex-grow=".75" class="OscSegment" id="Adsr">
             <Slider caption="Attack" parameter="attack_0" flex-grow="1.0" class="ADSRSlider"
                     padding="" margin=""/>
             <Slider caption="Decay" parameter="decay_0" flex-grow="1.0" class="ADSRSlider"
@@ -79,22 +79,19 @@
         <View caption="OSC 2" class="group" flex-direction="row" caption-placement="top-left"
               radius="5">
           <View flex-grow=".4" caption-size="" caption="" class="OscSegment"
-                margin="5" padding="1" border="1" radius="2" flex-direction="column"
-                id="Wavetype">
+                flex-direction="column" id="Wavetype">
             <ComboBox parameter="wavetype_1" max-width="150" max-height="50" class="Waveform_selector"
                       padding="" caption-placement="top-left" caption="" caption-size="0"
                       id="Wavetype"/>
             <Slider parameter="gain_1" margin="0" padding="0" class="ADSRSlider"
                     flex-grow="1.7" caption="" slider-textbox="no-textbox" id="Gain"/>
           </View>
-          <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
-                radius="2" id="Pitch">
+          <View flex-grow=".6" class="OscSegment" id="Pitch">
             <Slider caption="Pitch" parameter="coarse_pitch_1" flex-grow="1.2" margin="0"
                     padding="0" border="" class="ADSRSlider"/>
             <Slider class="ADSRSlider" parameter="fine_pitch_1" caption="Fine" flex-grow="1.0"/>
           </View>
-          <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
-                radius="2" id="Adsr">
+          <View flex-grow=".75" class="OscSegment" id="Adsr">
             <Slider caption="Attack" parameter="attack_1" flex-grow="1.0" class="ADSRSlider"
                     padding="" margin=""/>
             <Slider caption="Decay" parameter="decay_1" flex-grow="1.0" class="ADSRSlider"
@@ -109,22 +106,19 @@
         <View caption="OSC 3" class="group" flex-direction="row" caption-placement="top-left"
               radius="5">
           <View flex-grow=".4" caption-size="" caption="" class="OscSegment"
-                margin="5" padding="1" border="1" radius="2" flex-direction="column"
-                id="Wavetype">
+                flex-direction="column" id="Wavetype">
             <ComboBox parameter="wavetype_2" max-width="150" max-height="50" class="Waveform_selector"
                       padding="" caption-placement="top-left" caption="" caption-size="0"
                       id="Wavetype"/>
             <Slider parameter="gain_2" margin="0" padding="0" class="ADSRSlider"
                     caption="" slider-textbox="no-textbox" flex-grow="1.7" id="Gain"/>
           </View>
-          <View flex-grow=".6" class="OscSegment" margin="5" padding="1" radius="2"
-                border="1" id="Pitch">
+          <View flex-grow=".6" class="OscSegment" id="Pitch">
             <Slider caption="Pitch" parameter="coarse_pitch_2" flex-grow="1.2" margin="0"
                     padding="0" border="" class="ADSRSlider"/>
             <Slider class="ADSRSlider" parameter="fine_pitch_2" caption="Fine" flex-grow="1.0"/>
           </View>
-          <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
-                radius="2" id="Adsr">
+          <View flex-grow=".75" class="OscSegment" id="Adsr">
             <Slider caption="Attack" parameter="attack_2" flex-grow="1.0" class="ADSRSlider"
                     padding="" margin=""/>
             <Slider caption="Decay" parameter="decay_2" flex-grow="1.0" class="ADSRSlider"
@@ -139,21 +133,18 @@
         <View caption="OSC 4" class="group" flex-direction="row" caption-placement="top-left"
               radius="5">
           <View flex-grow=".4" caption-size="" caption="" class="OscSegment"
-                margin="5" padding="1" border="1" radius="2" flex-direction="column"
-                id="Wavetype">
+                flex-direction="column" id="Wavetype">
             <ComboBox parameter="wavetype_3" class="Waveform_selector" padding="" caption-placement="top-left"
                       max-height="50" caption-size="0" caption="" id="Wavetype"/>
             <Slider parameter="gain_3" margin="0" padding="0" class="ADSRSlider"
                     slider-textbox="no-textbox" caption="" flex-grow="1.7" id="Gain"/>
           </View>
-          <View flex-grow=".6" class="OscSegment" margin="5" padding="1" border="1"
-                radius="2" id="Pitch">
+          <View flex-grow=".6" class="OscSegment" id="Pitch">
             <Slider caption="Pitch" parameter="coarse_pitch_3" flex-grow="1.2" margin="0"
                     padding="0" border="" class="ADSRSlider"/>
             <Slider class="ADSRSlider" parameter="fine_pitch_3" caption="Fine" flex-grow="1.0"/>
           </View>
-          <View flex-grow=".75" class="OscSegment" margin="5" padding="1" border="1"
-                radius="2" id="Adsr">
+          <View flex-grow=".75" class="OscSegment" id="Adsr">
             <Slider caption="Attack" parameter="attack_3" flex-grow="1.0" class="ADSRSlider"
                     padding="" margin=""/>
             <Slider caption="Decay" parameter="decay_3" flex-grow="1.0" class="ADSRSlider"
@@ -166,7 +157,7 @@
           </View>
         </View>
       </View>
-      <View flex-direction="column" id="Filter Box">
+      <View flex-direction="column" id="Filter Box" margin="0" padding="0">
         <View caption="Filter" class="group">
           <View class="OscSegment" id="Filter">
             <ComboBox caption="Filter Type" parameter="filter_type" caption-size="15"
@@ -185,10 +176,13 @@
             <Slider caption="Release" parameter="filter_release" class="ADSRSlider"/>
           </View>
         </View>
-        <View>
-          <Plot source="output_analyser" class="OscSegment" plot-color="FFBE6522"
-                plot-fill-color="FF6B4B33" plot-inactive-color="" plot-gradient="linear-gradient(0,0% 85ff6b4b,100% ff555555)"
-                plot-decay=".4"/>
+        <View id="Output" class="group" flex-direction="">
+          <View class="OscSegment" id="Plots" flex-direction="column">
+            <Plot source="output_scope" id="Oscilloscope" class="OutputPlot" plot-fill-color="00000000"/>
+            <Plot source="output_analyser" class="OutputPlot" plot-fill-color="FF6B4B33"
+                  plot-inactive-color="" plot-gradient="linear-gradient(0,0% 85ff6b4b,100% ff555555)"
+                  plot-decay=".4" id="Spectrum" plot-color="FFBE6522"/>
+          </View>
           <Meter source="output_meter" flex-grow=".2" bar-background-color="FF393939"
                  outline-color="FF7A7A7A" bar-fill-color="FFBE6522" tickmark-color="FFED4100"
                  class="OscSegment"/>

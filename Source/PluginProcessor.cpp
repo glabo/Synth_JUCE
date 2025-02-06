@@ -25,6 +25,7 @@ Synth_JUCEAudioProcessor::Synth_JUCEAudioProcessor()
 
     analyser = magicState.createAndAddObject<foleys::MagicAnalyser>("output_analyser");
     meter = magicState.createAndAddObject<foleys::MagicLevelSource>("output_meter");
+    scope = magicState.createAndAddObject<foleys::MagicOscilloscope>("output_scope");
 
     initialiseSynth();
 }
@@ -52,7 +53,8 @@ void Synth_JUCEAudioProcessor::prepareToPlay (double newSampleRate, int samplesP
     }
 
     analyser->prepareToPlay(newSampleRate, samplesPerBlock);
-    meter->setupSource(getNumOutputChannels(), newSampleRate, 1000);
+    meter->setupSource(getNumOutputChannels(), newSampleRate, 300);
+    scope->prepareToPlay(newSampleRate, samplesPerBlock);
 
     reset();
 }

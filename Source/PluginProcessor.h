@@ -77,6 +77,7 @@ public:
         // Output analyser
         analyser->pushSamples(buffer);
         meter->pushSamples(buffer);
+        scope->pushSamples(buffer);
 
         // Now ask the host for the current time so we can store it to be displayed later...
         updateCurrentTimeInfoFromHost();
@@ -138,6 +139,7 @@ private:
 
     foleys::MagicPlotSource* analyser = nullptr;
     foleys::MagicLevelSource* meter = nullptr;
+    foleys::MagicOscilloscope* scope = nullptr;
 
     juce::CriticalSection trackPropertiesLock;
     TrackProperties trackProperties;
