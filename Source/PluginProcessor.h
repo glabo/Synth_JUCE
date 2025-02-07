@@ -53,6 +53,9 @@ public:
        
         auto numSamples = buffer.getNumSamples();
 
+        // Hook up visual keyboard
+        magicState.processMidiBuffer(midiMessages, numSamples);
+
         // In case we have more outputs than inputs, we'll clear any output
         // channels that didn't contain input data, (because these aren't
         // guaranteed to be empty - they may contain garbage).
