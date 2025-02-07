@@ -7,6 +7,8 @@
       <FILE id="Khrre8" name="layout.xml" compile="0" resource="1" file="Resources/layout.xml"/>
     </GROUP>
     <GROUP id="{C1840135-DD99-FB35-BD29-767955C43315}" name="Source">
+      <FILE id="uLOQW3" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
+      <FILE id="B7zM9A" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>
       <FILE id="qMVMxN" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
       <FILE id="eH3ezW" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
       <FILE id="fIKXlu" name="FilterComponent.cpp" compile="1" resource="0"

@@ -146,7 +146,7 @@ public:
         auto gain = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ gainId,  1 },
             "Gain",
             juce::NormalisableRange<float>(0.0f, 1.0f),
-            0.9f);
+            0.0f);
         auto coarsePitch = std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ coarsePitchId,  1 },
             "Coarse Pitch",
             -12, 12, 0);
@@ -158,11 +158,11 @@ public:
         auto attack = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ attackId,  1 },
             "Attack",
             juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
-            1.0f);
+            0.0f);
         auto decay = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ decayId,  1 },
             "Decay",
             juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
-            1.0f);
+            0.0f);
         auto sustain = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ sustainId,  1 },
             "Sustain Level",
             juce::NormalisableRange<float>(0.0f, 1.0f),
@@ -170,7 +170,7 @@ public:
         auto release = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ releaseId,  1 },
             "Release",
             juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
-            1.0f);
+            0.0f);
 
         auto group = std::make_unique<juce::AudioProcessorParameterGroup>(oscId, oscId, "|",
             std::move(wavetype),
