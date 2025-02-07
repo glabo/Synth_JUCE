@@ -2,6 +2,8 @@
 
 #include <JuceHeader.h>
 #include "TreeLabels.h"
+#include "Oscillator.h"
+#include "LFO.h"
 
 enum class FilterType {
 	NONE, // Placeholder for 1-justified selection box behavior
@@ -31,7 +33,10 @@ public:
 		juce::String attackId,
 		juce::String decayId,
 		juce::String sustainId,
-		juce::String releaseId);
+		juce::String releaseId,
+		juce::String lfoAmountId,
+		juce::String lfoFreqId,
+		juce::String wavetypeId);
 	void setEnvelopeParams();
 
 	void startNote();
@@ -40,7 +45,7 @@ public:
 
 	void process(juce::AudioBuffer<float>& buffer, int startSample);
 private:
-	void setFilters();
+	void setFilters(int numSamples);
 	void resetFilters();
 	void bypassPeak(bool bypass);
 	void bypassLowCut(bool bypass);
@@ -48,12 +53,11 @@ private:
 	void setProcessorBypass(bool highPassBypass, bool peakBypass, bool lowPassBypass);
 
 	FilterType getFilterType();
-	float getModulatedCutoffFreq();
+	float getModulatedCutoffFreq(int numSamples);
 
+	// ====================== FILTER ================================
 	using IIRFilter = juce::dsp::IIR::Filter<float>;
 	using CutFilter = juce::dsp::ProcessorChain<IIRFilter, IIRFilter, IIRFilter, IIRFilter>;
-	// Mono signal path: LowCut Filter --> Peak Filter --> HighCut Filter
-	//using MonoChain = juce::dsp::ProcessorChain<CutFilter, IIRFilter, CutFilter>;
 	using MonoChain = juce::dsp::ProcessorChain<IIRFilter, IIRFilter, IIRFilter>;
 	MonoChain leftChain, rightChain;
 
@@ -64,8 +68,7 @@ private:
 	juce::AudioParameterFloat* q = nullptr;
 	juce::AudioParameterFloat* resonance = nullptr;
 
-	juce::dsp::IIR::Filter<float> filter;
-
+	// ====================== ENVELOPE ================================
 	juce::ADSR envelope;
 	juce::AudioParameterFloat* adsrAmount = nullptr;
 	juce::AudioParameterFloat* attack = nullptr;
@@ -73,6 +76,10 @@ private:
 	juce::AudioParameterFloat* sustain = nullptr;
 	juce::AudioParameterFloat* release = nullptr;
 	juce::ADSR::Parameters envelopeParams;
+
+
+	// ====================== LFO ================================
+	LFO lfo;
 
 	juce::AudioProcessorValueTreeState& apvts;
 };

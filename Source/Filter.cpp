@@ -1,8 +1,11 @@
 #include "Filter.h"
 
 Filter::Filter(juce::AudioProcessorValueTreeState& apvts)
-    : apvts(apvts)
+    : apvts(apvts),
+    lfo(apvts, FILTER_LFO_AMOUNT_ID, FILTER_LFO_FREQ_ID, FILTER_LFO_WAVETYPE_ID)
 {
+
+    // ====================== FILTER ================================
     filterType = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(FILTER_TYPE_ID));
     jassert(filterType);
     cutoffFreq = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(CUTOFF_FREQ_ID));
@@ -12,6 +15,7 @@ Filter::Filter(juce::AudioProcessorValueTreeState& apvts)
     resonance = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(RESONANCE_ID));
     jassert(resonance);
 
+    // ====================== ENVELOPE ================================
     adsrAmount = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_ADSR_AMOUNT_ID));
     jassert(adsrAmount);
     attack = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_ATTACK_ID));
@@ -28,6 +32,7 @@ Filter::Filter(juce::AudioProcessorValueTreeState& apvts)
 void Filter::prepareToPlay(double newSampleRate, int samplesPerBlock)
 {
     sampleRate = newSampleRate;
+    lfo.prepareToPlay(newSampleRate);
 
     juce::dsp::ProcessSpec spec;
     spec.maximumBlockSize = samplesPerBlock;
@@ -39,9 +44,21 @@ void Filter::prepareToPlay(double newSampleRate, int samplesPerBlock)
     rightChain.prepare(spec);
 }
 
-std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParameterLayoutGroup(juce::String filterTypeId, juce::String cutoffId, juce::String qId, juce::String resonanceId, juce::String adsrAmountId, juce::String attackId, juce::String decayId, juce::String sustainId, juce::String releaseId)
+std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParameterLayoutGroup(
+    juce::String filterTypeId,
+    juce::String cutoffId,
+    juce::String qId,
+    juce::String resonanceId,
+    juce::String adsrAmountId,
+    juce::String attackId,
+    juce::String decayId,
+    juce::String sustainId,
+    juce::String releaseId,
+    juce::String lfoAmountId,
+    juce::String lfoFreqId,
+    juce::String wavetypeId)
 {
-
+    // ====================== FILTER ================================
     auto filterType = std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ filterTypeId,  1 },
         "Filter Type",
         juce::StringArray{ "Low Pass", "High Pass", "Band Pass", "Peak" },
@@ -59,6 +76,7 @@ std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParamete
         juce::NormalisableRange<float>(-0.1f, 10.f, 0.05f, 1.f),
         1.f);
 
+    // ====================== ENVELOPE ================================
     auto adsrAmount = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ adsrAmountId,  1 },
         "Amount",
         juce::NormalisableRange<float>(-1.0f, 1.0f),
@@ -79,6 +97,21 @@ std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParamete
         "Release",
         juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
         1.0f);
+
+    // ====================== LFO ================================
+    auto lfoAmount = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ lfoAmountId,  1 },
+        "Amount",
+        juce::NormalisableRange<float>(-1.0f, 1.0f),
+        0.0f);
+    auto lfoFreq = std::make_unique<juce::AudioParameterFloat>(lfoFreqId,
+        "Freq",
+        juce::NormalisableRange<float>(0.1f, 100.f, 0.1f, 0.35f),
+        1.f);
+    auto wavetype = std::make_unique<juce::AudioParameterChoice>(juce::ParameterID{ wavetypeId,  1 },
+        "Waveform",
+        juce::StringArray{ "Sine", "Square", "Triangle", "Saw Analog", "Noise" },
+        0);
+
     auto group = std::make_unique<juce::AudioProcessorParameterGroup>("Filter", "Filter", "|",
         std::move(filterType),
         std::move(cutoff),
@@ -88,7 +121,10 @@ std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParamete
         std::move(attack),
         std::move(decay),
         std::move(sustain),
-        std::move(release)
+        std::move(release),
+        std::move(lfoAmount),
+        std::move(lfoFreq),
+        std::move(wavetype)
         );
     return group;
 }
@@ -112,6 +148,7 @@ void Filter::noteOn()
     // Retrigger filter envelope on each new note, more intuitive
     envelope.reset();
     envelope.noteOn();
+    lfo.noteOn();
 }
 
 void Filter::noteOff()
@@ -123,7 +160,7 @@ void Filter::process(juce::AudioBuffer<float>& buffer, int startSample)
 {
     // Push input coefficients to filters before processing
     setEnvelopeParams();
-    setFilters();
+    setFilters(buffer.getNumSamples());
 
     juce::dsp::AudioBlock<float> block(buffer, startSample);
     auto leftBlock = block.getSingleChannelBlock(0);
@@ -136,10 +173,10 @@ void Filter::process(juce::AudioBuffer<float>& buffer, int startSample)
     rightChain.process(rightContext);
 }
 
-void Filter::setFilters()
+void Filter::setFilters(int numSamples)
 {
     // Modulate frequency with envelope value
-    auto modulatedFreq = getModulatedCutoffFreq();
+    auto modulatedFreq = getModulatedCutoffFreq(numSamples);
 
     auto lowPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, modulatedFreq, q->get());
     auto highPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, modulatedFreq, q->get());
@@ -216,16 +253,20 @@ FilterType Filter::getFilterType()
     return f;
 }
 
-float Filter::getModulatedCutoffFreq()
+float Filter::getModulatedCutoffFreq(int numSamples)
 {
     // Filter logic:
     // When adsrAmount = +1
     // freq follows env on positive slope starting from cutoffFreq, ceiling freq of 20k
     float maxFreqRange = 20000.0f;
+    float maxLFOAmount = 5000.0f;
 
-    float modulatedFreq = cutoffFreq->get() + (adsrAmount->get() * (envelope.getNextSample() * maxFreqRange));
+    auto lfoOffset = lfo.generateSample(numSamples) * maxLFOAmount;
+    auto adsrOffset = adsrAmount->get() * (envelope.getNextSample() * maxFreqRange);
+    float modulatedFreq = cutoffFreq->get() + adsrOffset + lfoOffset;
+
     modulatedFreq = std::min(modulatedFreq, 20000.0f);
-    modulatedFreq = std::max(0.0f, modulatedFreq);
+    modulatedFreq = std::max(20.0f, modulatedFreq);
 
     return modulatedFreq;
 }

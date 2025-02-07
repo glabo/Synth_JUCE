@@ -31,7 +31,6 @@ private:
 
 	// GUI Parameters
 	juce::AudioParameterChoice* waveType = nullptr;
-	
 	juce::AudioParameterFloat* knobLevel = nullptr;
 	juce::AudioParameterInt* coarsePitchParam = nullptr;
 	juce::AudioParameterInt* finePitchParam = nullptr;

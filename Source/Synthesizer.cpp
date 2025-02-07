@@ -86,7 +86,10 @@ void Synthesizer::createAndAddFilterParameterLayouts(juce::AudioProcessorValueTr
         FILTER_ATTACK_ID,
         FILTER_DECAY_ID,
         FILTER_SUSTAIN_ID,
-        FILTER_RELEASE_ID);
+        FILTER_RELEASE_ID,
+        FILTER_LFO_AMOUNT_ID,
+        FILTER_LFO_FREQ_ID,
+        FILTER_LFO_WAVETYPE_ID);
     layout.add(std::move(group));
 }
 

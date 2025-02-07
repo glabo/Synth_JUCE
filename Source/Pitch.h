@@ -14,13 +14,16 @@ private:
 	int finePitchShift = 0;
 
 	void calculateAngleDelta();
+	void calculateAngleDelta(float freq, double sampleRate);
 public:
 	void setSampleRate(double sr);
 	void setPitchShift(int coarsePitchShift, int finePitchShift);
 	double calculateFinePitchShiftInHz(double inFreq);
 	void noteOn(int midiNoteNumber, double sampleRate);
+	void noteOn(float freq, double sampleRate);
 	void clearNote();
 
 	bool angleApproxZero();
 	double getNextSample();
+	double getNextSample(double freq);
 };

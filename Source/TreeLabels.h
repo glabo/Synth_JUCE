@@ -67,3 +67,7 @@ static const juce::String FILTER_ATTACK_ID = "filter_attack";
 static const juce::String FILTER_DECAY_ID = "filter_decay";
 static const juce::String FILTER_SUSTAIN_ID = "filter_sustain";
 static const juce::String FILTER_RELEASE_ID = "filter_release";
+
+static const juce::String FILTER_LFO_AMOUNT_ID = "filter_lfo_amount";
+static const juce::String FILTER_LFO_FREQ_ID = "filter_lfo_freq";
+static const juce::String FILTER_LFO_WAVETYPE_ID = "filter_lfo_wavetype";
