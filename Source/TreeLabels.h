@@ -1,5 +1,8 @@
 #pragma once
 
+// ========================= MASTER ==================================
+static const juce::String MASTER_LEVEL_ID = "master_level";
+
 // ========================= OSCILLATOR ==================================
 static const int OSC_0 = 0;
 static const int OSC_1 = 1;

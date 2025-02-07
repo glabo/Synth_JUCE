@@ -3,6 +3,8 @@
 Synthesizer::Synthesizer(juce::AudioProcessorValueTreeState& apvts)
     : filter(apvts)
 {
+    masterLevel = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(MASTER_LEVEL_ID));
+    jassert(masterLevel);
 }
 
 void Synthesizer::prepareToPlay(double newSampleRate, int samplesPerBlock)
@@ -17,6 +19,11 @@ void Synthesizer::render(juce::AudioBuffer<float>& outputAudio, const juce::Midi
 {
     juce::Synthesiser::renderNextBlock(outputAudio, inputMidi, startSample, numSamples);
     filter.process(outputAudio, startSample);
+}
+
+float Synthesizer::getMasterLevel()
+{
+    return masterLevel->get();
 }
 
 void Synthesizer::createAndAddOscillatorParameterLayouts(juce::AudioProcessorValueTreeState::ParameterLayout& layout)
@@ -93,8 +100,21 @@ void Synthesizer::createAndAddFilterParameterLayouts(juce::AudioProcessorValueTr
     layout.add(std::move(group));
 }
 
+void Synthesizer::createMasterParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout)
+{
+    auto masterLevel = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ MASTER_LEVEL_ID,  1 },
+        "Level",
+        juce::NormalisableRange<float>(0.0f, 1.2f),
+        1.0f);
+    auto group = std::make_unique<juce::AudioProcessorParameterGroup>("Master", "Master", "|",
+        std::move(masterLevel));
+    layout.add(std::move(group));
+}
+
 void Synthesizer::createParameterLayout(juce::AudioProcessorValueTreeState::ParameterLayout& layout)
 {
+    // Master parameter layouts
+    createMasterParameterLayout(layout);
     // Oscillator parameter layouts
     createAndAddOscillatorParameterLayouts(layout);
     // Filter parameter layouts

@@ -188,9 +188,13 @@
                   plot-inactive-color="" plot-gradient="linear-gradient(0,0% 85ff6b4b,100% ff555555)"
                   plot-decay=".4" id="Spectrum" plot-color="FFBE6522"/>
           </View>
-          <Meter source="output_meter" flex-grow=".2" bar-background-color="FF393939"
-                 outline-color="FF7A7A7A" bar-fill-color="FFBE6522" tickmark-color="FFED4100"
-                 class="OscSegment"/>
+          <View flex-grow=".2" class="OscSegment" flex-direction="column" id="MasterLevel">
+            <Meter source="output_meter" bar-background-color="FF393939" outline-color="FF7A7A7A"
+                   bar-fill-color="CCBE2222" tickmark-color="FFED4100" class="OscSegment"
+                   flex-grow="1.0" id="Volume"/>
+            <Slider flex-grow=".4" class="ADSRSlider" parameter="master_level" rotary-fill="FFBE2222"
+                    id="MasterLevel"/>
+          </View>
         </View>
       </View>
     </View>

@@ -47,8 +47,6 @@ public:
     template <typename FloatType>
     void process(juce::AudioBuffer<FloatType>& buffer, juce::MidiBuffer& midiMessages, juce::AudioBuffer<FloatType>& delayBuffer)
     {
-        // Eventually will be parametrized
-        auto masterGain = 1.0f;
 
         // Grab parameters from tree state
         getStateParameters();
@@ -72,7 +70,7 @@ public:
         //applyDelay(buffer, delayBuffer, delayParamValue);
 
         // Apply our gain change to the outgoing data..
-        applyGain(buffer, delayBuffer, masterGain);
+        applyGain(buffer, delayBuffer, synth.getMasterLevel());
 
         // Output analyser
         analyser->pushSamples(buffer);
