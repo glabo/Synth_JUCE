@@ -1,4 +1,0 @@
-This project is a learning exercise for the JUCE VST plugin platform.
-
-Current state is a 4-oscillator additive synth with per-oscillator volume envelopes
-and several filter types with their own frequency envelope.
