@@ -79,29 +79,29 @@ std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParamete
     // ====================== ENVELOPE ================================
     auto adsrAmount = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ adsrAmountId,  1 },
         "Amount",
-        juce::NormalisableRange<float>(-1.0f, 1.0f),
+        juce::NormalisableRange<float>(-1.0f, 1.0f, 0.01f),
         0.0f);
     auto attack = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ attackId,  1 },
         "Attack",
-        juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+        juce::NormalisableRange<float>(0.0f, 10.0f, 0.01f, 0.2f),
         0.0f);
     auto decay = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ decayId,  1 },
         "Decay",
-        juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+        juce::NormalisableRange<float>(0.0f, 10.0f, 0.01f, 0.2f),
         0.0f);
     auto sustain = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ sustainId,  1 },
         "Sustain Level",
-        juce::NormalisableRange<float>(0.0f, 1.0f),
+        juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f),
         1.0f);
     auto release = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ releaseId,  1 },
         "Release",
-        juce::NormalisableRange<float>(0.0f, 10.0f, 0.0f, 0.2f),
+        juce::NormalisableRange<float>(0.0f, 10.0f, 0.01f, 0.2f),
         0.0f);
 
     // ====================== LFO ================================
     auto lfoAmount = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ lfoAmountId,  1 },
         "Amount",
-        juce::NormalisableRange<float>(-1.0f, 1.0f),
+        juce::NormalisableRange<float>(-1.0f, 1.0f, 0.01f),
         0.0f);
     auto lfoFreq = std::make_unique<juce::AudioParameterFloat>(lfoFreqId,
         "Freq",
@@ -253,6 +253,14 @@ FilterType Filter::getFilterType()
     return f;
 }
 
+float Filter::getEnvelopeValue(int numSamples)
+{
+    for (auto i = 0; i < numSamples; i++) {
+        envelope.getNextSample();
+    }
+    return envelope.getNextSample();
+}
+
 float Filter::getModulatedCutoffFreq(int numSamples)
 {
     // Filter logic:
@@ -262,7 +270,7 @@ float Filter::getModulatedCutoffFreq(int numSamples)
     float maxLFOAmount = 5000.0f;
 
     auto lfoOffset = lfo.generateSample(numSamples) * maxLFOAmount;
-    auto adsrOffset = adsrAmount->get() * (envelope.getNextSample() * maxFreqRange);
+    auto adsrOffset = adsrAmount->get() * (getEnvelopeValue(numSamples) * maxFreqRange);
     float modulatedFreq = cutoffFreq->get() + adsrOffset + lfoOffset;
 
     modulatedFreq = std::min(modulatedFreq, 20000.0f);

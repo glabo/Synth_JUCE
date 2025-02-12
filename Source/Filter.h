@@ -53,6 +53,7 @@ private:
 	void setProcessorBypass(bool highPassBypass, bool peakBypass, bool lowPassBypass);
 
 	FilterType getFilterType();
+	float getEnvelopeValue(int numSamples);
 	float getModulatedCutoffFreq(int numSamples);
 
 	// ====================== FILTER ================================

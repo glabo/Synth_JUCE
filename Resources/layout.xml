@@ -11,7 +11,8 @@
                border-color="FF383838">
           <media/>
         </group>
-        <transparent background-color="transparentblack">
+        <transparent background-color="transparentblack" margin="0" padding="0" display="contents"
+                     flex-direction="column">
           <media/>
         </transparent>
         <Waveform_selector max-width="150" max-height="50" combo-background="FF4A3118" combo-text="FFA9A9A9"
@@ -30,6 +31,11 @@
         <OutputPlot plot-color="FFBE6522" plot-decay=".4" background-color="FF3C3C3C">
           <media/>
         </OutputPlot>
+        <KnobValueLabel border-color="00000000" background-color="00000000" pos-y="70%"
+                        pos-height="30%" justification="centred" label-background="00000000"
+                        label-outline="00000000" label-text="FFCEA95D" margin="0" padding="0">
+          <media/>
+        </KnobValueLabel>
       </Classes>
       <Types>
         <Slider border="0" slider-textbox="textbox-below"/>
@@ -60,20 +66,38 @@
                     slider-textbox="no-textbox" caption="" flex-grow="1.7" id="Gain"/>
           </View>
           <View flex-grow=".6" class="OscSegment" id="Pitch">
-            <Slider caption="Pitch" parameter="coarse_pitch_0" flex-grow="1.2" margin="0"
-                    padding="0" border="" class="ADSRSlider"/>
-            <Slider class="ADSRSlider" parameter="fine_pitch_0" caption="Fine" flex-grow="1.0"/>
+            <View class="transparent" id="CoarsePitch" display="contents">
+              <Label parameter="coarse_pitch_0" class="KnobValueLabel" id="PitchValue"/>
+              <Slider parameter="coarse_pitch_0" flex-grow="1.0" margin="0" padding="0"
+                      border="" class="ADSRSlider" caption="Pitch" slider-background="00000000"/>
+            </View>
+            <View class="transparent" id="FinePitch">
+              <Label parameter="fine_pitch_0" class="KnobValueLabel" id="FinePitchValue"/>
+              <Slider class="ADSRSlider" parameter="fine_pitch_0" caption="Fine" flex-grow="1.0"/>
+            </View>
           </View>
           <View flex-grow=".75" class="OscSegment" id="Adsr">
-            <Slider caption="Attack" parameter="attack_0" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Decay" parameter="decay_0" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Sustain" parameter="sustain_0" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Release" parameter="release_0" flex-grow="1.0" flex-align-self="stretch"
-                    rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
-                    class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+            <View id="Attack" class="transparent">
+              <Label parameter="attack_0" class="KnobValueLabel" id="Attack"/>
+              <Slider caption="Attack" parameter="attack_0" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View class="transparent" id="Decay">
+              <Label parameter="decay_0" class="KnobValueLabel" id="Decay"/>
+              <Slider caption="Decay" parameter="decay_0" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Sustain" class="transparent">
+              <Label parameter="sustain_0" class="KnobValueLabel" id="Sustain"/>
+              <Slider caption="Sustain" parameter="sustain_0" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Release" class="transparent">
+              <Label parameter="release_0" class="KnobValueLabel" id="Release"/>
+              <Slider caption="Release" parameter="release_0" flex-grow="1.0" flex-align-self="stretch"
+                      rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                      class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+            </View>
           </View>
         </View>
         <View caption="OSC 2" class="group" flex-direction="row" caption-placement="top-left"
@@ -87,20 +111,38 @@
                     flex-grow="1.7" caption="" slider-textbox="no-textbox" id="Gain"/>
           </View>
           <View flex-grow=".6" class="OscSegment" id="Pitch">
-            <Slider caption="Pitch" parameter="coarse_pitch_1" flex-grow="1.2" margin="0"
-                    padding="0" border="" class="ADSRSlider"/>
-            <Slider class="ADSRSlider" parameter="fine_pitch_1" caption="Fine" flex-grow="1.0"/>
+            <View id="Coarse" class="transparent">
+              <Label parameter="coarse_pitch_1" class="KnobValueLabel" id="FinePitchValue"/>
+              <Slider caption="Pitch" parameter="coarse_pitch_1" flex-grow="1.2" margin="0"
+                      padding="0" border="" class="ADSRSlider"/>
+            </View>
+            <View id="Fine" class="transparent">
+              <Label parameter="fine_pitch_1" class="KnobValueLabel" id="FinePitchValue"/>
+              <Slider class="ADSRSlider" parameter="fine_pitch_1" caption="Fine" flex-grow="1.0"/>
+            </View>
           </View>
           <View flex-grow=".75" class="OscSegment" id="Adsr">
-            <Slider caption="Attack" parameter="attack_1" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Decay" parameter="decay_1" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Sustain" parameter="sustain_1" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Release" parameter="release_1" flex-grow="1.0" flex-align-self="stretch"
-                    rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
-                    class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+            <View id="Attack" class="transparent">
+              <Label parameter="attack_1" class="KnobValueLabel" id="Attack"/>
+              <Slider caption="Attack" parameter="attack_1" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Decay" class="transparent">
+              <Label parameter="decay_1" class="KnobValueLabel" id="Decay"/>
+              <Slider caption="Decay" parameter="decay_1" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Sustain" class="transparent">
+              <Label parameter="sustain_1" class="KnobValueLabel" id="Sustain"/>
+              <Slider caption="Sustain" parameter="sustain_1" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Release" class="transparent">
+              <Label parameter="release_1" class="KnobValueLabel" id="Release"/>
+              <Slider caption="Release" parameter="release_1" flex-grow="1.0" flex-align-self="stretch"
+                      rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                      class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+            </View>
           </View>
         </View>
         <View caption="OSC 3" class="group" flex-direction="row" caption-placement="top-left"
@@ -114,20 +156,38 @@
                     caption="" slider-textbox="no-textbox" flex-grow="1.7" id="Gain"/>
           </View>
           <View flex-grow=".6" class="OscSegment" id="Pitch">
-            <Slider caption="Pitch" parameter="coarse_pitch_2" flex-grow="1.2" margin="0"
-                    padding="0" border="" class="ADSRSlider"/>
-            <Slider class="ADSRSlider" parameter="fine_pitch_2" caption="Fine" flex-grow="1.0"/>
+            <View id="Coarse" class="transparent">
+              <Label parameter="coarse_pitch_2" class="KnobValueLabel" id="Coarse"/>
+              <Slider caption="Pitch" parameter="coarse_pitch_2" flex-grow="1.2" margin="0"
+                      padding="0" border="" class="ADSRSlider"/>
+            </View>
+            <View id="Fine" class="transparent">
+              <Label parameter="fine_pitch_2" class="KnobValueLabel" id="Fine"/>
+              <Slider class="ADSRSlider" parameter="fine_pitch_2" caption="Fine" flex-grow="1.0"/>
+            </View>
           </View>
           <View flex-grow=".75" class="OscSegment" id="Adsr">
-            <Slider caption="Attack" parameter="attack_2" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Decay" parameter="decay_2" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Sustain" parameter="sustain_2" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Release" parameter="release_2" flex-grow="1.0" flex-align-self="stretch"
-                    rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
-                    class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+            <View id="Attack" class="transparent">
+              <Label parameter="attack_2" class="KnobValueLabel" id="Attack"/>
+              <Slider caption="Attack" parameter="attack_2" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Decay" class="transparent">
+              <Label parameter="decay_2" class="KnobValueLabel" id="Decay"/>
+              <Slider caption="Decay" parameter="decay_2" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Sustain" class="transparent">
+              <Label parameter="sustain_2" class="KnobValueLabel" id="Sustain"/>
+              <Slider caption="Sustain" parameter="sustain_2" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Release" class="transparent">
+              <Label parameter="release_2" class="KnobValueLabel" id="Release"/>
+              <Slider caption="Release" parameter="release_2" flex-grow="1.0" flex-align-self="stretch"
+                      rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                      class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+            </View>
           </View>
         </View>
         <View caption="OSC 4" class="group" flex-direction="row" caption-placement="top-left"
@@ -140,20 +200,38 @@
                     slider-textbox="no-textbox" caption="" flex-grow="1.7" id="Gain"/>
           </View>
           <View flex-grow=".6" class="OscSegment" id="Pitch">
-            <Slider caption="Pitch" parameter="coarse_pitch_3" flex-grow="1.2" margin="0"
-                    padding="0" border="" class="ADSRSlider"/>
-            <Slider class="ADSRSlider" parameter="fine_pitch_3" caption="Fine" flex-grow="1.0"/>
+            <View id="Coarse" class="transparent">
+              <Label parameter="coarse_pitch_3" class="KnobValueLabel" id="Coarse"/>
+              <Slider caption="Pitch" parameter="coarse_pitch_3" flex-grow="1.2" margin="0"
+                      padding="0" border="" class="ADSRSlider"/>
+            </View>
+            <View id="Fine" class="transparent">
+              <Label parameter="fine_pitch_3" class="KnobValueLabel" id="Fine"/>
+              <Slider class="ADSRSlider" parameter="fine_pitch_3" caption="Fine" flex-grow="1.0"/>
+            </View>
           </View>
           <View flex-grow=".75" class="OscSegment" id="Adsr">
-            <Slider caption="Attack" parameter="attack_3" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Decay" parameter="decay_3" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Sustain" parameter="sustain_3" flex-grow="1.0" class="ADSRSlider"
-                    padding="" margin=""/>
-            <Slider caption="Release" parameter="release_3" flex-grow="1.0" flex-align-self="stretch"
-                    rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
-                    class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+            <View id="Attack" class="transparent">
+              <Label parameter="attack_3" class="KnobValueLabel" id="Attack"/>
+              <Slider caption="Attack" parameter="attack_3" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Decay" class="transparent">
+              <Label parameter="decay_3" class="KnobValueLabel" id="Decay"/>
+              <Slider caption="Decay" parameter="decay_3" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Sustain" class="transparent">
+              <Label parameter="sustain_3" class="KnobValueLabel" id="Sustain"/>
+              <Slider caption="Sustain" parameter="sustain_3" flex-grow="1.0" class="ADSRSlider"
+                      padding="" margin=""/>
+            </View>
+            <View id="Release" class="transparent">
+              <Label parameter="release_3" class="KnobValueLabel" id="Release"/>
+              <Slider caption="Release" parameter="release_3" flex-grow="1.0" flex-align-self="stretch"
+                      rotary-fill="FFBE6522" rotary-outline="FF383838" slider-text="FFC9AD8A"
+                      class="ADSRSlider" padding="" margin="" slider-text-outline="004C4C4C"/>
+            </View>
           </View>
         </View>
       </View>
@@ -163,21 +241,51 @@
             <ComboBox caption="Filter Type" parameter="filter_type" caption-size="15"
                       caption-placement="top-left" lookAndFeel="FoleysFinest" class="Waveform_selector"
                       background-color="00000000"/>
-            <Slider caption="Cutoff Freq" parameter="cutoff_freq" class="ADSRSlider"/>
-            <Slider caption="Quality" parameter="q" class="ADSRSlider"/>
-            <Slider caption="Resonance" parameter="resonance" class="ADSRSlider"/>
+            <View id="Cutoff" class="transparent">
+              <Label parameter="cutoff_freq" class="KnobValueLabel" id="Cutoff"/>
+              <Slider caption="Cutoff Freq" parameter="cutoff_freq" class="ADSRSlider"/>
+            </View>
+            <View id="Q" class="transparent">
+              <Label parameter="q" class="KnobValueLabel" id="Q"/>
+              <Slider caption="Quality" parameter="q" class="ADSRSlider"/>
+            </View>
+            <View id="Resonance" class="transparent">
+              <Label parameter="resonance" class="KnobValueLabel" id="Resonance"/>
+              <Slider caption="Resonance" parameter="resonance" class="ADSRSlider"/>
+            </View>
           </View>
           <View class="OscSegment" id="Envelope">
-            <Slider caption="Amount" parameter="filter_adsr_amount" class="ADSRSlider"
-                    flex-grow="1.0"/>
-            <Slider caption="Attack" parameter="filter_attack" class="ADSRSlider"/>
-            <Slider caption="Decay" parameter="filter_decay" class="ADSRSlider"/>
-            <Slider caption="Sustain Level" parameter="filter_sustain" class="ADSRSlider"/>
-            <Slider caption="Release" parameter="filter_release" class="ADSRSlider"/>
+            <View id="Amount" class="transparent">
+              <Label parameter="filter_adsr_amount" class="KnobValueLabel" id="Amount"/>
+              <Slider caption="Amount" parameter="filter_adsr_amount" class="ADSRSlider"
+                      flex-grow="1.0"/>
+            </View>
+            <View id="Attack" class="transparent">
+              <Label parameter="filter_attack" class="KnobValueLabel" id="Attack"/>
+              <Slider caption="Attack" parameter="filter_attack" class="ADSRSlider"/>
+            </View>
+            <View id="Decay" class="transparent">
+              <Label parameter="filter_decay" class="KnobValueLabel" id="Decay"/>
+              <Slider caption="Decay" parameter="filter_decay" class="ADSRSlider"/>
+            </View>
+            <View id="Sustain" class="transparent">
+              <Label parameter="filter_sustain" class="KnobValueLabel" id="Sustain"/>
+              <Slider caption="Sustain Level" parameter="filter_sustain" class="ADSRSlider"/>
+            </View>
+            <View id="Release" class="transparent">
+              <Label parameter="filter_release" class="KnobValueLabel" id="Release"/>
+              <Slider caption="Release" parameter="filter_release" class="ADSRSlider"/>
+            </View>
           </View>
           <View id="LFO" class="OscSegment">
-            <Slider class="ADSRSlider" caption="LFO Amount" parameter="filter_lfo_amount"/>
-            <Slider class="ADSRSlider" caption="Frequency" parameter="filter_lfo_freq"/>
+            <View id="Amount" class="transparent">
+              <Label parameter="filter_lfo_amount" class="KnobValueLabel" id="Amount"/>
+              <Slider class="ADSRSlider" caption="LFO Amount" parameter="filter_lfo_amount"/>
+            </View>
+            <View id="Frequency" class="transparent">
+              <Label parameter="filter_lfo_freq" class="KnobValueLabel" id="Frequency"/>
+              <Slider class="ADSRSlider" caption="Frequency" parameter="filter_lfo_freq"/>
+            </View>
             <ComboBox class="Waveform_selector" caption="Wavetype" parameter="filter_lfo_wavetype"/>
           </View>
         </View>
@@ -193,7 +301,7 @@
                    bar-fill-color="CCBE2222" tickmark-color="FFED4100" class="OscSegment"
                    flex-grow="1.0" id="Volume"/>
             <Slider flex-grow=".4" class="ADSRSlider" parameter="master_level" rotary-fill="FFBE2222"
-                    id="MasterLevel"/>
+                    id="MasterLevel" slider-textbox="no-textbox"/>
           </View>
         </View>
       </View>
