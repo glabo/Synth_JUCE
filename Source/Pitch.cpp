@@ -19,7 +19,7 @@ void Pitch::setSampleRate(double sr) {
 	sampleRate = sr;
 }
 
-void Pitch::setPitchShift(int ps, int fine)
+void Pitch::setPitchShift(int ps, float fine)
 {
 	coarsePitchShift = ps;
 	finePitchShift = fine;

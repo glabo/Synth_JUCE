@@ -16,7 +16,7 @@ Oscillator::Oscillator(juce::AudioProcessorValueTreeState& apvts, int initId, do
 	coarsePitchParam = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(coarsePitchId));
 	jassert(coarsePitchParam);
 	auto finePitchId = "fine_pitch_" + std::to_string(initId);
-	finePitchParam = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(finePitchId));
+	finePitchParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(finePitchId));
 	jassert(finePitchParam);
 
 	auto attackId = "attack_" + std::to_string(initId);

@@ -33,7 +33,7 @@ private:
 	juce::AudioParameterChoice* waveType = nullptr;
 	juce::AudioParameterFloat* knobLevel = nullptr;
 	juce::AudioParameterInt* coarsePitchParam = nullptr;
-	juce::AudioParameterInt* finePitchParam = nullptr;
+	juce::AudioParameterFloat* finePitchParam = nullptr;
 
 	juce::ADSR envelope;
 	juce::AudioParameterFloat* attack = nullptr;

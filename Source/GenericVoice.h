@@ -150,9 +150,10 @@ public:
         auto coarsePitch = std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ coarsePitchId,  1 },
             "Coarse Pitch",
             -12, 12, 0);
-        auto finePitch = std::make_unique<juce::AudioParameterInt>(juce::ParameterID{ finePitchId,  1 },
+        auto finePitch = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ finePitchId,  1 },
             "Fine Pitch",
-            0, 1000, 0);
+            juce::NormalisableRange<float>(0.0f, 1000.0f, 1.0f, 0.35f),
+            0.0f);
 
         // Oscillator envelope controls
         auto attack = std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{ attackId,  1 },
