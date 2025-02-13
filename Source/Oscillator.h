@@ -2,7 +2,7 @@
 
 #include <JuceHeader.h>
 #include "WaveGenerator.h"
-#include "Pitch.h"
+#include "OscillatorPitch.h"
 
 class Oscillator {
 public:
@@ -27,7 +27,7 @@ private:
 	
 	double velocityLevel;
 
-	Pitch pitch;
+	OscillatorPitch pitch;
 
 	// GUI Parameters
 	juce::AudioParameterChoice* waveType = nullptr;

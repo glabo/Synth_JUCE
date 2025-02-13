@@ -1,7 +1,7 @@
 #pragma once
 
 #include "WaveGenerator.h"
-#include "Pitch.h"
+#include "OscillatorPitch.h"
 
 class LFO {
 public:
@@ -15,7 +15,7 @@ public:
 	void noteOn();
 	double generateSample(int numSamples);
 private:
-	Pitch pitch;
+	OscillatorPitch pitch;
 
 	double sampleRate;
 

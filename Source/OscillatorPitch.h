@@ -1,7 +1,7 @@
 #pragma once
 
 
-class Pitch {
+class OscillatorPitch {
 private:
 	double currentAngle = 0.0;
 	double angleDelta = 0.0;

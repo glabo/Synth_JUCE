@@ -1,7 +1,7 @@
-#include "Pitch.h"
+#include "OscillatorPitch.h"
 #include <JuceHeader.h>
 
-void Pitch::calculateAngleDelta()
+void OscillatorPitch::calculateAngleDelta()
 {
 	auto shiftedNote = currentMidiNote + coarsePitchShift;
 	auto originalNoteInHz = juce::MidiMessage::getMidiNoteInHertz(shiftedNote);
@@ -9,23 +9,23 @@ void Pitch::calculateAngleDelta()
 	calculateAngleDelta(freq, sampleRate);
 }
 
-void Pitch::calculateAngleDelta(float freq, double sampleRate)
+void OscillatorPitch::calculateAngleDelta(float freq, double sampleRate)
 {
 	auto cyclesPerSample = freq / sampleRate;
 	angleDelta = cyclesPerSample * juce::MathConstants<double>::twoPi;
 }
 
-void Pitch::setSampleRate(double sr) {
+void OscillatorPitch::setSampleRate(double sr) {
 	sampleRate = sr;
 }
 
-void Pitch::setPitchShift(int ps, float fine)
+void OscillatorPitch::setPitchShift(int ps, float fine)
 {
 	coarsePitchShift = ps;
 	finePitchShift = fine;
 }
 
-double Pitch::calculateFinePitchShiftInHz(double inFreq)
+double OscillatorPitch::calculateFinePitchShiftInHz(double inFreq)
 {
 	// Fine pitch shift is the next octave mapped into 1000 (MAX_FINE_PITCH_SHIFT) steps
 	// Next octave is 2x current freq, so distance in Hz from this octave to the next is inFreq
@@ -33,7 +33,7 @@ double Pitch::calculateFinePitchShiftInHz(double inFreq)
 	return ((double)finePitchShift / (double)MAX_FINE_PITCH_SHIFT) * octaveRange;
 }
 
-void Pitch::noteOn(int midiNoteNumber, double sr)
+void OscillatorPitch::noteOn(int midiNoteNumber, double sr)
 {
 	currentMidiNote = midiNoteNumber;
 	sampleRate = sr;
@@ -41,31 +41,31 @@ void Pitch::noteOn(int midiNoteNumber, double sr)
 	currentAngle = 0.0;
 }
 
-void Pitch::noteOn(float freq, double sr)
+void OscillatorPitch::noteOn(float freq, double sr)
 {
 	sampleRate = sr;
 	calculateAngleDelta(freq, sr);
 	currentAngle = 0.0;
 }
 
-void Pitch::clearNote()
+void OscillatorPitch::clearNote()
 {
 	angleDelta = 0.0;
 }
 
-bool Pitch::angleApproxZero()
+bool OscillatorPitch::angleApproxZero()
 {
 	return juce::approximatelyEqual(angleDelta, 0.0);
 }
 
-double Pitch::getNextSample()
+double OscillatorPitch::getNextSample()
 {
 	calculateAngleDelta();
 	currentAngle += angleDelta;
 	return currentAngle;
 }
 
-double Pitch::getNextSample(double newFreq)
+double OscillatorPitch::getNextSample(double newFreq)
 {
 	calculateAngleDelta(newFreq, sampleRate);
 	currentAngle += angleDelta;
