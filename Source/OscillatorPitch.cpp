@@ -1,16 +1,13 @@
 #include "OscillatorPitch.h"
 #include <JuceHeader.h>
 
-void OscillatorPitch::calculateAngleDelta()
+void OscillatorPitch::calculateAngleDelta(float newFreq, double sampleRate)
 {
-	auto shiftedNote = currentMidiNote + coarsePitchShift;
-	auto originalNoteInHz = juce::MidiMessage::getMidiNoteInHertz(shiftedNote);
-	freq = originalNoteInHz + calculateFinePitchShiftInHz(originalNoteInHz);
-	calculateAngleDelta(freq, sampleRate);
-}
-
-void OscillatorPitch::calculateAngleDelta(float freq, double sampleRate)
-{
+	freq = newFreq;
+	// Coarse pitch calc
+	applyCoarseFreqOffset();
+	// Fine pitch calc
+	applyFineFreqOffset();
 	auto cyclesPerSample = freq / sampleRate;
 	angleDelta = cyclesPerSample * juce::MathConstants<double>::twoPi;
 }
@@ -33,14 +30,6 @@ double OscillatorPitch::calculateFinePitchShiftInHz(double inFreq)
 	return ((double)finePitchShift / (double)MAX_FINE_PITCH_SHIFT) * octaveRange;
 }
 
-void OscillatorPitch::noteOn(int midiNoteNumber, double sr)
-{
-	currentMidiNote = midiNoteNumber;
-	sampleRate = sr;
-	calculateAngleDelta();
-	currentAngle = 0.0;
-}
-
 void OscillatorPitch::noteOn(float freq, double sr)
 {
 	sampleRate = sr;
@@ -53,16 +42,21 @@ void OscillatorPitch::clearNote()
 	angleDelta = 0.0;
 }
 
+void OscillatorPitch::applyCoarseFreqOffset()
+{
+	// 1 octave up is 2x, 1 octave down is 0.5x, etc.
+	double multiplier = pow(2.0, coarsePitchShift / 12.0);
+	freq = freq * multiplier;
+}
+
+void OscillatorPitch::applyFineFreqOffset()
+{
+	freq += calculateFinePitchShiftInHz(freq);
+}
+
 bool OscillatorPitch::angleApproxZero()
 {
 	return juce::approximatelyEqual(angleDelta, 0.0);
-}
-
-double OscillatorPitch::getNextSample()
-{
-	calculateAngleDelta();
-	currentAngle += angleDelta;
-	return currentAngle;
 }
 
 double OscillatorPitch::getNextSample(double newFreq)

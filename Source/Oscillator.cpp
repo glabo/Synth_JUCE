@@ -34,10 +34,12 @@ Oscillator::Oscillator(juce::AudioProcessorValueTreeState& apvts, int initId, do
 
 }
 
-void Oscillator::startNote(double velocity, int midiNoteNumber, double sampleRate) {
+void Oscillator::startNote(double velocity, double freq, double sampleRate) {
 	velocityLevel = velocity;
 	envelope.noteOn();
-	pitch.noteOn(midiNoteNumber, sampleRate);
+	// Initialize pitch so angleDelta is calculated and oscillators are "triggered"
+	// I don't like this
+	pitch.noteOn(freq, sampleRate);
 }
 
 void Oscillator::noteOn() {
@@ -87,12 +89,12 @@ bool Oscillator::angleApproxZero()
 	return pitch.angleApproxZero();
 }
 
-double Oscillator::generateSample()
+double Oscillator::generateSample(float fundamentalFreq)
 {
 	setEnvelopeParams();
 	if (isActive()) {
 		float envelopeLevel = envelope.getNextSample();
-		double currentAngle = pitch.getNextSample();
+		double currentAngle = pitch.getNextSample(fundamentalFreq);
 		return getWaveformSample(getWaveType(), currentAngle) * velocityLevel * envelopeLevel * knobLevel->get();
 	}
 	else {

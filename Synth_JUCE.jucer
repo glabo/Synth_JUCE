@@ -22,8 +22,10 @@
             file="Source/OscillatorComponent.cpp"/>
       <FILE id="m1bfx7" name="OscillatorComponent.h" compile="0" resource="0"
             file="Source/OscillatorComponent.h"/>
-      <FILE id="LjRdhu" name="Pitch.cpp" compile="1" resource="0" file="Source/Pitch.cpp"/>
-      <FILE id="wLugkd" name="Pitch.h" compile="0" resource="0" file="Source/Pitch.h"/>
+      <FILE id="LjRdhu" name="OscillatorPitch.cpp" compile="1" resource="0"
+            file="Source/OscillatorPitch.cpp"/>
+      <FILE id="wLugkd" name="OscillatorPitch.h" compile="0" resource="0"
+            file="Source/OscillatorPitch.h"/>
       <FILE id="SPwOcQ" name="SineWave.h" compile="0" resource="0" file="Source/SineWave.h"/>
       <FILE id="Wl6u09" name="SpinLockedPosInfo.h" compile="0" resource="0"
             file="Source/SpinLockedPosInfo.h"/>

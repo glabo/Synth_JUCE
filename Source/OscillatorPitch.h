@@ -13,17 +13,17 @@ private:
 	const int MAX_FINE_PITCH_SHIFT = 1000;
 	float finePitchShift = 0.0f;
 
-	void calculateAngleDelta();
 	void calculateAngleDelta(float freq, double sampleRate);
 public:
 	void setSampleRate(double sr);
 	void setPitchShift(int coarsePitchShift, float finePitchShift);
 	double calculateFinePitchShiftInHz(double inFreq);
-	void noteOn(int midiNoteNumber, double sampleRate);
 	void noteOn(float freq, double sampleRate);
 	void clearNote();
 
+	void applyCoarseFreqOffset();
+	void applyFineFreqOffset();
+
 	bool angleApproxZero();
-	double getNextSample();
 	double getNextSample(double freq);
 };

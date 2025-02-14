@@ -8,7 +8,7 @@ class Oscillator {
 public:
 	Oscillator(juce::AudioProcessorValueTreeState& apvts, int initId, double sampleRate);
 
-	void startNote(double velocityLevel, int midiNoteNumber, double sampleRate);
+	void startNote(double velocityLevel, double freq, double sampleRate);
 	void noteOn();
 	void noteOff();
 	void clearNote();
@@ -20,7 +20,7 @@ public:
 	int getId();
 
 	bool angleApproxZero();
-	double generateSample();
+	double generateSample(float fundamentalFreq);
 private:
 	int id;
 	bool fixedFreq = false;

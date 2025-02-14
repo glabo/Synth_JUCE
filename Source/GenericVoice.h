@@ -4,6 +4,7 @@
 #include <JuceHeader.h>
 #include "WaveGenerator.h"
 #include "Oscillator.h"
+#include "GlobalPitch.h"
 
 const int NUM_OSC = 4;
 
@@ -37,8 +38,9 @@ public:
         int /*currentPitchWheelPosition*/) override
     {
         velocityLevel = velocity * 0.15;
+        globalPitch.noteOn(midiNoteNumber);
         for (const auto& o : osc) {
-            o->startNote(velocityLevel, midiNoteNumber, getSampleRate());
+            o->startNote(velocityLevel, globalPitch.getFundamentalFreq(), getSampleRate());
         }
     }
 
@@ -55,6 +57,7 @@ public:
         {
             // start a tail-off by setting this flag. The render callback will pick up on
             // this and do a fade out, calling clearCurrentNote() when it's finished.
+            globalPitch.noteOff();
             for (auto& o : osc) {
                 o->noteOff();
             }
@@ -100,11 +103,13 @@ public:
         {
             while (--numSamples >= 0)
             {
+                // Update fundamental for each sample
+                float fundamentalFreq = globalPitch.getFundamentalFreq();
                 if (anyEnvelopeActive()) {
                     float summedSample = 0.0f;
                     // Sum samples from each oscillator
                     for (auto& o : osc) {
-                        summedSample += (float)o->generateSample();
+                        summedSample += (float)o->generateSample(fundamentalFreq);
                     }
 
                     // Populate output buffer
@@ -197,5 +202,8 @@ public:
 private:
     double velocityLevel = 0.0;
 
+    // Each voice plays a different MIDI note, thus has a different pitch.
+    // They'll use the same parameters aside from their input midi note
+    GlobalPitch globalPitch;
     std::vector<std::unique_ptr<Oscillator>> osc;
 };
