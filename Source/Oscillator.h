@@ -22,6 +22,17 @@ public:
 	bool angleApproxZero();
 	double generateSample(float fundamentalFreq);
 private:
+	struct OscillatorParams {
+		juce::AudioParameterChoice* waveType = nullptr;
+		juce::AudioParameterFloat* knobLevel = nullptr;
+		juce::AudioParameterInt* coarsePitchParam = nullptr;
+		juce::AudioParameterFloat* finePitchParam = nullptr;
+
+		juce::AudioParameterFloat* attack = nullptr;
+		juce::AudioParameterFloat* decay = nullptr;
+		juce::AudioParameterFloat* sustain = nullptr;
+		juce::AudioParameterFloat* release = nullptr;
+	};
 	int id;
 	bool fixedFreq = false;
 	
@@ -30,15 +41,8 @@ private:
 	OscillatorPitch pitch;
 
 	// GUI Parameters
-	juce::AudioParameterChoice* waveType = nullptr;
-	juce::AudioParameterFloat* knobLevel = nullptr;
-	juce::AudioParameterInt* coarsePitchParam = nullptr;
-	juce::AudioParameterFloat* finePitchParam = nullptr;
+	OscillatorParams audioParams;
 
 	juce::ADSR envelope;
-	juce::AudioParameterFloat* attack = nullptr;
-	juce::AudioParameterFloat* decay = nullptr;
-	juce::AudioParameterFloat* sustain = nullptr;
-	juce::AudioParameterFloat* release = nullptr;
 	juce::ADSR::Parameters envelopeParams;
 };

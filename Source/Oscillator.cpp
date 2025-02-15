@@ -7,30 +7,30 @@ Oscillator::Oscillator(juce::AudioProcessorValueTreeState& apvts, int initId, do
 	envelope.setSampleRate(sampleRate);
 
 	auto wavetypeId = "wavetype_" + std::to_string(initId);
-	waveType = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(wavetypeId));
-	jassert(waveType);
+	audioParams.waveType = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(wavetypeId));
+	jassert(audioParams.waveType);
 	auto knobLevelId = "gain_" + std::to_string(initId);
-	knobLevel = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(knobLevelId));
-	jassert(knobLevel);
+	audioParams.knobLevel = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(knobLevelId));
+	jassert(audioParams.knobLevel);
 	auto coarsePitchId = "coarse_pitch_" + std::to_string(initId);
-	coarsePitchParam = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(coarsePitchId));
-	jassert(coarsePitchParam);
+	audioParams.coarsePitchParam = dynamic_cast<juce::AudioParameterInt*>(apvts.getParameter(coarsePitchId));
+	jassert(audioParams.coarsePitchParam);
 	auto finePitchId = "fine_pitch_" + std::to_string(initId);
-	finePitchParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(finePitchId));
-	jassert(finePitchParam);
+	audioParams.finePitchParam = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(finePitchId));
+	jassert(audioParams.finePitchParam);
 
 	auto attackId = "attack_" + std::to_string(initId);
-	attack = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(attackId));
-	jassert(attack);
+	audioParams.attack = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(attackId));
+	jassert(audioParams.attack);
 	auto decayId = "decay_" + std::to_string(initId);
-	decay = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(decayId));
-	jassert(decay);
+	audioParams.decay = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(decayId));
+	jassert(audioParams.decay);
 	auto sustainId = "sustain_" + std::to_string(initId);
-	sustain = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(sustainId));
-	jassert(sustain);
+	audioParams.sustain = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(sustainId));
+	jassert(audioParams.sustain);
 	auto releaseId = "release_" + std::to_string(initId);
-	release = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(releaseId));
-	jassert(release);
+	audioParams.release = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(releaseId));
+	jassert(audioParams.release);
 
 }
 
@@ -58,7 +58,7 @@ void Oscillator::clearNote()
 
 WAVE_TYPE Oscillator::getWaveType()
 {
-	WAVE_TYPE wt = static_cast<WAVE_TYPE>(waveType->getIndex() + 1);
+	WAVE_TYPE wt = static_cast<WAVE_TYPE>(audioParams.waveType->getIndex() + 1);
 	return wt;
 }
 
@@ -67,11 +67,11 @@ void Oscillator::setEnvelopeSampleRate(double sampleRate) {
 }
 
 void Oscillator::setEnvelopeParams() {
-	pitch.setPitchShift(coarsePitchParam->get(), finePitchParam->get());
-	envelopeParams.attack = attack->get();
-	envelopeParams.decay = decay->get();
-	envelopeParams.sustain = sustain->get();
-	envelopeParams.release = release->get();
+	pitch.setPitchShift(audioParams.coarsePitchParam->get(), audioParams.finePitchParam->get());
+	envelopeParams.attack = audioParams.attack->get();
+	envelopeParams.decay = audioParams.decay->get();
+	envelopeParams.sustain = audioParams.sustain->get();
+	envelopeParams.release = audioParams.release->get();
 	envelope.setParameters(envelopeParams);
 }
 
@@ -95,7 +95,7 @@ double Oscillator::generateSample(float fundamentalFreq)
 	if (isActive()) {
 		float envelopeLevel = envelope.getNextSample();
 		double currentAngle = pitch.getNextSample(fundamentalFreq);
-		return getWaveformSample(getWaveType(), currentAngle) * velocityLevel * envelopeLevel * knobLevel->get();
+		return getWaveformSample(getWaveType(), currentAngle) * velocityLevel * envelopeLevel * audioParams.knobLevel->get();
 	}
 	else {
 		return 0.0;
