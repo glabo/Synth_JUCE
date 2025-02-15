@@ -8,7 +8,7 @@ class Oscillator {
 public:
 	Oscillator(juce::AudioProcessorValueTreeState& apvts, int initId, double sampleRate);
 
-	void startNote(double velocityLevel, double freq, double sampleRate);
+	void startNote(float velocityLevel, float freq, double sampleRate);
 	void noteOn();
 	void noteOff();
 	void clearNote();
@@ -20,7 +20,7 @@ public:
 	int getId();
 
 	bool angleApproxZero();
-	double generateSample(float fundamentalFreq);
+	float generateSample(float fundamentalFreq);
 private:
 	struct OscillatorParams {
 		juce::AudioParameterChoice* waveType = nullptr;
@@ -36,7 +36,7 @@ private:
 	int id;
 	bool fixedFreq = false;
 	
-	double velocityLevel;
+	float velocityLevel;
 
 	OscillatorPitch pitch;
 

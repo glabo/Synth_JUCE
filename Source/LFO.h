@@ -13,7 +13,7 @@ public:
 	WAVE_TYPE getWaveType();
 	void prepareToPlay(double sampleRate);
 	void noteOn();
-	double generateSample(int numSamples);
+	float generateSample(int numSamples);
 private:
 	struct LFOParams {
 		juce::AudioParameterFloat* knobLevel = nullptr;

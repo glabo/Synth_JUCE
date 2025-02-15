@@ -29,7 +29,7 @@ void LFO::noteOn() {
 	pitch.noteOn(audioParams.freq->get(), sampleRate);
 }
 
-double LFO::generateSample(int numSamples)
+float LFO::generateSample(int numSamples)
 {
 	// lfo is only updated once per processed block, so needs a frequency multiplier to be accurate
 	double currentAngle = pitch.getNextSample(audioParams.freq->get() * numSamples);

@@ -37,7 +37,7 @@ public:
         juce::SynthesiserSound* /*sound*/,
         int /*currentPitchWheelPosition*/) override
     {
-        velocityLevel = velocity * 0.15;
+        velocityLevel = velocity * 0.15f;
         globalPitch.noteOn(midiNoteNumber);
         for (const auto& o : osc) {
             o->startNote(velocityLevel, globalPitch.getFundamentalFreq(), getSampleRate());
@@ -109,7 +109,7 @@ public:
                     float summedSample = 0.0f;
                     // Sum samples from each oscillator
                     for (auto& o : osc) {
-                        summedSample += (float)o->generateSample(fundamentalFreq);
+                        summedSample += o->generateSample(fundamentalFreq);
                     }
 
                     // Populate output buffer
@@ -200,7 +200,7 @@ public:
     using SynthesiserVoice::renderNextBlock;
 
 private:
-    double velocityLevel = 0.0;
+    float velocityLevel = 0.0f;
 
     // Each voice plays a different MIDI note, thus has a different pitch.
     // They'll use the same parameters aside from their input midi note

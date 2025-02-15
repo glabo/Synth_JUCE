@@ -11,4 +11,4 @@ enum WAVE_TYPE {
 	NOISE,
 };
 
-double getWaveformSample(WAVE_TYPE waveType, double dPhase, double freq = 0.0);
+float getWaveformSample(WAVE_TYPE waveType, double dPhase);

@@ -19,6 +19,6 @@ void GlobalPitch::noteOff()
 float GlobalPitch::getFundamentalFreq()
 {
 	// This is where ADSR will be applied, currently it's just a passthrough
-	float fundamentalFreq = juce::MidiMessage::getMidiNoteInHertz(currentMidiNote);
+	float fundamentalFreq = (float)juce::MidiMessage::getMidiNoteInHertz(currentMidiNote);
 	return fundamentalFreq;
 }

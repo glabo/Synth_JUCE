@@ -53,7 +53,7 @@ void Synth_JUCEAudioProcessor::prepareToPlay (double newSampleRate, int samplesP
     }
 
     analyser->prepareToPlay(newSampleRate, samplesPerBlock);
-    meter->setupSource(getNumOutputChannels(), newSampleRate, 300);
+    meter->setupSource(getTotalNumOutputChannels(), newSampleRate, 300);
     scope->prepareToPlay(newSampleRate, samplesPerBlock);
 
     reset();

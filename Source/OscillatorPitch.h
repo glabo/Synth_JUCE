@@ -5,7 +5,7 @@ class OscillatorPitch {
 private:
 	double currentAngle = 0.0;
 	double angleDelta = 0.0;
-	double freq = 0.0;
+	float freq = 0.0;
 	double sampleRate = 1.0; // Avoiding div by 0, maybe bad practice
 	int currentMidiNote = -1;
 	int coarsePitchShift = 0;
@@ -17,7 +17,7 @@ private:
 public:
 	void setSampleRate(double sr);
 	void setPitchShift(int coarsePitchShift, float finePitchShift);
-	double calculateFinePitchShiftInHz(double inFreq);
+	float calculateFinePitchShiftInHz(float inFreq);
 	void noteOn(float freq, double sampleRate);
 	void clearNote();
 
@@ -25,5 +25,5 @@ public:
 	void applyFineFreqOffset();
 
 	bool angleApproxZero();
-	double getNextSample(double freq);
+	double getNextSample(float freq);
 };

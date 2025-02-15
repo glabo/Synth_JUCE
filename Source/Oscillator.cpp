@@ -34,7 +34,7 @@ Oscillator::Oscillator(juce::AudioProcessorValueTreeState& apvts, int initId, do
 
 }
 
-void Oscillator::startNote(double velocity, double freq, double sampleRate) {
+void Oscillator::startNote(float velocity, float freq, double sampleRate) {
 	velocityLevel = velocity;
 	envelope.noteOn();
 	// Initialize pitch so angleDelta is calculated and oscillators are "triggered"
@@ -89,7 +89,7 @@ bool Oscillator::angleApproxZero()
 	return pitch.angleApproxZero();
 }
 
-double Oscillator::generateSample(float fundamentalFreq)
+float Oscillator::generateSample(float fundamentalFreq)
 {
 	setEnvelopeParams();
 	if (isActive()) {
