@@ -15,11 +15,14 @@ public:
 	void noteOn();
 	double generateSample(int numSamples);
 private:
+	struct LFOParams {
+		juce::AudioParameterFloat* knobLevel = nullptr;
+		juce::AudioParameterFloat* freq = nullptr;
+		juce::AudioParameterChoice* waveType = nullptr;
+	};
+
 	OscillatorPitch pitch;
+	LFOParams audioParams;
 
 	double sampleRate;
-
-	juce::AudioParameterFloat* knobLevel = nullptr;
-	juce::AudioParameterFloat* freq = nullptr;
-	juce::AudioParameterChoice* waveType = nullptr;
 };

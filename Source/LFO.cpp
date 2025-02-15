@@ -5,17 +5,17 @@ LFO::LFO(juce::AudioProcessorValueTreeState& apvts,
 	juce::String lfoFreqId,
 	juce::String lfoWavetypeId)
 {
-	freq = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(lfoFreqId));
-	jassert(freq);
-	knobLevel = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(lfoAmountId));
-	jassert(knobLevel);
-	waveType = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(lfoWavetypeId));
-	jassert(waveType);
+	audioParams.freq = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(lfoFreqId));
+	jassert(audioParams.freq);
+	audioParams.knobLevel = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(lfoAmountId));
+	jassert(audioParams.knobLevel);
+	audioParams.waveType = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(lfoWavetypeId));
+	jassert(audioParams.waveType);
 }
 
 WAVE_TYPE LFO::getWaveType()
 {
-	WAVE_TYPE wt = static_cast<WAVE_TYPE>(waveType->getIndex() + 1);
+	WAVE_TYPE wt = static_cast<WAVE_TYPE>(audioParams.waveType->getIndex() + 1);
 	return wt;
 }
 
@@ -26,12 +26,12 @@ void LFO::prepareToPlay(double sr)
 }
 
 void LFO::noteOn() {
-	pitch.noteOn(freq->get(), sampleRate);
+	pitch.noteOn(audioParams.freq->get(), sampleRate);
 }
 
 double LFO::generateSample(int numSamples)
 {
 	// lfo is only updated once per processed block, so needs a frequency multiplier to be accurate
-	double currentAngle = pitch.getNextSample(freq->get() * numSamples);
-	return getWaveformSample(getWaveType(), currentAngle) * knobLevel->get();
+	double currentAngle = pitch.getNextSample(audioParams.freq->get() * numSamples);
+	return getWaveformSample(getWaveType(), currentAngle) * audioParams.knobLevel->get();
 }
