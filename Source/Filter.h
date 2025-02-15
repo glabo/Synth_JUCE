@@ -45,6 +45,19 @@ public:
 
 	void process(juce::AudioBuffer<float>& buffer, int startSample);
 private:
+	struct FilterParams {
+		juce::AudioParameterChoice* filterType;
+		juce::AudioParameterFloat* cutoffFreq = nullptr;
+		juce::AudioParameterFloat* q = nullptr;
+		juce::AudioParameterFloat* resonance = nullptr;
+
+		juce::AudioParameterFloat* adsrAmount = nullptr;
+		juce::AudioParameterFloat* attack = nullptr;
+		juce::AudioParameterFloat* decay = nullptr;
+		juce::AudioParameterFloat* sustain = nullptr;
+		juce::AudioParameterFloat* release = nullptr;
+	};
+
 	void setFilters(int numSamples);
 	void resetFilters();
 	void bypassPeak(bool bypass);
@@ -64,20 +77,12 @@ private:
 
 	bool paramsUpdated = true;
 	double sampleRate;
-	juce::AudioParameterChoice* filterType;
-	juce::AudioParameterFloat* cutoffFreq = nullptr;
-	juce::AudioParameterFloat* q = nullptr;
-	juce::AudioParameterFloat* resonance = nullptr;
+
+	FilterParams audioParams;
 
 	// ====================== ENVELOPE ================================
 	juce::ADSR envelope;
-	juce::AudioParameterFloat* adsrAmount = nullptr;
-	juce::AudioParameterFloat* attack = nullptr;
-	juce::AudioParameterFloat* decay = nullptr;
-	juce::AudioParameterFloat* sustain = nullptr;
-	juce::AudioParameterFloat* release = nullptr;
 	juce::ADSR::Parameters envelopeParams;
-
 
 	// ====================== LFO ================================
 	LFO lfo;

@@ -6,26 +6,26 @@ Filter::Filter(juce::AudioProcessorValueTreeState& apvts)
 {
 
     // ====================== FILTER ================================
-    filterType = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(FILTER_TYPE_ID));
-    jassert(filterType);
-    cutoffFreq = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(CUTOFF_FREQ_ID));
-    jassert(cutoffFreq);
-    q = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(Q_ID));
-    jassert(q);
-    resonance = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(RESONANCE_ID));
-    jassert(resonance);
+    audioParams.filterType = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(FILTER_TYPE_ID));
+    jassert(audioParams.filterType);
+    audioParams.cutoffFreq = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(CUTOFF_FREQ_ID));
+    jassert(audioParams.cutoffFreq);
+    audioParams.q = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(Q_ID));
+    jassert(audioParams.q);
+    audioParams.resonance = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(RESONANCE_ID));
+    jassert(audioParams.resonance);
 
     // ====================== ENVELOPE ================================
-    adsrAmount = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_ADSR_AMOUNT_ID));
-    jassert(adsrAmount);
-    attack = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_ATTACK_ID));
-    jassert(attack);
-    decay = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_DECAY_ID));
-    jassert(decay);
-    sustain = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_SUSTAIN_ID));
-    jassert(sustain);
-    release = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_RELEASE_ID));
-    jassert(release);
+    audioParams.adsrAmount = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_ADSR_AMOUNT_ID));
+    jassert(audioParams.adsrAmount);
+    audioParams.attack = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_ATTACK_ID));
+    jassert(audioParams.attack);
+    audioParams.decay = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_DECAY_ID));
+    jassert(audioParams.decay);
+    audioParams.sustain = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_SUSTAIN_ID));
+    jassert(audioParams.sustain);
+    audioParams.release = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(FILTER_RELEASE_ID));
+    jassert(audioParams.release);
 
 }
 
@@ -131,10 +131,10 @@ std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParamete
 
 void Filter::setEnvelopeParams()
 {
-    envelopeParams.attack = attack->get();
-    envelopeParams.decay = decay->get();
-    envelopeParams.sustain = sustain->get();
-    envelopeParams.release = release->get();
+    envelopeParams.attack = audioParams.attack->get();
+    envelopeParams.decay = audioParams.decay->get();
+    envelopeParams.sustain = audioParams.sustain->get();
+    envelopeParams.release = audioParams.release->get();
     envelope.setParameters(envelopeParams);
 }
 
@@ -178,10 +178,10 @@ void Filter::setFilters(int numSamples)
     // Modulate frequency with envelope value
     auto modulatedFreq = getModulatedCutoffFreq(numSamples);
 
-    auto lowPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, modulatedFreq, q->get());
-    auto highPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, modulatedFreq, q->get());
-    auto peakCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, modulatedFreq, q->get(),
-        juce::Decibels::decibelsToGain(resonance->get()));
+    auto lowPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeLowPass(sampleRate, modulatedFreq, audioParams.q->get());
+    auto highPassCoefficients = juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, modulatedFreq, audioParams.q->get());
+    auto peakCoefficients = juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, modulatedFreq, audioParams.q->get(),
+        juce::Decibels::decibelsToGain(audioParams.resonance->get()));
 
     switch (getFilterType()) {
     case FilterType::LOWPASS:
@@ -249,7 +249,7 @@ void Filter::setProcessorBypass(bool highCutBypass, bool peakBypass, bool lowCut
 
 FilterType Filter::getFilterType()
 {
-    FilterType f = static_cast<FilterType>(filterType->getIndex()+1);
+    FilterType f = static_cast<FilterType>(audioParams.filterType->getIndex()+1);
     return f;
 }
 
@@ -270,8 +270,8 @@ float Filter::getModulatedCutoffFreq(int numSamples)
     float maxLFOAmount = 5000.0f;
 
     auto lfoOffset = lfo.generateSample(numSamples) * maxLFOAmount;
-    auto adsrOffset = adsrAmount->get() * (getEnvelopeValue(numSamples) * maxFreqRange);
-    float modulatedFreq = cutoffFreq->get() + adsrOffset + lfoOffset;
+    auto adsrOffset = audioParams.adsrAmount->get() * (getEnvelopeValue(numSamples) * maxFreqRange);
+    float modulatedFreq = audioParams.cutoffFreq->get() + adsrOffset + lfoOffset;
 
     modulatedFreq = std::min(modulatedFreq, 20000.0f);
     modulatedFreq = std::max(20.0f, modulatedFreq);
