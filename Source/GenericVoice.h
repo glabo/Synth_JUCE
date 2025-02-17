@@ -5,6 +5,7 @@
 #include "WaveGenerator.h"
 #include "Oscillator.h"
 #include "GlobalPitch.h"
+#include "TreeLabels.h"
 
 const int NUM_OSC = 4;
 
@@ -26,6 +27,9 @@ public:
         for (auto i = 0; i < NUM_OSC; i++) {
             osc.push_back(std::make_unique<Oscillator>(apvts, i, getSampleRate()));
         }
+
+        fmMode = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(FM_MODE_ID));
+        jassert(fmMode);
     }
 
     bool canPlaySound(juce::SynthesiserSound* sound) override
@@ -37,7 +41,7 @@ public:
         juce::SynthesiserSound* /*sound*/,
         int /*currentPitchWheelPosition*/) override
     {
-        velocityLevel = velocity * 0.15f;
+        velocityLevel = velocity * 0.5f;
         globalPitch.noteOn(midiNoteNumber);
         for (const auto& o : osc) {
             o->startNote(velocityLevel, globalPitch.getFundamentalFreq(), getSampleRate());
@@ -95,6 +99,11 @@ public:
         return true;
     }
 
+    float calculateFreqOffsetFromSample(float sample) {
+        // convert sample to some frequency between -20kHz and +20kHz
+        return sample * 20000.0f;
+    }
+
     void renderNextBlock(juce::AudioBuffer<float>& outputBuffer, int startSample, int numSamples) override
     {
         // Trigger envelope param set for oscillators
@@ -107,11 +116,20 @@ public:
                 float fundamentalFreq = globalPitch.getFundamentalFreq();
                 if (anyEnvelopeActive()) {
                     float summedSample = 0.0f;
-                    // Sum samples from each oscillator
-                    for (auto& o : osc) {
-                        summedSample += o->generateSample(fundamentalFreq);
-                    }
+                    if (fmMode->get()) {
+                        // FM Chain in FM mode
+                        auto chain1Sample = osc[0]->generateSample(fundamentalFreq);
+                        summedSample += osc[1]->generateSample(fundamentalFreq + calculateFreqOffsetFromSample(chain1Sample));
 
+                        auto chain2Sample = osc[2]->generateSample(fundamentalFreq);
+                        summedSample += osc[3]->generateSample(fundamentalFreq + calculateFreqOffsetFromSample(chain2Sample));
+                    }
+                    else {
+                        // Non-FM is additive mode
+                        for (auto& o : osc) {
+                            summedSample += o->generateSample(fundamentalFreq);
+                        }
+                    }
                     // Populate output buffer
                     for (auto i = outputBuffer.getNumChannels(); --i >= 0;)
                         outputBuffer.addSample(i, startSample, summedSample);
@@ -205,5 +223,6 @@ private:
     // Each voice plays a different MIDI note, thus has a different pitch.
     // They'll use the same parameters aside from their input midi note
     GlobalPitch globalPitch;
+    juce::AudioParameterBool* fmMode = nullptr;
     std::vector<std::unique_ptr<Oscillator>> osc;
 };

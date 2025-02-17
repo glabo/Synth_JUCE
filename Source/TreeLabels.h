@@ -2,6 +2,7 @@
 
 // ========================= MASTER ==================================
 static const juce::String MASTER_LEVEL_ID = "master_level";
+static const juce::String FM_MODE_ID = "fm_mode";
 
 // ========================= OSCILLATOR ==================================
 static const int OSC_0 = 0;

@@ -344,7 +344,10 @@
                    bar-fill-color="CCBE2222" tickmark-color="FFED4100" class="OscSegment"
                    flex-grow="1.0" id="Volume"/>
             <Slider flex-grow=".4" class="ADSRSlider" parameter="master_level" rotary-fill="FFBE2222"
-                    id="MasterLevel" slider-textbox="no-textbox"/>
+                    id="MasterLevel" slider-textbox="no-textbox" slider-type="rotary-horizontal-vertical"/>
+            <Slider parameter="fm_mode" class="ADSRSlider" id="AM/FM" slider-type="linear-horizontal"
+                    flex-grow=".25" caption="AM/FM" caption-size="12" caption-color="FFAACDCA"
+                    slider-thumb="FFBE6522" flex-shrink="1.0" flex-align-self="stretch"/>
           </View>
         </View>
       </View>
@@ -354,3 +357,4 @@
     </View>
   </View>
 </magic>
+ 

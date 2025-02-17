@@ -106,8 +106,12 @@ void Synthesizer::createMasterParameterLayout(juce::AudioProcessorValueTreeState
         "Level",
         juce::NormalisableRange<float>(0.0f, 1.2f),
         1.0f);
+    auto fmMode = std::make_unique<juce::AudioParameterBool>(juce::ParameterID{ FM_MODE_ID, 1 },
+        "FM Mode",
+        true);
     auto group = std::make_unique<juce::AudioProcessorParameterGroup>("Master", "Master", "|",
-        std::move(masterLevel));
+        std::move(masterLevel),
+        std::move(fmMode));
     layout.add(std::move(group));
 }
 
