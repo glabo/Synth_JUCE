@@ -66,7 +66,7 @@ std::unique_ptr<juce::AudioProcessorParameterGroup> Filter::createFilterParamete
     auto cutoff = std::make_unique<juce::AudioParameterFloat>(cutoffId,
         "Cutoff Freq",
         juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 0.35f),
-        20.f);
+        20000.f);
     auto q = std::make_unique<juce::AudioParameterFloat>(qId,
         "Quality",
         juce::NormalisableRange<float>(0.1f, 10.f, 0.05f, 1.f),
